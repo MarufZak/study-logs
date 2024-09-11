@@ -31,6 +31,9 @@
 - [declare](#declare)
   - [local declare](#local-declare)
   - [global declare](#global-declare)
+- [Types you don’t control](#types-you-dont-control)
+  - [declaring types for external modules](#declaring-types-for-external-modules)
+  - [skipLibCheck](#skiplibcheck)
 
 ## Distributive types
 
@@ -710,3 +713,94 @@ There are two ways to declare global types in TypeScript:
     };
   }
   ```
+
+## types you don’t control
+
+- Case 1
+  Let’s say we have following tsconfig.ts
+
+  ```tsx
+  {
+    "compilerOptions": {
+      "target": "ES2015"
+    }
+  }
+  ```
+
+  And following code
+
+  ```tsx
+  const str = "Hello, world!";
+  str.replaceAll("Hello", "Goodbye"); // Error: Property 'replaceAll' doesn't
+  // exist on type "Hello, world!"
+  ```
+
+  There are a variety of **`lib.d.ts`** files that ship with TypeScript, each corresponding to a specific version of JavaScript. The `target` option specifies which declaration file to use. `replaceAll` method didn’t exist in String prototype until es2021, so it has no types in es2015 declaration files on String interface.
+  Just for fun we can specify `noLib` true option, which just turns off all the typings coming from lib declaration files.
+  There is another option `lib` which tells exactly which libraries we want inside specified target to be (because there are many libraries included in target), if we don’t choose, it’s all libs in target by default.
+
+- Case 2
+  Did you have a problem when you cannot iterate over DOM elements. Well, this is because corresponding lib was not specified in `lib` option in tsconfig, and the lib is `DOM.Iterable`
+
+  ```tsx
+  const elements = document.querySelectorAll("div");
+
+  for (const element of elements) {
+    element.innerHTML = "Hello World!";
+  }
+
+  // error: Type 'NodeListOf<HTMLDivElement>' must have a '[Symbol.iterator]()'
+  // method that returns an iterator.
+  ```
+
+- Case 3
+  Let's say we want to add some object to global window object. If we go to declaration files, we see that global window object is: `declare var window: Window & typeof globalThis`.
+  We also know that if two interfaces are declared in the same scope, there are gonna be merged. The idea is to make our window interface, so it's merged with globally declared one.
+  If we do this in the .ts file, where we are accessing global object on window (to which we need type to be attached), it's NOT gonna be merged with global Window interface, because there MUST be in the same scope. In our case, our interface is LOCAL, NOT GLOBAL.
+  To make it global, we can either create Window interface in .d.ts file, or use `declare global {}` in .ts file.
+
+### declaring types for external modules
+
+Let’s say we have a lib, which has no types and type declarations. We can write them out ourselves! In order to do so, in the global scope, we need to use syntax: `declare module 'my-module-name' {}`.
+
+- Example
+
+  ```tsx
+  declare module "my-module-name" {
+    export function myFunc(): string;
+    // we are using export here because the lib exports this function.
+  }
+  ```
+
+But let’s say we are importing non-code files, like images, what can we do about its typings?
+
+When using `declare module` syntax, for the module name we can use wildcard char to list all modules that match to this wildcard.
+
+- Example
+
+  ```tsx
+  declare module "*.png" {
+    const png: string;
+    export default png;
+  }
+
+  // index.ts
+  import image from "./image.png";
+  ```
+
+### **skipLibCheck**
+
+This option in tsconfig tells compiler to skip checking all declaration files, including yours and in `node_modules`.
+
+- Example
+
+  ```tsx
+  type TParams = {
+    name: string;
+  };
+
+  type TSurname = TParams["surname"];
+  // no errors!
+  ```
+
+Note that the approach of using `exclude: ["node_modules"]` in tsconfig doesn’t prevent compiler from checking `node_modules`
