@@ -1,0 +1,66 @@
+{
+  "check_status": true,
+  "commit_type": {
+    "enable": true,
+    "initial_value": "typescript-essentials",
+    "infer_type_from_branch": true,
+    "options": [
+      {
+        "value": "typescript-essentials",
+        "label": "typescript-essentials"
+      },
+      {
+        "value": "config",
+        "label": "config"
+      },
+      {
+        "label": "none",
+        "value": ""
+      }
+    ]
+  },
+  "commit_title": {
+    "max_size": 70
+  },
+  "commit_scope": {
+    "enable": false
+  },
+  "check_ticket": {
+    "infer_ticket": false,
+    "confirm_ticket": false,
+    "add_to_title": false,
+    "append_hashtag": false,
+    "title_position": "start"
+  },
+  "commit_body": {
+    "enable": false
+  },
+  "commit_footer": {
+    "enable": false
+  },
+  "breaking_change": {
+    "add_exclamation_to_title": true
+  },
+  "confirm_commit": false,
+  "print_commit_output": true,
+  "branch_pre_commands": [],
+  "branch_post_commands": [],
+  "branch_user": {
+    "enable": true,
+    "required": false,
+    "separator": "/"
+  },
+  "branch_type": {
+    "enable": true,
+    "separator": "/"
+  },
+  "branch_ticket": {
+    "enable": true,
+    "required": false,
+    "separator": "-"
+  },
+  "branch_description": {
+    "max_length": 70
+  },
+  "overrides": {}
+}
