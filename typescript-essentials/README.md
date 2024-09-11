@@ -34,6 +34,10 @@
 - [Types you don’t control](#types-you-dont-control)
   - [declaring types for external modules](#declaring-types-for-external-modules)
   - [skipLibCheck](#skiplibcheck)
+- [function params](#function-params)
+- [type predicates](#type-predicates)
+- [assertion functions](#assertion-functions)
+- [function overloads](#function-overloads)
 
 ## Distributive types
 
@@ -804,3 +808,116 @@ This option in tsconfig tells compiler to skip checking all declaration files, i
   ```
 
 Note that the approach of using `exclude: ["node_modules"]` in tsconfig doesn’t prevent compiler from checking `node_modules`
+
+## function params
+
+function params should always be a tuple. When annotating function params with generics, if we annotate the params of the function as array, we lose inference when using this function, meaning it will be inferred as an array, not tuple. To solve the problem we should use the generic as a tuple.
+
+- Example
+
+```tsx
+// we should not
+const func = <T,>(...args: T[]) => args;
+const result = func("apple"); // string[]
+
+// we should
+const func = <T extends any[]>(...args: T) => args;
+const result = func("apple"); // [string]
+```
+
+## type predicates
+
+Sometimes when checking logic is too big, we want to put it to separate function.
+
+Type predicates helps typescript to say something is certain type if the function returns true, or not, if returns false. But note that type predicates can be unsafe, meaning we can say the value is number, and check if typeof value is string.
+
+- Example
+
+  ```tsx
+  // "value is number" would be valid also,
+  // typescript won't yell at us. Be accurate!
+  function check(value: unknown): value is string {
+    return typeof value === "string";
+  }
+  ```
+
+Interesting case: if checking is too much, typescript just won’t infer the return type, and we need to tell typescript manually with type predicates.
+
+- Example
+
+  ```tsx
+  function isUser(user: unknown) {
+    return (
+      typeof user === "object" &&
+      user !== null &&
+      "name" in user &&
+      "email" in user &&
+      "age" in user &&
+      "city" in user &&
+      "country" in user &&
+      typeof user.name === "string" &&
+      typeof user.email === "string" &&
+      typeof user.age === "number" &&
+      typeof user.city === "string" &&
+      typeof user.country === "string"
+    );
+  }
+
+  function checkUser(user: unknown) {
+    if (isUser(user)) {
+      user.name; // Error, 'user' is of type 'unknown'
+      // First solution is to put all checks in if block.
+      // Another solution is to add type predicate to the isUser function
+    }
+  }
+  ```
+
+## assertion functions
+
+Sometimes we throw errors instead of returning booleans, so in this case assertion functions are helpful. It says if function doesn’t throw error, the type of value is certain type. The same problem of being unsafe exists here also.
+
+- Example
+
+  ```tsx
+  function isAdmin(value: User | AdminUser): asserts value is AdminUser {
+    if (value.role === "user") {
+      throw new Error("not admin");
+    }
+  }
+  ```
+
+## function overloads
+
+Function overloads allow you to define multiple ways a function can be called. They look like several extra function keywords above the function, followed by an implementation signature.
+
+- Example
+
+  ```tsx
+  function sum(
+    valuesOrA: { a: number; b: number } | number,
+    b?: number
+  ): number {
+    if (typeof valuesOrA === "object") {
+      return valuesOrA.a + valuesOrA.b;
+    }
+    return valuesOrA + b!;
+  }
+
+  // can be turned into:
+  function sum(valuesOrA: { a: number; b: number }): number;
+  function sum(valuesOrA: number, b: number): number;
+  function sum(
+    valuesOrA: { a: number; b: number } | number,
+    b?: number
+  ): number {
+    // 3
+    if (typeof valuesOrA === "object") {
+      return valuesOrA.a + valuesOrA.b;
+    }
+    return valuesOrA + b!;
+  }
+  ```
+
+Note that only overloads are exposed to the consumer, and actual implementation signature is not. Consumers cannot use function with params annotated in implementation signature, unless it’s compatible with one of the overloads.
+
+Implementation signature must be compatible with overloads.
