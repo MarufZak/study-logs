@@ -42,6 +42,7 @@ My notes and takeaways from the TotalTypeScript Pro Essentials workshop by Matt 
 - [type predicates](#type-predicates)
 - [assertion functions](#assertion-functions)
 - [function overloads](#function-overloads)
+- [TSConfig basics](#tsconfig-basics)
 
 ## Distributive types
 
@@ -925,3 +926,42 @@ Function overloads allow you to define multiple ways a function can be called. T
 Note that only overloads are exposed to the consumer, and actual implementation signature is not. Consumers cannot use function with params annotated in implementation signature, unless it’s compatible with one of the overloads.
 
 Implementation signature must be compatible with overloads.
+
+## TSConfig basics
+
+1. `esModuleInterop` - Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. Typescript outputs special functions to handle default imports of CJS in ESM.
+
+   - Example with esModuleInterop false
+
+     ```jsx
+     // moduleA.ts
+     function greet(name: string) {
+       return `Hello, ${name}!`;
+     }
+
+     export = greet;
+
+     // moduleB.ts
+     import greet from "./moduleA.ts";
+     // error: Module can only be default-imported using the 'esModuleInterop'
+     // flag
+     ```
+
+   - Example with esModuleInterop true
+
+     ```jsx
+     // moduleA.ts
+     function greet(name: string) {
+       return `Hello, ${name}!`;
+     }
+
+     export = greet;
+
+     // moduleB.ts
+     import greet from "./moduleA.ts"; // works fine
+     ```
+
+   Note that `export =` is typescript syntax to support interoperability between CommonJS modules and ES6 modules.
+
+2. `allowSyntheticDefaultImports` - Allow default imports from modules with no default export. This does not affect code emit, just typechecking.
+3. `allowJs` - lets us import js files into ts files.
