@@ -1,5 +1,9 @@
 # TS Essentials
 
+![TotalTypeScript Pro Essentials logo](./assets/logo.png)
+
+My notes and takeaways from the TotalTypeScript Pro Essentials workshop by Matt Pocock. See the [workshop](https://www.totaltypescript.com/workshops/typescript-pro-essentials) for more details.
+
 ## Table of Contents
 
 - [Distributive types](#distributive-types)
@@ -360,7 +364,7 @@ An empty object can represent anything in JavaScript and TypeScript that is not 
   ```
 
   Anything can be assigned to empty object in TypeScript, except null or undefined. So here is types tree:
-  ![types tree](./assets//1.png)
+  ![types tree](./assets/type-tree.png)
 
 ### Excess property warning
 
