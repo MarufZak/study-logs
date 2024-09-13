@@ -43,6 +43,13 @@ My notes and takeaways from the TotalTypeScript Pro Essentials workshop by Matt 
 - [assertion functions](#assertion-functions)
 - [function overloads](#function-overloads)
 - [TSConfig basics](#tsconfig-basics)
+  - [Basic options](#basic-options)
+  - [Recommended combinations of module and moduleResolution](#recommended-combinations-of-module-and-moduleresolution)
+  - [Transpiling with typescript recommendations](#transpiling-with-typescript-recommendations)
+  - [Lib and target](#lib-and-target)
+  - [Multiple tsconfigs](#multiple-tsconfigs)
+  - [extends](#extends)
+  - [Project references](#project-references)
 
 ## Distributive types
 
@@ -929,7 +936,9 @@ Implementation signature must be compatible with overloads.
 
 ## TSConfig basics
 
-1. `esModuleInterop` - Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. Typescript outputs special functions to handle default imports of CJS in ESM.
+### Basic options
+
+1. `esModuleInterop` - Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. Typescript outputs special functions to handle default imports of CJS into ESM.
 
    - Example with esModuleInterop false
 
@@ -963,5 +972,156 @@ Implementation signature must be compatible with overloads.
 
    Note that `export =` is typescript syntax to support interoperability between CommonJS modules and ES6 modules.
 
-2. `allowSyntheticDefaultImports` - Allow default imports from modules with no default export. This does not affect code emit, just typechecking.
+   Before these flags, we had to use `import * as myModule from './myModule.ts'` , but it’s not compliant to ES6 module spec. This tsconfig option solves this problem.
+
+2. `allowSyntheticDefaultImports` - Allow default imports from modules with no default export. This does not affect code emit, just typechecking. Implicitly set to true when `esModuleInterop` is true.
 3. `allowJs` - lets us import js files into ts files.
+4. `resolveJsonModule` lets us import json files **_transpiling with typescript._** Typescript also infers the type of parsed json.
+5. `outDir` - where to put the generated code.
+6. `sourceMap` - whether to include source maps for the source code. Source map lets you map compiled javscript code to original typescript code, so when hover over and clicking the imported entity, it goes to original ts code, rather than js. Good for debugging.
+7. `declaration` - used when building a library to generate declaration files.
+8. `declarationMap`- If you are transpiling your ts code into declaration and js files, if you try to navigate to the type or interface you are importing from module, you are navigated to declarationFile. To fix this, declarationMap is used, this maps declaration files to source files. This feature might be useful in monorepo, because the code you are transpiling is yours, and from npm you are probably not going to get typescript source files.
+9. `noUncheckedIndexedAccess` - make type of items in array a union of undefined and its type, making sure we check the accessed item if it exists.
+10. `isolatedModules` - Ensure that each file can be safely transpiled without relying on other imports ⇒ disables some typescript features that would be unsafe in import/export environment.
+
+    - Example
+
+      ```jsx
+      declare const enum Numbers {
+        Zero,
+        One,
+        Two,
+      }
+
+      // isolatedModules: false // no error
+
+      const example = Numbers.Zero;
+
+      // declare keyword puts everything inside it in ambient context,
+      // meaning it disappears at runtime. Such syntax can only be compiled
+      // by typescript, not by swc, babel, or esbuild (they just strip out the
+      // types), they do single file transpilation.
+
+      // there is gonna be runtime error if we use bundlers. If we use
+      // isolatedModules, we say that we are using single file transpilation,
+      // and since then declaring enum like this is not safe anymore,
+      // typescript will warn us about this.
+
+      // isolatedModules: true
+
+      const example = Numbers.Zero;
+      // error! Cannot access ambient const enums when 'isolatedModules'
+      // is enabled
+
+      ```
+
+11. `moduleResolution` - how the imports, how should that be resolved.
+12. `module` - specify what module code is generated. It accepts 3 values.
+
+    - `NodeNext` - implies `moduleResolution: NodeNext` under the hood. It’s used when we are using tsc when transpiling our code. It copies the way Node works to compile our project. If we are using .cts as file extension, our code is transpiled as CJS, if using .mts, our code is transpiled as ESM. Also, if folder has package.json, tsc compiler sees that file to detect which to use. It sees `module` option.
+    - `ESNext` - force all files to use ESM. When compiler sees cts using esm, it’s gonna break.
+    - `CommonJS` - force all files to use CJS. When compiler sees mts using cjs, it’s gonna break.
+
+13. `verbatimModuleSyntax` - the problem it solves is using fake ESM in CJS modules. Note that this works when transpiling with tsc. Also it forces you to import types with `type` keyword.
+
+- Example
+
+  ```tsx
+  // example.cts
+
+  export const example = "";
+  // this is NOT causing errors, although it should, because we are using
+  // esm in cts file. To fix this, we should use verbatimModuleSyntax: true.
+  // verbatimModuleSyntax makes it stricter about CJS exports.
+
+  // example2.cts
+  import { example } = require("./example.cts");
+  // this is typescript feature to make the imports from cts modules type-safe.
+  // besides that, this option forces us to use type keyword if we are importing
+  // types from a module.
+
+  import type { User } from './mymodule.ts'
+  // or
+  import { type User } from './mymodule.ts'
+  ```
+
+1. `skipLibCheck` - This option in tsconfig tells compiler to skip checking all declaration files, including yours and in `node_modules`.
+
+   - Example
+
+     ```tsx
+     type TParams = {
+       name: string;
+     };
+
+     type TSurname = TParams["surname"];
+     // no errors!
+     ```
+
+   The approach of using `exclude: ["node_modules"]` in tsconfig doesn’t prevent compiler from checking `node_modules`
+
+2. `jsx` - this option lets tsc to handle jsx syntax. It has 5 values
+
+- `preserve` - typescript doesn’t touch the jsx syntax, and in fact transforms tsx file into jsx (when we are using typescript to transpile our code).
+- `react` - ts compiler transforms ts into js with `React.createElement`, but it expects React to be imported in the file.
+- `react-jsx` - same as `react` option, but you don’t need to import React. This option is newer and imports newer jsx transform functions.
+
+### Recommended combinations of module and moduleResolution
+
+- If using tsc to compile our code, `module` should be `NodeNext`, and `moduleResolution` should also be `NodeNext`. In this case, when importing from files, it demands us to use .js extension in path, even it doesn’t exist yet. If you want to use like `import example from ‘example’`, it’s permitted by bundlers, but not by tsc compiler, so it forces you to use file extension.
+
+  - Example
+
+    ```jsx
+    // assuming "type" option in package.json is "module".
+
+    // example1.ts
+    export const str = "str";
+
+    // example2.ts
+    import { str } from "./example1";
+    // error! Relative import paths need explicit file extensions
+    // with moduleResolution 'node16' or 'nodenext'. Did you
+    // mean './ts2.js'
+    ```
+
+- If using bundlers to compile ts files, we should use `module: ESNext` (because it most closely represents what happens inside the bundler), and `moduleResolution: Bundler`. This allows us to use in path ‘.js’, or not using extension at all to import from files, because external bundlers support it.
+
+  - Example
+
+    ```jsx
+    // assuming "type" option in package.json is "module".
+
+    // example1.ts
+    export const str = "str";
+
+    // example2.ts
+    import { str } from "./example1"; // fine
+    ```
+
+### Transpiling with typescript recommendations
+
+`module` should be `Preserve`, and `noEmit` is `true`. This makes typescript as a linter, and we can use it with external bundler. If code runs in DOM, `lib` should be `[”es2022”, “dom”, “dom.iterable"]` . If code doesn’t run in DOM, `lib` should be `[”es2022”]`
+
+### Lib and target
+
+Lib lets you specify which javascript features are available in environment we are working in. Target option specifies version of js our code is gonna be transpiled to. If you want to transform your code and down-level the code with polyfills, typescript will not do that! Typescript will only transform the syntax, without adding pollyfills.
+
+### Multiple tsconfigs
+
+When ts compiler sees .ts file, it uses closest parent tsconfig as config. We can use this feature to make two behaviors for ts files, for example, based on environment (for example `lib` set to `“ES2015.Core”` tells ts compiler that this is for server environment).
+Also, when we have multiple tsconfigs, global .d.ts files are attached to the closest tsconfig, meaning if we have 2 dirs with 2 tsconfigs and .d.ts files, .d.ts file in first folder is available only for the first folder, and second one for second.
+
+### extends
+
+tsconfig can extend other tsconfig files with extends keyword. Note that the base file can be any file name, for example `tsconfig.base.config.json` (this name also means that tsconfig won’t use this file as a config), just any. AND `extends` keyword is just for `compilerOptions`, meaning everything outside of compilerOptions it will be excluded.
+
+### project references
+
+If you have a multiple tsconfig files, and you have to run both of them to build, or watch, or anything else, we can make one tsconfig at the root (lets say both of above ones are in their folders), and use `references` option to reference tsconfig files.
+
+We can also use `files: []` option in the root tsconfig to say that this tsconfig is not responsible for any file checks.
+
+After we use references, in the package.json we can make use `tsc -b` option to run typescript compiler in the build mode, meaning it uses references option to run all of our tsconfig files. If we don’t use tsc -b, it’s not going to go to project references.
+
+There is one more option to set to child tsconfig files - `composite` true option. This basically tells ts compiler that this is child config, and is used in parent config as a reference.
