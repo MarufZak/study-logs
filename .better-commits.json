@@ -10,6 +10,10 @@
         "label": "typescript-pro-essentials"
       },
       {
+        "value": "typescript-type-transformations",
+        "label": "typescript-type-transformations"
+      },
+      {
         "value": "nodejs-design-patterns",
         "label": "nodejs-design-patterns"
       },
