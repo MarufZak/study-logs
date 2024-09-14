@@ -1,6 +1,6 @@
-# TS Essentials
+# TypeScript Pro Essentials
 
-![TotalTypeScript Pro Essentials logo](./assets/logo.png)
+![TypeScript Pro Essentials logo](./assets/logo.png)
 
 My notes and takeaways from the TotalTypeScript Pro Essentials workshop by Matt Pocock. See the [workshop](https://www.totaltypescript.com/workshops/typescript-pro-essentials) for more details.
 
