@@ -10,6 +10,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [I/O (Input / Output)](#io-input--output)
   - [Event demultiplexing](#event-demultiplexing)
   - [The reactor pattern](#the-reactor-pattern)
+  - [Libuv](#libuv)
 
 ## The Node.js platform
 
@@ -57,3 +58,9 @@ It’s specialization of algorithms that has a handler associated with each I/O 
 Node.js application exits, when there are no more pending operations in event demultiplexer and no more events being processed in event queue.
 
 So, the reactor pattern handles i/o by going idle until new events are available from a set of observed resources, and then reacts by dispatching each event to associated handler.
+
+### Libuv
+
+Each operating system has different API interfaces for the event demultiplexer, and each i/o may behave differently even with one operating system. For example in Unix there is no way to access files in non-blocking manner. To simulate it, we need to create another thread and process it there.
+
+Libuv is low-level i/o engine of node.js, which makes node.js compatible with all major OSs, and normalizes the behavior among them. It implements the reactor pattern, providing APIs for creating event loops, managing event queue and others.
