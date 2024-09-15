@@ -12,6 +12,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [The reactor pattern](#the-reactor-pattern)
   - [Libuv](#libuv)
   - [Recipe of Node.js](#recipe-of-nodejs)
+  - [Native code](#native-code)
 
 ## The Node.js platform
 
@@ -77,3 +78,7 @@ Reactor pattern and libuv are building blocks of Node.js, but we need three more
 ![Node.js recipe](./assets/nodejs-recipe.png)
 
 Node.js ships with very recent versions of V8, which means we can use the most new features with confidence.
+
+### Native code
+
+Node.js allows us to reuse components written in C/C++ native code. It can be beneficial because with native code we can access lower-level APIs, for example communicating with hardware drivers. Although V8 is very fast, it is still a bit slower than native code. For CPU-intensive apps, it makes sense to use native code.
