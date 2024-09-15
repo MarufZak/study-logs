@@ -12,6 +12,7 @@ My notes and takeaways from the TypeScript type transformations workshop by Matt
 - [indexed access with arrays](#indexed-access-with-arrays)
 - [combining unions in template literal types](#combining-unions-in-template-literal-types)
 - [constraint generic except null or undefined](#constraint-generic-except-null-or-undefined)
+- [infer with generic arguments](#infer-with-generic-arguments)
 
 ## extract members of discrimination unions
 
@@ -151,3 +152,61 @@ In typescript, `{}` represents all values except null or undefined. In fact, the
 // so to constraint generic to all values except null or undefined, we do:
 type Generic<T extends {}> = T;
 ```
+
+## infer with generic arguments
+
+- Task
+
+  Write a type for the `GetPoint` type so that the test cases pass. This type should get the type of the `getPoint` method of the generic passed in.
+
+  ```tsx
+  import type { Equal, Expect } from "@total-typescript/helpers";
+
+  interface MyComplexInterface<Event, Context, Name, Point> {
+    getEvent: () => Event;
+    getContext: () => Context;
+    getName: () => Name;
+    getPoint: () => Point;
+  }
+
+  type Example = MyComplexInterface<
+    "click",
+    "window",
+    "my-event",
+    { x: 12; y: 14 }
+  >;
+
+  type GetPoint = unknown;
+
+  type test = Expect<Equal<GetPoint<Example>, { x: 12; y: 14 }>>;
+  ```
+
+- Solution
+
+  ```tsx
+  import type { Equal, Expect } from "@total-typescript/helpers";
+
+  interface MyComplexInterface<Event, Context, Name, Point> {
+    getEvent: () => Event;
+    getContext: () => Context;
+    getName: () => Name;
+    getPoint: () => Point;
+  }
+
+  type Example = MyComplexInterface<
+    "click",
+    "window",
+    "my-event",
+    { x: 12; y: 14 }
+  >;
+
+  // here, we could just do the following:
+  // type GetPoint<T> = T extends { getPoint: () => infer R } ? R : never;
+  // but another pretty cool solution would be:
+  type GetPoint<T> = T extends MyComplexInterface<any, any, any, infer TPoint>
+    ? TPoint
+    : never;
+  // this is better, because it doesn't interact with details of the interface.
+
+  type test = Expect<Equal<GetPoint<Example>, { x: 12; y: 14 }>>;
+  ```
