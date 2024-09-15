@@ -15,6 +15,7 @@ My notes and takeaways from the TypeScript type transformations workshop by Matt
 - [infer with generic arguments](#infer-with-generic-arguments)
 - [gotcha with distributivity in conditional types](#gotcha-with-distributivity-in-conditional-types)
 - [map over discriminated union](#map-over-discriminated-union)
+- [challenges](#challenges)
 
 ## extract members of discrimination unions
 
@@ -243,6 +244,7 @@ type AppleOrBanana = Fruit extends infer T
 ## map over discriminated union
 
 - Task
+
   Write the type of `RoutesObject` type, which iterates over the `Route` discriminated union type and takes the `route` discriminator as a key, and the `search` entry as a value.
 
   ```tsx
@@ -343,3 +345,101 @@ type AppleOrBanana = Fruit extends infer T
     >
   ];
   ```
+
+## Challenges
+
+- Challenge 1
+
+  - Task
+
+    How do we create a type helper that represents a union of all possible combinations of `Attributes`?
+
+    ```tsx
+    import type { Expect, Equal } from "@total-typescript/helpers";
+
+    interface Attributes {
+      id: string;
+      email: string;
+      username: string;
+    }
+
+    type MutuallyExclusive<T> = unknown;
+    type ExclusiveAttributes = MutuallyExclusive<Attributes>;
+
+    type test = Expect<
+      Equal<
+        ExclusiveAttributes,
+        | {
+            id: string;
+          }
+        | {
+            email: string;
+          }
+        | {
+            username: string;
+          }
+      >
+    >;
+    ```
+
+  - Solution
+    The solution is pretty simple, with pattern of making values as the intermediatery values we want, and indexing though all the keys. **Pretty cool pattern!**
+
+    ```tsx
+    type MutuallyExclusive<T> = {
+      [K in keyof T]: Record<K, T[K]>;
+    }[keyof T];
+    ```
+
+- Challenge 2
+
+  - Task
+
+    Create a type that maps over each member of discriminated union and returns object type with discriminator as a key, and `search` as a value. If `search` doesn’t exist, put `null`.
+
+    ```tsx
+    import type { Equal, Expect } from "@total-typescript/helpers";
+
+    type Route =
+      | {
+          route: "/";
+          search: {
+            page: string;
+            perPage: string;
+          };
+        }
+      | { route: "/about" }
+      | { route: "/admin" }
+      | { route: "/admin/users" };
+
+    type RoutesObject = unknown;
+
+    type test = Expect<
+      Equal<
+        RoutesObject,
+        {
+          "/": {
+            page: string;
+            perPage: string;
+          };
+          "/about": never;
+          "/admin": never;
+          "/admin/users": never;
+        }
+      >
+    >;
+    ```
+
+  - Solution
+    We can use pattern pattern of declaring generic as a member of union, use its route as a key, and use the generic itself in the value field.
+
+    ```tsx
+    type RoutesObject = {
+      [R in Route as R["route"]]: R extends {
+        route: R["route"];
+        search: infer S;
+      }
+        ? S
+        : never;
+    };
+    ```
