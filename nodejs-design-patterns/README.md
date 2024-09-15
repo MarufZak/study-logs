@@ -9,6 +9,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
 - [The Node.js platform](#the-nodejs-platform)
   - [I/O (Input / Output)](#io-input--output)
   - [Event demultiplexing](#event-demultiplexing)
+  - [The reactor pattern](#the-reactor-pattern)
 
 ## The Node.js platform
 
@@ -40,3 +41,19 @@ See difference between blocking i/o and non-blocking i/o (with event demultiplex
 
 ![Blocking I/O threads](./assets/blocking-io-threads.png)
 ![Non blocking I/O threads](./assets/non-blocking-io-threads.png)
+
+### The reactor pattern
+
+It’s specialization of algorithms that has a handler associated with each I/O operation, and represented by callback function.
+
+1. Application submits a new I/O request to **Event Demultiplexer** and specifies handler with it. This operation is non-blocking ⇒ returns immediately.
+2. When the result is available in event demultiplexer, it pushes a set of corresponding event and handler to **Event Queue.**
+3. Event loop iterates over event queue, invoking each handler for each event.
+4. The handler (which is part of app code) gives control back to the event loop when its execution completes. Or it submits another I/O request that triggers the cycle once more.
+5. When all items in Event Queue are processed, event loop goes idle, waiting event demultiplexer to push another items.
+
+![Reactor pattern](./assets/reactor-pattern.png)
+
+Node.js application exits, when there are no more pending operations in event demultiplexer and no more events being processed in event queue.
+
+So, the reactor pattern handles i/o by going idle until new events are available from a set of observed resources, and then reacts by dispatching each event to associated handler.
