@@ -11,6 +11,7 @@ My notes and takeaways from the TypeScript type transformations workshop by Matt
 - [union types in js](#union-types-in-js)
 - [indexed access with arrays](#indexed-access-with-arrays)
 - [combining unions in template literal types](#combining-unions-in-template-literal-types)
+- [constraint generic except null or undefined](#constraint-generic-except-null-or-undefined)
 
 ## extract members of discrimination unions
 
@@ -139,3 +140,14 @@ If we combine strings in template literal types, we can get union of all combina
   // "brown with cheese" | "brown with ham" | "brown with salami" |
   // "white with cheese" | "white with ham" | "white with salami"
   ```
+
+## constraint generic except null or undefined
+
+In typescript, `{}` represents all values except null or undefined. In fact, the `unknown` is union of `{}, null, undefined`. In typescript, everything is subtype of `{}` except null or undefined. See the image below.
+
+![Types tree](./assets/types-tree.png)
+
+```tsx
+// so to constraint generic to all values except null or undefined, we do:
+type Generic<T extends {}> = T;
+```
