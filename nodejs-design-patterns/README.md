@@ -11,6 +11,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Event demultiplexing](#event-demultiplexing)
   - [The reactor pattern](#the-reactor-pattern)
   - [Libuv](#libuv)
+  - [Recipe of Node.js](#recipe-of-nodejs)
 
 ## The Node.js platform
 
@@ -64,3 +65,15 @@ So, the reactor pattern handles i/o by going idle until new events are available
 Each operating system has different API interfaces for the event demultiplexer, and each i/o may behave differently even with one operating system. For example in Unix there is no way to access files in non-blocking manner. To simulate it, we need to create another thread and process it there.
 
 Libuv is low-level i/o engine of node.js, which makes node.js compatible with all major OSs, and normalizes the behavior among them. It implements the reactor pattern, providing APIs for creating event loops, managing event queue and others.
+
+### Recipe of Node.js
+
+Reactor pattern and libuv are building blocks of Node.js, but we need three more components:
+
+1. A set of bindings for wrapping and exposing libuv and other low-level functionalities to JavaScript.
+2. V8, JavaScript engine, to compile JavaScript into machine code.
+3. A core JavaScript library that implements high-level node.js api, for example `fs` or `http`
+
+![Node.js recipe](./assets/nodejs-recipe.png)
+
+Node.js ships with very recent versions of V8, which means we can use the most new features with confidence.
