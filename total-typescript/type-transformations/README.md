@@ -13,6 +13,8 @@ My notes and takeaways from the TypeScript type transformations workshop by Matt
 - [combining unions in template literal types](#combining-unions-in-template-literal-types)
 - [constraint generic except null or undefined](#constraint-generic-except-null-or-undefined)
 - [infer with generic arguments](#infer-with-generic-arguments)
+- [gotcha with distributivity in conditional types](#gotcha-with-distributivity-in-conditional-types)
+- [map over discriminated union](#map-over-discriminated-union)
 
 ## extract members of discrimination unions
 
@@ -209,4 +211,135 @@ type Generic<T extends {}> = T;
   // this is better, because it doesn't interact with details of the interface.
 
   type test = Expect<Equal<GetPoint<Example>, { x: 12; y: 14 }>>;
+  ```
+
+## gotcha with distributivity in conditional types
+
+When we use generic, the union inside the generic is going to be distributed across (In other words, the generic will become each individual member of the union), meaning conditional type with `extends` will iterate over each one in the union. If we don’t use generic, typescript will compare entire union to another entire union, which is probably not expected.
+
+```tsx
+type Fruit = "apple" | "banana" | "orange";
+type GetAppleOrBanana<T> = T extends "apple" | "banana" ? T : never;
+
+type Test1 = GetAppleOrBanana<Fruit>; // "apple" | "banana"
+
+// meanwhile
+
+type Test2 = Fruit extends "apple" | "banana" ? Fruit : never; // never
+// suppose we extends "apple" only, we get true in condition, and we get
+// the whole Fruit, not "apple" only
+```
+
+Because we can use generic, this makes another solution possible, with `infer`, because basically we are creating generic here also.
+
+```tsx
+type AppleOrBanana = Fruit extends infer T
+  ? T extends "apple" | "banana"
+    ? T
+    : never
+  : never;
+```
+
+## map over discriminated union
+
+- Task
+  Write the type of `RoutesObject` type, which iterates over the `Route` discriminated union type and takes the `route` discriminator as a key, and the `search` entry as a value.
+
+  ```tsx
+  import type { Equal, Expect } from "@total-typescript/helpers";
+
+  type Route =
+    | {
+        route: "/";
+        search: {
+          page: string;
+          perPage: string;
+        };
+      }
+    | { route: "/about"; search: {} }
+    | { route: "/admin"; search: {} }
+    | { route: "/admin/users"; search: {} };
+
+  type RoutesObject = unknown;
+
+  type tests = [
+    Expect<
+      Equal<
+        RoutesObject,
+        {
+          "/": {
+            page: string;
+            perPage: string;
+          };
+          "/about": {};
+          "/admin": {};
+          "/admin/users": {};
+        }
+      >
+    >
+  ];
+  ```
+
+- Solution
+
+  ```tsx
+  import type { Equal, Expect } from "@total-typescript/helpers";
+
+  type Route =
+    | {
+        route: "/";
+        search: {
+          page: string;
+          perPage: string;
+        };
+      }
+    | { route: "/about"; search: {} }
+    | { route: "/admin"; search: {} }
+    | { route: "/admin/users"; search: {} };
+
+  // you could say that RoutesObject can be
+
+  // type RoutesObject = {
+  //   [K in Route["route"]]: Route extends { route: K } ? Route["search"] : never;
+  // };
+
+  // but remember that union is not distributed, and `extends` operation will not iterate over each member of union.
+  // To iterate over each one, we need to create generic.
+
+  // type RoutesObject = {
+  //   [K in Route["route"]]: Route extends infer R
+  //     ? R extends { route: K; search: infer S }
+  //       ? S
+  //       : never
+  //     : never;
+  // };
+
+  // or more elegant solution, iterating over the the members of union, and putting `route` as a ke of that member.
+
+  type RoutesObject = {
+    [R in Route as R["route"]]: R["search"];
+  };
+
+  // another possible solution
+
+  // type RoutesObject = {
+  //   [K in Route["route"]]: Extract<Route, { route: K }>["search"];
+  // };
+
+  type tests = [
+    Expect<
+      Equal<
+        RoutesObject,
+        {
+          "/": {
+            page: string;
+            perPage: string;
+          };
+          "/about": {};
+          "/admin": {};
+          "/admin/users": {};
+        }
+      >
+    >
+  ];
   ```
