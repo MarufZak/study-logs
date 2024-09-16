@@ -8,6 +8,7 @@ My notes and takeaways from the TypeScript generics workshop by Matt Pocock. See
 
 - [Multiple generics inferring](#multiple-generics-inferring)
 - [Interesting case with return promise type](#interesting-case-with-return-promise-type)
+- [Generic function currying](#generic-function-currying)
 
 ## multiple generics inferring
 
@@ -84,3 +85,35 @@ const fetchData = async <T,>(url: string): Promise<T> => {
 
 Typescript won't warn us, event if we constraint generic to something else, like string for example, because the type of data is `any`
 Better way to do this is to annotate the data variable `const data: T = ...`
+
+## generic function currying
+
+Function generics are always attached to the function call, meaning the arguments are gonna be inferred if the generics are used in the function to which they were attached.
+
+```tsx
+export const curryFunction =
+  <T, U, V>(t: T) =>
+  (u: U) =>
+  (v: V) => {
+    return {
+      t,
+      u,
+      v,
+    };
+  };
+```
+
+In this case, `U` and `V` properties of return object are `unknown` (default generic value), because generics are not used in the arguments of function where generics were created. We can solve this by manually passing generic arguments when we invoke the function. Or attach generic to its own function where it’s being used.
+
+```tsx
+export const curryFunction =
+  <T,>(t: T) =>
+  <U,>(u: U) =>
+  <V,>(v: V) => {
+    return {
+      t,
+      u,
+      v,
+    };
+  };
+```
