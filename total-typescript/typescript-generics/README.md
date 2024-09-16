@@ -9,6 +9,7 @@ My notes and takeaways from the TypeScript generics workshop by Matt Pocock. See
 - [Multiple generics inferring](#multiple-generics-inferring)
 - [Interesting case with return promise type](#interesting-case-with-return-promise-type)
 - [Generic function currying](#generic-function-currying)
+- [Missing generics](#missing-generics)
 
 ## multiple generics inferring
 
@@ -116,4 +117,56 @@ export const curryFunction =
       v,
     };
   };
+```
+
+## missing generics
+
+If you're not getting the inference you want, make sure that you haven't got any missing generics. In the case below, we want key to be inferred as a literal, but instead they are being inferred as union of keys.
+
+```tsx
+const getValue = <TObj,>(obj: TObj, key: keyof TObj) => {
+  return obj[key];
+};
+
+const value = getValue({ name: "John", age: 3 }, "name");
+// string | number
+```
+
+For this, we can create second generic to infer the actual key passed in and with indexed access we can get exact type of value in object.
+
+```tsx
+const getValue = <TObj, TKey extends keyof TObj>(obj: TObj, key: TKey) => {
+  return obj[key];
+};
+```
+
+## partial inference
+
+There is a partial inference issue in TS, for example if you have a function, and that function accepts 2 generics, and if you want the first generic to be passed manually and second generic, which depend on first, to be inferred without being passed, typescript cannot do that, and it will be inferred as unknown.
+
+```tsx
+export const makeSelectors = <
+  TSource,
+  TSelectors extends Record<string, (source: TSource) => any> = {}
+>(
+  selectors: TSelectors
+) => {
+  return selectors;
+};
+```
+
+We need to pass both generics to make it correctly typed, or another solution we can do is to refactor.
+
+```tsx
+export const makeSelectors =
+  <TSource = "makeSelectors expects to be passed a type argument",>() =>
+  <TSelectors extends Record<string, (source: TSource) => any>>(
+    selectors: TSelectors
+  ) => {
+    return selectors;
+  };
+
+// API changes, because the function now returns another function, which
+// accepts selectors and returns it, but now we can skip passing generic
+// to the second function.
 ```
