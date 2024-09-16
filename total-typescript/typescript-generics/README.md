@@ -11,6 +11,7 @@ My notes and takeaways from the TypeScript generics workshop by Matt Pocock. See
 - [Generic function currying](#generic-function-currying)
 - [Missing generics](#missing-generics)
 - [Partial inference](#partial-inference)
+- [Function overloads](#function-overloads)
 
 ## multiple generics inferring
 
@@ -171,3 +172,13 @@ export const makeSelectors =
 // accepts selectors and returns it, but now we can skip passing generic
 // to the second function.
 ```
+
+## function overloads
+
+The function signature is not exposed to outside world, meaning if you have an overload, this overload is the only one that outside world sees and according to which outside world can use it. If overload acceots one argument, but implementation 2 arguments, outside world cannot pass 2 arguments.
+
+But implementation signature in function overloads is not that safe, because even if the function overloads can return specific literal, implementation can return other literal of the same type for example. That’s why it’s better to annotate return type of implementation signature.
+
+It’s best to use function overloads when the return type changes based on what we passed in. Otherwise, consider, is it necessary to use function overloads?
+
+Typescript can also determine the overload based on the passed generics. Let’s say there is only one overload that accepts two generics, and if we manually pass those generics, we will be inside the overload with 2 generics.
