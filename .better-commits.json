@@ -14,12 +14,12 @@
         "label": "typescript-type-transformations"
       },
       {
-        "value": "nodejs-design-patterns",
-        "label": "nodejs-design-patterns"
+        "value": "typescript-generics",
+        "label": "typescript-generics"
       },
       {
-        "value": "config",
-        "label": "config"
+        "value": "nodejs-design-patterns",
+        "label": "nodejs-design-patterns"
       },
       {
         "label": "none",

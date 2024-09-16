@@ -12,6 +12,7 @@ The repository is organized into different folders, each representing a specific
 
 - **`typescript-essentials`** — My notes and takeaways from the TotalTypeScript Pro Essentials workshop by Matt Pocock.
 - **`nodejs-design-patterns`** — My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro and Luciano Mammino.
+- **`typescript-generics`** — My notes and takeaways from the TotalTypeScript Pro Generics workshop by Matt Pocock.
 
 > **Note**: This list will grow as I continue my learning journey. Feel free to explore the folders to see detailed notes on each subject. If anything is unclear or you have questions, feel free to open an issue or reach out to me directly.
 
