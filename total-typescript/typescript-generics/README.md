@@ -7,6 +7,7 @@ My notes and takeaways from the TypeScript generics workshop by Matt Pocock. See
 ## Table of Contents
 
 - [Multiple generics inferring](#multiple-generics-inferring)
+- [Interesting case with return promise type](#interesting-case-with-return-promise-type)
 
 ## multiple generics inferring
 
@@ -43,3 +44,43 @@ const makeStatus = <TStatus extends string>(status: TStatus) => {
   return statuses;
 };
 ```
+
+## interesting case with return promise type
+
+Suppose we have this code, and we want to make it generic function
+
+```tsx
+const fetchData = async (url: string) => {
+  const response = await fetch(url);
+  const data = await response.json();
+
+  return data;
+};
+```
+
+One possible solution is to do:
+
+```tsx
+const fetchData = async <T,>(url: string): Promise<T> => {
+  const response = await fetch(url);
+  let data = await response.json();
+
+  return data;
+};
+```
+
+But consider when function returns something else
+
+```tsx
+const fetchData = async <T,>(url: string): Promise<T> => {
+  const response = await fetch(url);
+  let data = await response.json();
+
+  data = null; // !!!
+
+  return data;
+};
+```
+
+Typescript won't warn us, event if we constraint generic to something else, like string for example, because the type of data is `any`
+Better way to do this is to annotate the data variable `const data: T = ...`
