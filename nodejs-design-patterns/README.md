@@ -13,6 +13,10 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Libuv](#libuv)
   - [Recipe of Node.js](#recipe-of-nodejs)
   - [Native code](#native-code)
+- [Module system](#module-system)
+  - [CommonJS](#commonjs)
+    - [Homemade module system](#homemade-module-system)
+    - [Monkey patching](#monkey-patching)
 
 ## The Node.js platform
 
@@ -82,3 +86,101 @@ Node.js ships with very recent versions of V8, which means we can use the most n
 ### Native code
 
 Node.js allows us to reuse components written in C/C++ native code. It can be beneficial because with native code we can access lower-level APIs, for example communicating with hardware drivers. Although V8 is very fast, it is still a bit slower than native code. For CPU-intensive apps, it makes sense to use native code.
+
+## Module system
+
+ES6 specification didn’t come with implementation of modules (ESM), so different browsers companies and node.js had to come up with their own implementation according to the spec.
+
+### CommonJS
+
+CommonJS is the original module system for Node.js that provides a way to organize and structure code by dividing it into reusable modules.
+
+#### Homemade module system
+
+```tsx
+import fs from "fs";
+
+function loadModule(filename, module, require) {
+  const wrapperSrc = `((module, exports, require)=>{
+    ${fs.readFileSync(filename, "utf-8")}
+  })(module, module.exports, require)`;
+
+  eval(wrapperSrc);
+}
+
+function require(filename) {
+  const id = require.resolve(filename);
+  if (require.cache[id]) {
+    return require.cache[id].exports;
+  }
+
+  const module = {
+    id,
+    exports: {},
+  };
+
+  loadModule(filename, module, require);
+
+  return module.exports;
+}
+require.resolve = (filename) => {
+  return filename;
+};
+require.cache = {};
+```
+
+Complete resolving algorithm can be found [here](https://nodejs.org/api/modules.html#modules_all_together).
+
+Synchronous nature of `require` function makes it impossible to export asynchronously. Any assignment to `module.exports` must be synchronous. That’s why most Node.js core modules offer synchronous APIs instead of asynchronous.
+
+CommonJS module system has one disadvantage, it can’t solve the problem with circular dependencies, where different module can have different version of its counterpart depending on when it was required.
+
+```tsx
+// module a
+module.exports.loaded = false;
+const b = require("./b");
+module.exports = {
+  b,
+  loaded: true, // overrides the previous export }
+};
+
+// module b
+module.exports.loaded = false;
+const a = require("./a");
+module.exports = {
+  a,
+  loaded: true,
+};
+
+// main.js
+const a = require("./a");
+const b = require("./b");
+console.log("a ->", JSON.stringify(a, null, 2));
+console.log("b ->", JSON.stringify(b, null, 2));
+
+/* a = {
+  b: {
+    a: {
+      loaded: false,
+    },
+    loaded: true,
+  },
+  loaded: true,
+};
+b = {
+  a: {
+    loaded: false,
+  },
+  loaded: true,
+}; */
+```
+
+#### Monkey patching
+
+It’s a practice of modifying existing objects (other modules exports) at runtime to change or extend behaviour, or apply temporary fixes. Monkey patching is considered harmful.
+
+```tsx
+require("./logger").customFunction = () => {
+  console.log("monkey");
+};
+```
