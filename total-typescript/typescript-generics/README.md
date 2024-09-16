@@ -10,6 +10,7 @@ My notes and takeaways from the TypeScript generics workshop by Matt Pocock. See
 - [Interesting case with return promise type](#interesting-case-with-return-promise-type)
 - [Generic function currying](#generic-function-currying)
 - [Missing generics](#missing-generics)
+- [Partial inference](#partial-inference)
 
 ## multiple generics inferring
 
