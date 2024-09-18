@@ -17,6 +17,9 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [CommonJS](#commonjs)
     - [Homemade module system](#homemade-module-system)
     - [Monkey patching](#monkey-patching)
+- [ES Modules](#esmodules)
+  - [default export notes](#default-export-notes)
+  - [async imports](#async-imports)
 
 ## The Node.js platform
 
@@ -183,4 +186,37 @@ It’s a practice of modifying existing objects (other modules exports) at runti
 require("./logger").customFunction = () => {
   console.log("monkey");
 };
+```
+
+## ESModules
+
+ESM were introduced as ECMAScript 2015 spec, with goal to give JS official module system across different environments. It has support for cyclic dependencies, and load modules async. ES modules are static, and cannot be imported conditionally, only at top of the file.
+
+With ESM we **_must_** include extension of the file in the import path, whereas in CJS we could use either `./myModule.js` or `./myModule`
+
+With ESM absolute path must be like `file:///....` and `/...` or `//...` is not supported.
+
+(browser only) With ESM we can load modules from outside, for example `import mdl from "https://mdl.pkg.com"`.
+
+Namespace import can be imported like:
+
+```tsx
+import * as myModule from "./myModule.js";
+```
+
+### default export notes
+
+When default exporting, the name of variable or function is ignored, so we can use any name when importing it.
+
+Default export can prevent tree shaking for some cases. For example, when module exports object with properties and methods, even if neither of them were used, most module bundlers think it’s used.
+
+### async imports
+
+Suppose we want to load specific module of language based on which lang pref user has. We can use dynamic imports with `import()` operation. It returns a promise that resolves to the module object.
+
+```tsx
+const translationModule = `./strings-${lang}.js`;
+import(translationModule).then((strings) => {
+  console.log(strings);
+});
 ```
