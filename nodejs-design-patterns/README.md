@@ -20,6 +20,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
 - [ES Modules](#esmodules)
   - [default export notes](#default-export-notes)
   - [async imports](#async-imports)
+  - [Modules loading](#modules-loading)
 
 ## The Node.js platform
 
@@ -220,3 +221,17 @@ import(translationModule).then((strings) => {
   console.log(strings);
 });
 ```
+
+### Modules loading
+
+The goal of interpreter is to build dependency graph of the modules. It helps interpreter to determine the order in which modules should be loaded. Entry point is passed to interpreter as an entry point, and it recursively starts to explore and evaluate the code.
+
+1. **Phase 1 - Construction.** FInd all imports and recursively load the content of every module from it.
+2. **Phase 2 - Instantiation.** For every exported and imported entity, keep reference in memory, but don’t assign any value (because code is not executed yet). Keep tracking of deps relationship between them (linking).
+3. **Phase 3 - Evaluation.** All blanks are filled, **c**ode is executed.
+
+In simple terms, phase 1 is finding dots, phase 2 is connecting them, phase 3 is going through paths in the right order.
+
+Difference from CJS is that in cjs the code before `require` is already executed, whereas no code is executed until phase 3 in ESM, this makes exports and imports to be static.
+
+In case of ESM, all modules will have up-to-date imports from other modules, because the evaluation step happens from bottom to top, to make sure that other modules that import this module has this module up-to-date ⇒ circular deps problem with CJS is now resolved.
