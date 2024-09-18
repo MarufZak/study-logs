@@ -21,6 +21,8 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [default export notes](#default-export-notes)
   - [async imports](#async-imports)
   - [Modules loading](#modules-loading)
+  - [Read-only live binding and live binding](#read-only-live-binding-and-live-binding)
+  - [differences](#differences)
 
 ## The Node.js platform
 
@@ -261,3 +263,48 @@ We can modify other modules, if they provide default export as an object, we can
 Object itself is read-only live binding, but its properties are not.
 
 Note that by importing `import * as fs from 'fs'` or `import { someFunc } from 'fs'` gives us read-only live binding.
+
+### differences
+
+ESModules run in strict mode, whereas CommonJS modules do not.
+
+We can import CJS modules in ESM, whereas we cannot import ESM in CJS. We can import CJS in ESM like this:
+
+```tsx
+// 1) default import, importing specific exports fails.
+import mod from "./mymod.cjs"; // success
+import { func } from "./mymod.cjs"; // fails
+
+// 2) we can create our require for ESM:
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
+// and use it:
+const server = require("./server.cjs");
+server2.func1();
+```
+
+In ESM we don’t have predefined properties, like module, \_\_dirname (absolute path of parent folder), or \_\_filename (absolute path of current file). But we can define them ourselves:
+
+```tsx
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+// import.meta is object with properties for metadata like current url in
+// the form of: file:///Users/123/... fileURLToPath transforms it to normal
+// absolute path -> /Users/123/...
+console.log({ __filename });
+```
+
+In ESM, `this` refers to `undefined`, whereas in CJS it’s reference to `exports`.
+
+Also we cannot import JSON in ESM, whereas we can in CJS, but we can use our `require` to do this in ESM:
+
+```tsx
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const json = require("./j.json");
+console.log({ json });
+```
