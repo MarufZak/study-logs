@@ -101,7 +101,7 @@ CommonJS is the original module system for Node.js that provides a way to organi
 
 #### Homemade module system
 
-```tsx
+```js
 import fs from "fs";
 
 function loadModule(filename, module, require) {
@@ -139,7 +139,7 @@ Synchronous nature of `require` function makes it impossible to export asynchron
 
 CommonJS module system has one disadvantage, it can’t solve the problem with circular dependencies, where different module can have different version of its counterpart depending on when it was required.
 
-```tsx
+```js
 // module a
 module.exports.loaded = false;
 const b = require("./b");
@@ -183,7 +183,7 @@ b = {
 
 It’s a practice of modifying existing objects (other modules exports) at runtime to change or extend behaviour, or apply temporary fixes. Monkey patching is considered harmful.
 
-```tsx
+```js
 require("./logger").customFunction = () => {
   console.log("monkey");
 };
@@ -201,7 +201,7 @@ With ESM absolute path must be like `file:///....` and `/...` or `//...` is not 
 
 Namespace import can be imported like:
 
-```tsx
+```js
 import * as myModule from "./myModule.js";
 ```
 
@@ -215,7 +215,7 @@ Default export can prevent tree shaking for some cases. For example, when module
 
 Suppose we want to load specific module of language based on which lang pref user has. We can use dynamic imports with `import()` operation. It returns a promise that resolves to the module object.
 
-```tsx
+```js
 const translationModule = `./strings-${lang}.js`;
 import(translationModule).then((strings) => {
   console.log(strings);
@@ -235,3 +235,29 @@ In simple terms, phase 1 is finding dots, phase 2 is connecting them, phase 3 is
 Difference from CJS is that in cjs the code before `require` is already executed, whereas no code is executed until phase 3 in ESM, this makes exports and imports to be static.
 
 In case of ESM, all modules will have up-to-date imports from other modules, because the evaluation step happens from bottom to top, to make sure that other modules that import this module has this module up-to-date ⇒ circular deps problem with CJS is now resolved.
+
+### Read-only live binding and live binding
+
+When entity is imported from other module, it is readonly (read-only live binding) and cannot be mutated directly, whereas it can be mutated in its original module (live binding). We can provide a function as an export to mutate the readon-only live binding variables.
+
+```js
+// count.js
+export let count = 0;
+export function increment() {
+  count++;
+}
+
+// index.js
+import { count, increment } from "./count.js";
+console.log(count); // 0
+increment();
+console.log(count); // 1
+
+console.log(++count); // TypeError, assignment to constant variable.
+```
+
+We can modify other modules, if they provide default export as an object, we can modify it’s properties and methods.
+
+Object itself is read-only live binding, but its properties are not.
+
+Note that by importing `import * as fs from 'fs'` or `import { someFunc } from 'fs'` gives us read-only live binding.
