@@ -395,3 +395,93 @@ try {
 ```
 
 However in Node.js we can still catch the error with `process.on("uncaughtException")` event. It’s not recommended to let the app continue after such event anyway. The process of exiting and making some cleanups is called fail-fast approach, and is recommended approach in Node.js
+
+### Observer pattern
+
+The Observer pattern defines an object (called subject) that can notify a set of observers (or listeners) when a change in its state occurs.
+
+Difference from callback pattern is that observer pattern can continuously notify multiple listeners, whereas in callback pattern, only one listener, its callback.
+
+#### EventEmitter
+
+Observer pattern is built-in feature in Node.js, and is available with `EventEmitter` class from “events” module.
+
+![Screenshot 2024-09-03 at 18.39.18.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/7c84aec7-3b30-4803-92a4-b6ccffedd598/dcf3551e-1bc1-4a74-9383-71876bbe355f/Screenshot_2024-09-03_at_18.39.18.png)
+
+Following code demonstrates usage example:
+
+```tsx
+import { EventEmitter } from "events";
+import { readFile } from "fs";
+
+function findRegex(files, regex) {
+  const emitter = new EventEmitter();
+  for (const file of files) {
+    readFile(file, { encoding: "utf-8" }, (err, data) => {
+      if (err) {
+        return emitter.emit("error", err);
+      }
+      emitter.emit("fileRead", file);
+      const match = data.match(regex);
+      if (match) {
+        match.forEach((elem) => {
+          emitter.emit("found", file, elem);
+        });
+      }
+    });
+  }
+  return emitter;
+}
+
+findRegex(["./package.json", "./index.ts"], /hello/g)
+  .on("fileRead", (file) => {
+    console.log(`File has been read: ${file.toString()}`);
+  })
+  .on("error", (error) => {
+    console.log(`Error reading a file: ${error.toString()}`);
+  })
+  .on("found", (file, elem) => {
+    console.log(
+      `Found in file ${file.toString()} in element ${elem.toString()}`
+    );
+  });
+```
+
+Again, note that we can’t throw errors in callbacks of event emitter events, and what we do in the code above is recommended approach.
+
+There is special event type `error` , and if there is no listener for such event, EventEmitter will automatically throw exception and exit from application.
+
+Event emitter is not commonly used on its own, and is used in following way, by being extended by other class:
+
+```jsx
+import { EventEmitter } from "events";
+import { readFile } from "fs";
+class FindRegex extends EventEmitter {
+  constructor(regex) {
+    super();
+    this.regex = regex;
+    this.files = [];
+  }
+  addFile(file) {
+    this.files.push(file);
+    return this;
+  }
+  find() {
+    for (const file of this.files) {
+      readFile(file, "utf8", (err, content) => {
+        if (err) {
+          return this.emit("error", err);
+        }
+        this.emit("fileread", file);
+        const match = content.match(this.regex);
+        if (match) {
+          match.forEach((elem) => this.emit("found", file, elem));
+        }
+      });
+    }
+    return this;
+  }
+}
+```
+
+Examples of modules extending from EventEmitter are `http` server, in which EventEmitter is used to produce events such as request, connection, or closed. Another example is Node.js `streams`.
