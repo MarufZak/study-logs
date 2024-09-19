@@ -31,6 +31,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
     - [Propagating errors](#propagating-errors)
     - [Observer pattern](#observer-pattern)
       - [EventEmitter](#eventemitter)
+      - [Memory leaks](#memory-leaks)
 
 ## The Node.js platform
 
@@ -489,3 +490,21 @@ class FindRegex extends EventEmitter {
 ```
 
 Examples of modules extending from EventEmitter are `http` server, in which EventEmitter is used to produce events such as request, connection, or closed. Another example is Node.js `streams`.
+
+#### Memory leaks
+
+One thing to note with observable pattern is that it can cause memory leaks.
+
+If the observables we are subscribing to have a long life span, we have to unsubscribe from them once there are not needed, otherwise it’s going to cause memory leaks.
+
+Following code demonstrates an example. Variable `thisTakesMemory` is referenced inside listener, and is not garbage collected until listener is released from emitter, or until emitter is not garbage collected itself.
+
+```jsx
+const thisTakesMemory = "A big string....";
+const listener = () => {
+  console.log(thisTakesMemory);
+};
+emitter.on("an_event", listener);
+```
+
+We can prevent this by releasing the listener with `emitter.removeListener` method. EventEmitter itself warns developer when listeners count are > 10 (by default). Or we can use `emitter.once` to release it after first invokation.
