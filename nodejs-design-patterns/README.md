@@ -32,6 +32,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
     - [Observer pattern](#observer-pattern)
       - [EventEmitter](#eventemitter)
       - [Memory leaks](#memory-leaks)
+      - [Antipatterns](#antipatterns)
 
 ## The Node.js platform
 
@@ -508,3 +509,11 @@ emitter.on("an_event", listener);
 ```
 
 We can prevent this by releasing the listener with `emitter.removeListener` method. EventEmitter itself warns developer when listeners count are > 10 (by default). Or we can use `emitter.once` to release it after first invokation.
+
+#### Antipatterns
+
+It’s generally not recommended to emit the events synchronously. In case if we do, we have to register all the listeners before we launch the task. If we register listener after the task launch, it’ll not be triggered.
+
+If we emit the events asynchronously, we can register the listeners after the task launch, because async tasks are guaranteed not to be executed in the same event loop cycle.
+
+Note that we can delegate the execution of sync task with `process.nextTick` and making it async.
