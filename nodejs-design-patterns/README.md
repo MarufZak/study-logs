@@ -25,6 +25,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [differences](#differences)
 - [Callbacks and Events](#callbacks-and-events)
   - [CPS and direct style](#cps-and-direct-style)
+  - [guaranteeing asynchronicity with deferred execution](#guaranteeing-asynchronicity-with-deferred-execution)
 
 ## The Node.js platform
 
@@ -320,3 +321,56 @@ Direct style is returning the result of a function to caller, whereas continuati
 Always choose a direct style for purely syncronous functions.
 
 Bear in mind that sync API will break Node.js concurrency model, slowing down whole app.
+
+## guaranteeing asynchronicity with deferred execution
+
+Sometimes we might need to turn sync function into async. Suppose we have this synchronous function.
+
+```jsx
+import fs from "fs";
+
+const cache = new Map();
+
+function readSync(filename) {
+  if (cache.has(filename)) {
+    return cache.get(filename);
+  }
+
+  const data = fs.readFileSync(filename);
+  cache.set(filename, data);
+  return data;
+}
+```
+
+And you want to turn it into asynchronous function. You might think of next implementation, which is incorrect, because first branch runs synchronously, and second one asynchronously. This makes our function unpredictable.
+
+```jsx
+function readAsync(filename, callback) {
+  if (cache.has(filename)) {
+    callback(cache.get(filename));
+  }
+
+  const data = fs.readFileSync(filename);
+  cache.set(filename, data);
+  callback(data);
+}
+```
+
+We can defer execution with `process.nextTick()`, which defers execution of function after currently running operation completes. It pushes the callback to the top of event queue, in front of any pending I/O event, and returns immediately. The callback will be invoked as soon as currently running operation yields control back to the event loop.
+
+```jsx
+function readAsync(filename, callback) {
+  if (cache.has(filename)) {
+    process.nextTick(() => {
+      callback(cache.get(filename));
+    });
+    return;
+  }
+
+  const data = fs.readFileSync(filename);
+  cache.set(filename, data);
+  callback(data);
+}
+```
+
+There are other ways also to defer the execution of some code like `setImmediate` or `setTimeout(cb, 0)`, and difference between them all is having different running phases in event loop. Note that `process.nextTick()` callback is **microtask**.
