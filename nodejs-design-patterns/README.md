@@ -17,7 +17,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [CommonJS](#commonjs)
     - [Homemade module system](#homemade-module-system)
     - [Monkey patching](#monkey-patching)
-- [ES Modules](#esmodules)
+- [ESModules](#esmodules)
   - [default export notes](#default-export-notes)
   - [async imports](#async-imports)
   - [Modules loading](#modules-loading)
@@ -26,6 +26,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
 - [Callbacks and Events](#callbacks-and-events)
   - [CPS and direct style](#cps-and-direct-style)
   - [guaranteeing asynchronicity with deferred execution](#guaranteeing-asynchronicity-with-deferred-execution)
+  - [Propagating errors](#propagating-errors)
 
 ## The Node.js platform
 
@@ -194,7 +195,7 @@ require("./logger").customFunction = () => {
 };
 ```
 
-## ESModules
+### ESModules
 
 ESM were introduced as ECMAScript 2015 spec, with goal to give JS official module system across different environments. It has support for cyclic dependencies, and load modules async. ES modules are static, and cannot be imported conditionally, only at top of the file.
 
@@ -210,13 +211,13 @@ Namespace import can be imported like:
 import * as myModule from "./myModule.js";
 ```
 
-### default export notes
+#### default export notes
 
 When default exporting, the name of variable or function is ignored, so we can use any name when importing it.
 
 Default export can prevent tree shaking for some cases. For example, when module exports object with properties and methods, even if neither of them were used, most module bundlers think it’s used.
 
-### async imports
+#### async imports
 
 Suppose we want to load specific module of language based on which lang pref user has. We can use dynamic imports with `import()` operation. It returns a promise that resolves to the module object.
 
@@ -227,7 +228,7 @@ import(translationModule).then((strings) => {
 });
 ```
 
-### Modules loading
+#### Modules loading
 
 The goal of interpreter is to build dependency graph of the modules. It helps interpreter to determine the order in which modules should be loaded. Entry point is passed to interpreter as an entry point, and it recursively starts to explore and evaluate the code.
 
@@ -241,7 +242,7 @@ Difference from CJS is that in cjs the code before `require` is already executed
 
 In case of ESM, all modules will have up-to-date imports from other modules, because the evaluation step happens from bottom to top, to make sure that other modules that import this module has this module up-to-date ⇒ circular deps problem with CJS is now resolved.
 
-### Read-only live binding and live binding
+#### Read-only live binding and live binding
 
 When entity is imported from other module, it is readonly (read-only live binding) and cannot be mutated directly, whereas it can be mutated in its original module (live binding). We can provide a function as an export to mutate the readon-only live binding variables.
 
@@ -322,7 +323,7 @@ Always choose a direct style for purely syncronous functions.
 
 Bear in mind that sync API will break Node.js concurrency model, slowing down whole app.
 
-## guaranteeing asynchronicity with deferred execution
+### guaranteeing asynchronicity with deferred execution
 
 Sometimes we might need to turn sync function into async. Suppose we have this synchronous function.
 
@@ -374,3 +375,23 @@ function readAsync(filename, callback) {
 ```
 
 There are other ways also to defer the execution of some code like `setImmediate` or `setTimeout(cb, 0)`, and difference between them all is having different running phases in event loop. Note that `process.nextTick()` callback is **microtask**.
+
+### Propagating errors
+
+In synchronous direct style functions, errors are propagated with `throw` keyword, in which errors are propagated in the callstack. Whereas in continuation-passing style (CPS), errors are propagated by passing error to next callback in the chain.
+
+Sometimes we may have CPS async function, and inside callback the error might be thrown. In this case, even if we surround the entire function with `try catch` block, it will not catch our error, because the stack in which the block operates is different from the one in which our callback is invoked. So, the error will go straight to the event loop, where it is caugth and thrown to the console.
+
+```tsx
+// example on how error is not caught inside catch block and propagated
+// to the event loop, crashing the whole app.
+try {
+  wait(1000).then(() => {
+    throw new Error("");
+  });
+} catch (error) {
+  console.log("Error!");
+}
+```
+
+However in Node.js we can still catch the error with `process.on("uncaughtException")` event. It’s not recommended to let the app continue after such event anyway. The process of exiting and making some cleanups is called fail-fast approach, and is recommended approach in Node.js
