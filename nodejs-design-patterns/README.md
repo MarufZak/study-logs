@@ -23,6 +23,8 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Modules loading](#modules-loading)
   - [Read-only live binding and live binding](#read-only-live-binding-and-live-binding)
   - [differences](#differences)
+- [Callbacks and Events](#callbacks-and-events)
+  - [CPS and direct style](#cps-and-direct-style)
 
 ## The Node.js platform
 
@@ -308,3 +310,13 @@ const require = createRequire(import.meta.url);
 const json = require("./j.json");
 console.log({ json });
 ```
+
+## Callbacks and Events
+
+### CPS and direct style
+
+Direct style is returning the result of a function to caller, whereas continuation-passing style (CPS) is accepting the callback to invoke when async operation completes.
+
+Always choose a direct style for purely syncronous functions.
+
+Bear in mind that sync API will break Node.js concurrency model, slowing down whole app.
