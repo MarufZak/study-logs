@@ -410,7 +410,7 @@ Difference from callback pattern is that observer pattern can continuously notif
 
 Observer pattern is built-in feature in Node.js, and is available with `EventEmitter` class from “events” module.
 
-![Screenshot 2024-09-03 at 18.39.18.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/7c84aec7-3b30-4803-92a4-b6ccffedd598/dcf3551e-1bc1-4a74-9383-71876bbe355f/Screenshot_2024-09-03_at_18.39.18.png)
+![Event emitter](./assets/event-emitter.png)
 
 Following code demonstrates usage example:
 
