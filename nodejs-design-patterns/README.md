@@ -34,6 +34,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
     - [Combining](#combining)
     - [Exercises](#exercises)
 - [Asynchronous Control Flow Patterns with Callbacks](#asynchronous-control-flow-patterns-with-callbacks)
+  - [The Sequential Iterator pattern](#the-sequential-iterator-pattern)
 
 ## The Node.js platform
 
@@ -631,3 +632,50 @@ hell.**
 The most notable negatives of callback hell besides the unclean code, is perfomance bottlenecks and memory leaks. Closures come with a little price in terms of perfomance and memory consumption, and they can create memory leaks, because any context referenced by an active closure will not be garbage collected.
 
 We can refactor callback hell with simple techniques, like early return, and separating common code into their own functions.
+
+### The Sequential Iterator pattern
+
+We can map the values of an array asynchronously. We can pass the result of operation to the next function, making asynchronous version of reduce function. We can even iterate over an infinite number of elements in the array of tasks. But note here that all the tasks must be asynchronous, otherwise we might hit the callstack exceeded error.
+
+This pattern is useful when order of execution of asynchronous operations matters.
+
+![Sequential iterator pattern](./assets/sequential-iterator-pattern.png)
+
+Below is my implementation of sequential iterator pattern.
+
+```jsx
+function iterator(collection, itemCb, cb) {
+  function iterate(index) {
+    if (index === collection.length) {
+      return cb();
+    }
+
+    collection[index](() => {
+      itemCb(index);
+      iterate(index + 1);
+    });
+  }
+
+  iterate(0);
+}
+
+function wait(ms, cb) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+      cb();
+    }, ms);
+  });
+}
+
+iterator(
+  [
+    (cb) => wait(100, cb),
+    (cb) => wait(100, cb),
+    (cb) => wait(100, cb),
+    (cb) => wait(100, cb),
+  ],
+  console.log,
+  console.log
+);
+```
