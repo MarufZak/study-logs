@@ -36,6 +36,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
 - [Asynchronous Control Flow Patterns with Callbacks](#asynchronous-control-flow-patterns-with-callbacks)
   - [The Sequential Iterator pattern](#the-sequential-iterator-pattern)
   - [Parallel execution](#parallel-execution)
+  - [Fix race conditions with concurrent tasks](#fix-race-conditions-with-concurrent-tasks)
 
 ## The Node.js platform
 
@@ -725,7 +726,7 @@ iterator(
 );
 ```
 
-## Fix race conditions with concurrent tasks
+### Fix race conditions with concurrent tasks
 
 In multithreaded languages, there are complex techniques to prevent race conditions, like mutexes and semaphores. In Node.js, because it’s single threaded, it’s way easier. We can just create a set with running inputs and check for the input when executing.
 
