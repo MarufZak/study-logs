@@ -742,3 +742,76 @@ function spider(url, nesting, cb) {
   // ...
 }
 ```
+
+### Limited parallel execution
+
+Spawning parallel tasks without control can often lead to excessive load. In this case, server might be exploited with DoS (denial of service) attack, in which it just refuses connections and becomes unresponsive.
+
+We can use techniques to limit the number of executing tasks.
+
+![Limited parallel execution](./assets/limited-parallel-execution.png)
+
+```jsx
+const tasks = [];
+const concurrency = 2;
+let running = 0;
+let completed = 0;
+let index = 0;
+
+function next() {
+  while (running < concurrency && index < tasks.length) {
+    const task = tasks[index++];
+    task(() => {
+      if (++completed === tasks.length) {
+        return;
+      }
+      running--;
+      next();
+    });
+
+    running++;
+  }
+}
+
+next();
+```
+
+We can take this to another level and separate it to its own class, that handles limiting execution of concurrent tasks.
+
+```jsx
+import { EventEmitter } from "events";
+
+export class TaskQueue extends EventEmitter {
+  constructor(concurrency) {
+    super();
+    this.concurrency = concurrency;
+    this.running = 0;
+    this.queue = [];
+  }
+
+  pushTask(task) {
+    this.queue.push(task);
+    process.nextTick(this.next.bind(this));
+
+    return this;
+  }
+
+  next() {
+    if (this.running === 0 && this.queue.length === 0) {
+      return this.emit("empty");
+    }
+
+    while (this.running < this.concurrency && this.queue.length) {
+      const task = this.queue.shift();
+      task((err) => {
+        if (err) {
+          this.emit("error", err);
+        }
+        this.running--;
+        process.nextTick(this.next.bind(this));
+      });
+      this.running++;
+    }
+  }
+}
+```
