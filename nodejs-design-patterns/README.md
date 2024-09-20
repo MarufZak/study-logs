@@ -33,6 +33,8 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
       - [EventEmitter](#eventemitter)
       - [Memory leaks](#memory-leaks)
       - [Antipatterns](#antipatterns)
+      - [Combining](#combining)
+      - [Exercises](#exercises)
 
 ## The Node.js platform
 
@@ -517,3 +519,106 @@ It’s generally not recommended to emit the events synchronously. In case if we
 If we emit the events asynchronously, we can register the listeners after the task launch, because async tasks are guaranteed not to be executed in the same event loop cycle.
 
 Note that we can delegate the execution of sync task with `process.nextTick` and making it async.
+
+### Combining
+
+There is also a pattern of combining callbacks with events, where callback is passed as argument and used for general use, whereas event emitter is returned from the function and is used for advanced use cases.
+
+For example in `glob` package in nodejs, we can pass a callback, which will have error as first arg, and matched files as second arg. The function returns event emitter, which is used for advanced scenarios, for example attaching a listener for each file match.
+
+### Exercises
+
+- Write a function that accepts a number and a callback as the arguments. The function will return an `EventEmitter` that emits an event called tick every 50 milliseconds until the number of milliseconds is passed from the invocation of the function. The function will also call the callback when the number of milliseconds has passed, providing, as the result, the total count of tick events emitted. recursively.
+
+  ```jsx
+  import EventEmitter from "events";
+
+  const exercise = (max, cb) => {
+    const eventEmitter = new EventEmitter();
+
+    let msPassed = 0;
+    const intervalId = setInterval(() => {
+      if (msPassed >= max) {
+        clearInterval(intervalId);
+        cb(msPassed / 50);
+        return;
+      }
+
+      eventEmitter.emit("tick");
+      msPassed += 50;
+    }, 50);
+
+    return eventEmitter;
+  };
+
+  const emitter = exercise(1000, (count) => {
+    console.log(count);
+  });
+
+  emitter.on("tick", () => {
+    console.log("tick");
+  });
+  ```
+
+- Modify the function created in exercise 3.2 so that it emits a tick event immediately after the function is invoked.
+
+  ```tsx
+  // add this code after new EventEmitter();
+  process.nextTick(() => {
+    eventEmitter.emit("tick");
+  });
+
+  // this is because if we just use eventEmitter.emit("tick") after
+  // declaring eventEmitter variable, at that time there are no listeners
+  // attached to event emitter, so callback is not executed.
+  ```
+
+- Modify the function created in exercise 3.3 so that it produces an error if the timestamp at the moment of a tick (including the initial one that we added as part of exercise 3.3) is divisible by 5. Propagate the error using both the callback and the event emitter. Hint: use Date.now() to get the timestamp and the remainder (%) operator to check whether the timestamp is divisible by 5.
+
+  ```tsx
+  import EventEmitter from "events";
+
+  const exercise = (max, cb) => {
+    const eventEmitter = new EventEmitter();
+    let error;
+
+    eventEmitter.on("tick", () => {
+      const date = Date.now();
+      if (date % 5 === 0) {
+        error = date;
+      }
+    });
+
+    eventEmitter.emit("tick");
+
+    let msPassed = 0;
+    const intervalId = setInterval(() => {
+      if (error) {
+        eventEmitter.emit("error", error);
+        cb(error, null);
+        clearInterval(intervalId);
+        return;
+      }
+      if (msPassed >= max) {
+        clearInterval(intervalId);
+        cb(null, msPassed / 50);
+        return;
+      }
+
+      eventEmitter.emit("tick");
+      msPassed += 50;
+    }, 50);
+
+    return eventEmitter;
+  };
+
+  const emitter = exercise(1000, (err, count) => {
+    if (err) {
+      return console.error(1, err);
+    }
+    console.log(count);
+  });
+  emitter.on("error", (error) => {
+    console.error(2, error);
+  });
+  ```
