@@ -35,6 +35,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
     - [Exercises](#exercises)
 - [Asynchronous Control Flow Patterns with Callbacks](#asynchronous-control-flow-patterns-with-callbacks)
   - [The Sequential Iterator pattern](#the-sequential-iterator-pattern)
+  - [Parallel execution](#parallel-execution)
 
 ## The Node.js platform
 
@@ -678,4 +679,65 @@ iterator(
   console.log,
   console.log
 );
+```
+
+### Parallel execution
+
+In fact word “parallel” is improper here, because, knowing the underlying mechanism of node.js with event loop, we know that these tasks do not run in different threads. The proper way is to say this kind of flow is concurrent, but word parallel is used for simplicity.
+
+![Parallel execution pattern](./assets/parallel-execution-pattern.png)
+
+In Node.js, synchronous tasks can’t run in parallel, unless the execution of them is not interleaved with setTimeout or similar async APIs.
+
+**The Unlimited Parallel Execution pattern.** Run a set of asynchronous tasks in parallel by launching them all at once, and then wait for all of them to complete by counting the number of times their callbacks are invoked.
+
+```jsx
+function iterator(tasks, finish) {
+  let completed = 0;
+  tasks.forEach((task) => {
+    task(() => {
+      completed++;
+      if (completed === tasks.length) {
+        console.log(completed, tasks);
+        finish();
+      }
+    });
+  });
+}
+
+function wait(ms, cb) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+      cb();
+    }, ms);
+  });
+}
+
+iterator(
+  [
+    (cb) => wait(100, cb),
+    (cb) => wait(100, cb),
+    (cb) => wait(100, cb),
+    (cb) => wait(100, cb),
+  ],
+  () => console.log("Finished")
+);
+```
+
+## Fix race conditions with concurrent tasks
+
+In multithreaded languages, there are complex techniques to prevent race conditions, like mutexes and semaphores. In Node.js, because it’s single threaded, it’s way easier. We can just create a set with running inputs and check for the input when executing.
+
+![Race conditions with concurrent tasks](./assets/race-conditions-with-concurrent-tasks.png)
+
+```jsx
+const spidering = new Set();
+function spider(url, nesting, cb) {
+  if (spidering.has(url)) {
+    return process.nextTick(cb);
+  }
+  spidering.add(url);
+  // ...
+}
 ```
