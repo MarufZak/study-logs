@@ -6,35 +6,34 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
 
 ## Table of contents
 
-- [Node.js design patterns](#nodejs-design-patterns)
-  - [Table of contents](#table-of-contents)
-  - [The Node.js platform](#the-nodejs-platform)
-    - [I/O (Input / Output)](#io-input--output)
-    - [Event demultiplexing](#event-demultiplexing)
-    - [The reactor pattern](#the-reactor-pattern)
-    - [Libuv](#libuv)
-    - [Recipe of Node.js](#recipe-of-nodejs)
-    - [Native code](#native-code)
-  - [Module system](#module-system)
-    - [CommonJS](#commonjs)
-      - [Homemade module system](#homemade-module-system)
-      - [Monkey patching](#monkey-patching)
-    - [ESModules](#esmodules)
-      - [default export notes](#default-export-notes)
-      - [async imports](#async-imports)
-      - [Modules loading](#modules-loading)
-      - [Read-only live binding and live binding](#read-only-live-binding-and-live-binding)
-    - [differences](#differences)
-  - [Callbacks and Events](#callbacks-and-events)
-    - [CPS and direct style](#cps-and-direct-style)
-    - [guaranteeing asynchronicity with deferred execution](#guaranteeing-asynchronicity-with-deferred-execution)
-    - [Propagating errors](#propagating-errors)
-    - [Observer pattern](#observer-pattern)
-      - [EventEmitter](#eventemitter)
-      - [Memory leaks](#memory-leaks)
-      - [Antipatterns](#antipatterns)
-      - [Combining](#combining)
-      - [Exercises](#exercises)
+- [The Node.js platform](#the-nodejs-platform)
+  - [I/O (Input / Output)](#io-input--output)
+  - [Event demultiplexing](#event-demultiplexing)
+  - [The reactor pattern](#the-reactor-pattern)
+  - [Libuv](#libuv)
+  - [Recipe of Node.js](#recipe-of-nodejs)
+  - [Native code](#native-code)
+- [Module system](#module-system)
+  - [CommonJS](#commonjs)
+    - [Homemade module system](#homemade-module-system)
+    - [Monkey patching](#monkey-patching)
+  - [ESModules](#esmodules)
+    - [default export notes](#default-export-notes)
+    - [async imports](#async-imports)
+    - [Modules loading](#modules-loading)
+    - [Read-only live binding and live binding](#read-only-live-binding-and-live-binding)
+  - [differences](#differences)
+- [Callbacks and Events](#callbacks-and-events)
+  - [CPS and direct style](#cps-and-direct-style)
+  - [guaranteeing asynchronicity with deferred execution](#guaranteeing-asynchronicity-with-deferred-execution)
+  - [Propagating errors](#propagating-errors)
+  - [Observer pattern](#observer-pattern)
+    - [EventEmitter](#eventemitter)
+    - [Memory leaks](#memory-leaks)
+    - [Antipatterns](#antipatterns)
+    - [Combining](#combining)
+    - [Exercises](#exercises)
+- [Asynchronous Control Flow Patterns with Callbacks](#asynchronous-control-flow-patterns-with-callbacks)
 
 ## The Node.js platform
 
@@ -622,3 +621,13 @@ For example in `glob` package in nodejs, we can pass a callback, which will have
     console.error(2, error);
   });
   ```
+
+## Asynchronous Control Flow Patterns with Callbacks
+
+The situation where the abundance of closures and in-place callback definitions
+transforms the code into an unreadable and unmanageable blob is known as **callback
+hell.**
+
+The most notable negatives of callback hell besides the unclean code, is perfomance bottlenecks and memory leaks. Closures come with a little price in terms of perfomance and memory consumption, and they can create memory leaks, because any context referenced by an active closure will not be garbage collected.
+
+We can refactor callback hell with simple techniques, like early return, and separating common code into their own functions.
