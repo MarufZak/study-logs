@@ -37,6 +37,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [The Sequential Iterator pattern](#the-sequential-iterator-pattern)
   - [Parallel execution](#parallel-execution)
   - [Fix race conditions with concurrent tasks](#fix-race-conditions-with-concurrent-tasks)
+  - [Limited parallel execution](#limited-parallel-execution)
 
 ## The Node.js platform
 
