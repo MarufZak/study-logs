@@ -39,6 +39,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Fix race conditions with concurrent tasks](#fix-race-conditions-with-concurrent-tasks)
   - [Limited parallel execution](#limited-parallel-execution)
   - [Exercises](#async-control-flow-patterns-with-callbacks-exercises)
+- [Asynchronous Control Flow Patterns with Promises and Async/Await](#asynchronous-control-flow-patterns-with-promises-and-asyncawait)
 
 ## The Node.js platform
 
@@ -913,3 +914,27 @@ export class TaskQueue extends EventEmitter {
     console.log({ content });
   });
   ```
+
+## Asynchronous Control Flow Patterns with Promises and Async/Await
+
+Promises are part of ES6, which offer alternative to CPS for propagating async result.
+
+Promise is an object which represent eventual result (or error) of an async operation. Promise is `pending` when async operation is not complete, `fulfilled` when operation successfully completes, and `rejected` when operation terminates with error. Once it’s fulfilled or rejected, it’s considered `settled`.
+
+To receive the fullfillment value or rejection reason, following syntax is used:
+
+```jsx
+promise.then(onFullfilled, onRejected);
+// onFulfilled is callback with fulfillment value
+// onRejected is callback with rejected reason.
+// Both are optional
+
+// usage example. asyncOperation returns a promise
+asyncOperation().then((result, reason) => {
+  if (reason) {
+    console.error(reason);
+  } else {
+    console.log(result);
+  }
+});
+```
