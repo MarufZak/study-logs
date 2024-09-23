@@ -38,6 +38,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Parallel execution](#parallel-execution)
   - [Fix race conditions with concurrent tasks](#fix-race-conditions-with-concurrent-tasks)
   - [Limited parallel execution](#limited-parallel-execution)
+  - [Exercises](#async-control-flow-patterns-with-callbacks-exercises)
 
 ## The Node.js platform
 
@@ -816,3 +817,99 @@ export class TaskQueue extends EventEmitter {
   }
 }
 ```
+
+#### Async control flow patterns with callbacks exercises
+
+- 4.1 File concatenation: Write the implementation of `concatFiles()`, a callback-style function that takes two or more paths to text files in the filesystem and a destination file.
+
+  ```jsx
+  import fs from "fs";
+
+  function concatFiles(sources, destination, callback) {
+    let data = "";
+
+    function iterate(index) {
+      if (index === sources.length) {
+        fs.writeFile(destination, data, callback);
+        return;
+      }
+
+      fs.readFile(sources[index], (err, fileData) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+
+        data += fileData.toString("utf-8");
+        iterate(index + 1);
+      });
+    }
+    iterate(0);
+  }
+
+  concatFiles(["./index1.txt", "./index2.txt"], "./text.txt", () => {
+    console.log("done");
+  });
+  ```
+
+- 4.2 List files recursively: Write listNestedFiles(), a callback-style function that takes, as the input, the path to a directory in the local filesystem and that asynchronously iterates over all the subdirectories to eventually return a list of all the files discovered.
+
+  ```jsx
+  import fs from "fs";
+
+  // we could also use limited parallel execution pattern.
+
+  function listNestedFiles(dir, cb) {
+    fs.readdir(dir, { encoding: "utf-8" }, (err, files) => {
+      if (err) {
+        return cb(err, null);
+      }
+
+      const data = [];
+      let pending = files.length;
+      for (const file of files) {
+        const path = dir + "/" + file;
+        fs.stat(path, (err, stats) => {
+          if (err) {
+            return cb(err, data);
+          }
+
+          if (stats.isDirectory()) {
+            listNestedFiles(path, (err, nestedData) => {
+              if (err) {
+                return cb(err, data);
+              }
+
+              pending--;
+              data.push(...nestedData);
+              if (pending === 0) {
+                return cb(null, data);
+              }
+            });
+          } else {
+            fs.readFile(path, (err, fileContent) => {
+              if (err) {
+                return cb(err, data);
+              }
+              pending--;
+              data.push(fileContent.toString());
+
+              if (pending === 0) {
+                return cb(null, data);
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+
+  listNestedFiles("dir", (err, content) => {
+    if (err) {
+      console.error({ err });
+      return;
+    }
+
+    console.log({ content });
+  });
+  ```
