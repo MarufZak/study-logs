@@ -40,6 +40,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Limited parallel execution](#limited-parallel-execution)
   - [Exercises](#async-control-flow-patterns-with-callbacks-exercises)
 - [Asynchronous Control Flow Patterns with Promises and Async/Await](#asynchronous-control-flow-patterns-with-promises-and-asyncawait)
+  - [Promises/A+ and thennables](#promisesa-and-thennables)
 
 ## The Node.js platform
 
@@ -951,7 +952,7 @@ Important notes:
 
    ![Promise then behavior](./assets/promise-then-behavior.png)
 
-## **Promises/A+ and thennables**
+### Promises/A+ and thennables
 
 Historically, there were many implementations of promises, and they varied such that they were not compatible between each other. Because of this **Promises/A+** spec was developed to make them working between each other. Native promises are also built on top of it.
 
