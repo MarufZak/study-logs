@@ -938,3 +938,15 @@ asyncOperation().then((result, reason) => {
   }
 });
 ```
+
+Important notes:
+
+1. `then()` method **_synchronously returns another Promise._**
+2. If `onFullfilled` or `onRejected` methods returns a value, `then()` will fulfill or reject respectively with that value.
+3. If `onFullfilled`method returns a promise that fulfills, `then()` will fulfill with fulfillment value of that promise.
+4. if `onRejected` method returns a promise that rejects, `then()` will reject will be rejected with reason of that promise.
+5. `onFulfilled()` and `onRejected()`callbacks are _guaranteed_ to be invoked asynchronously and at most once, even if we resolve the Promise synchronously with a value. This helps us prevent Zalgo problem, where the behavior of function is unpredictable.
+6. If exception is thrown in `onFulfilled()` or `onRejected()` handlers, the promise returned by `then()` is rejected with exception reason. In comparison, in CPS, the thrown errors must have been carried with care, but in this case, the exception is propagated across the chain.
+7. `then()` methods synchronously return another promises, whereas the callbacks provided are executed asynchronously.
+
+   ![Promise then behavior](./assets/promise-then-behavior.png)
