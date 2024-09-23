@@ -950,3 +950,11 @@ Important notes:
 7. `then()` methods synchronously return another promises, whereas the callbacks provided are executed asynchronously.
 
    ![Promise then behavior](./assets/promise-then-behavior.png)
+
+## **Promises/A+ and thennables**
+
+Historically, there were many implementations of promises, and they varied such that they were not compatible between each other. Because of this **Promises/A+** spec was developed to make them working between each other. Native promises are also built on top of it.
+
+According to Promises/A+ spec, any object with `then()` method is considered Promise-like object **(thennable)**.
+
+> If it looks like a duck, swims like a duck, and quacks like a duck, then it probably is a duck - **Duck typing,** technique of recognizing (or typing) objects based on their external behavior, rather than their actual type.
