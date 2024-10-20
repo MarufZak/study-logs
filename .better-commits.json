@@ -22,6 +22,10 @@
         "label": "nodejs-design-patterns"
       },
       {
+        "value": "understanding-linux-kernel",
+        "label": "understanding-linux-kernel"
+      },
+      {
         "label": "none",
         "value": ""
       }
