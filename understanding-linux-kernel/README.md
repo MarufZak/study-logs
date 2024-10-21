@@ -7,6 +7,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
 ## Table of Contents
 
 - [Introduction](#introduction)
+- [Basic OS concepts](#basic-os-concepts)
 
 ## Introduction
 
@@ -32,3 +33,12 @@ Unix-like kernels similarities:
 8. Streams I/O, subsystem used for writing device drivers, network protocols and others. Linux has no analog for it.
 
 Linux is cost-free, has all components customizable, meaning we can choose which features not to use. Runs on low-end, inexpensive hardware. Efficient and powerful, because it utilizes all hardware components at max level. Have low failure rate and system **maintenance**. It’s possible to fit kernel image with few system programs in 1.44 MB floppy disk (only linux is known to do this). Highly compatible with other OSs. Linux lets you mount filesystems to other OSs’ filesystems, linux can operate with network layers like ethernet, fiber, bluetooth and others. With corresponding libs, it can execute some apps written for other OSs on 80x86 platform. And finally, Linux is well supported.
+
+## Basic OS concepts
+
+Each computer includes a basic set of programs called the _operating system._ And the most important program among them is kernel. It’s loaded into RAM when system boots and contain many critical procedures needed for system to operate. The operating system fulfills two main objectives:
+
+1. Interact with the hardware components to service all low-level programmable elements included in the hardware.
+2. Provide execution environment for the user programs.
+
+Unix-like OSs hide the hardware details from the user, but those can be received by requesting it from the kernel, which operates with hardware device. Hardware has 2 execution modes for CPU, and Unix calls these as User mode (non-privileged) and Kernel mode (privileged).
