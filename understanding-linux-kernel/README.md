@@ -8,6 +8,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
 
 - [Introduction](#introduction)
 - [Basic OS concepts](#basic-os-concepts)
+- [Overview of filesystem](#overview-of-filesystem)
 
 ## Introduction
 
@@ -55,3 +56,7 @@ Unix-like OSs hide the hardware details from the user, but those can be received
 Microkernel approach use RAM better, because it loads only the essentials parts (modules) of what’s needed into the RAM, whereas monolithic approach keeps the RAM unnecessary big.
 
 To achieve what microkernels offer, Linux introduced concept of modules, which are files that can be linked and unlinked at runtime. Kernel modules are loadable pieces of code (like device drivers or file systems) that can be dynamically added or removed at runtime, allowing the kernel to load only necessary components
+
+## Overview of filesystem
+
+In Unix, the file is a container structured as a sequence of bytes. It can be binary file, or simple file (both are referred as regular file). Maximum characters for name is 255. The filesystem is organized as an inversed tree data structure, where the topmost node is root node.
