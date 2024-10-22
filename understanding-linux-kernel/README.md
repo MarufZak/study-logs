@@ -9,6 +9,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
 - [Introduction](#introduction)
 - [Basic OS concepts](#basic-os-concepts)
 - [Overview of filesystem](#overview-of-filesystem)
+  - [Hard and soft links](#hard-and-soft-links)
 
 ## Introduction
 
@@ -60,3 +61,17 @@ To achieve what microkernels offer, Linux introduced concept of modules, which a
 ## Overview of filesystem
 
 In Unix, the file is a container structured as a sequence of bytes. It can be binary file, or simple file (both are referred as regular file). Maximum characters for name is 255. The filesystem is organized as an inversed tree data structure, where the topmost node is root node.
+
+### Hard and soft links
+
+The filename included in a directory is called a hard link, or just a link. The same filename can have several links, but all of them point to a single file. All hard links have their own `INode`, with all metadata such as user permissions (but not filename) inside. We can create hard links with command `ln p1 p2`. But hard links have some disadvantages: it’s impossible to create hard links for directories, and we can only create hard links among files included in the same filesystem (this might be trivial because in Unix several filesystems might be included, without the user knowing it). To solve this, soft links were introduced.
+
+Soft link is a short file that contain an arbitrary pathname of another file. Pathname may refer to any file, even to nonexistent one. To create soft link, we use `ln -s p1 p2`. When it’s executed, directory path of `p1` is taken, put into the contents of the `p2` with its name. Soft links have their `INode`, with metadata about the link itself.
+
+**INode** is a data structure that contains all information for filesystem to handle a file, which includes (according to POSIX): file type, number of hard links associated with this file, file length in bytes, device id, INode number as id of file in filesystem, UID of file owner, user group ID, file change, last access and other timestamps, and access rights (owner, group, others).
+
+File handling. Process in User Mode cannot directly interract with hardware devices (memory in this case), so we need `syscalls` to interract with it (which operate in kernel mode). For example, `open` syscall is used to open a file. It returns a file descriptor (unique ID of open resouce that’s managed by OS to track and manage opened files), and creates file object, that contains set of flags, how file is opened, file poiner (current position in file where read/write happens) and etc. The contents of file can be accessed sequentially or randomly.
+
+Files are deleted when the links count in the `INode` reaches 0.
+
+In short, soft links are references, while hard links are alternative access points to the same data.
