@@ -88,3 +88,12 @@ When kernel stops execution of a process, it saves the info about it in **proces
 **Reentrant kernels** means several processes may be executing in kernel mode at the same time. Ways to provide reentrance are to use reentrant functions (which modify only local variables, not global), or using locking mechanisms to ensure that only one process can execute a non-reentrant function at a time.
 
 **kernel control path** is sequence of instructions kernel executes to handle syscall, exception, or interrupt. When running, they can be interleaved by CPU, when CPU detects an exception, a hardware interrupt occurs (which may happen at any time), or when syscall request (for ex getting data from memory) that cannot be handled immediately, another process is created with process scheduler, and the first kernel control path is left unfinished.
+
+Each process runs in its own address space with private stack, data, and code areas, and this process running in kernel mode uses kernel set of these. Sometimes the memory (not data) may be shared among processes, requested by other processes, or done by kernel.
+
+Synchronization problems occur when two or more processes try to access the same data structure at the same time. Solutions are:
+
+1. Interrupt disabling, not good solution, because it freezes all hardware interrupts.
+2. Disable kernel preempting before entering critical region and enabling after leaving it, meaning another process cannot be switched to while some piece of code is executing. Good for uniprocessors, but not for multiprocessors, because disabling happens locally in one processor, not the whole system.
+3. Semaphore. Each data structure has a semaphore, containing of integer variable (open or closed), a list of waiting processes, and atomic methods `down` and `up`. This is good solution, but sometimes it may fail, because of the pushing to the list of awaited processes and suspending it. While these operations happen, other kernel control path may already released the semaphore.
+4. Spin locks. Same as semaphores, but without awaiting processes list. Instead all processes continuously iterate and try to access resource inside the loop. It is bad approach for uniprocessors, because there is one CPU
