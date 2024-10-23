@@ -10,6 +10,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
 - [Basic OS concepts](#basic-os-concepts)
 - [Overview of filesystem](#overview-of-filesystem)
   - [Hard and soft links](#hard-and-soft-links)
+- [Overview of Unix kernels](#an-overview-of-unix-kernels)
 
 ## Introduction
 
@@ -75,3 +76,11 @@ File handling. Process in User Mode cannot directly interract with hardware devi
 Files are deleted when the links count in the `INode` reaches 0.
 
 In short, soft links are references, while hard links are alternative access points to the same data.
+
+## An overview of Unix kernels
+
+Unix kernel provides environment for processes to execute, and it does that by providing corresponding interfaces, which are used by applications, and therefore applications don’t use hardware directly.
+
+The kernel itself is not a process, but process manager. Besides user processes, Unix systems include privileged processes, called **kernel threads.** They run in kernel address space, do not interact with users, usually created during startup and terminated when shutting down.
+
+When kernel stops execution of a process, it saves the info about it in **process descriptior,** including program counter (PC), stack pointer (SP), and other registers. It can then continue executing this process with info in process descriptor.
