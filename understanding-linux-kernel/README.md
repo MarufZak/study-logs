@@ -97,3 +97,13 @@ Synchronization problems occur when two or more processes try to access the same
 2. Disable kernel preempting before entering critical region and enabling after leaving it, meaning another process cannot be switched to while some piece of code is executing. Good for uniprocessors, but not for multiprocessors, because disabling happens locally in one processor, not the whole system.
 3. Semaphore. Each data structure has a semaphore, containing of integer variable (open or closed), a list of waiting processes, and atomic methods `down` and `up`. This is good solution, but sometimes it may fail, because of the pushing to the list of awaited processes and suspending it. While these operations happen, other kernel control path may already released the semaphore.
 4. Spin locks. Same as semaphores, but without awaiting processes list. Instead all processes continuously iterate and try to access resource inside the loop. It is bad approach for uniprocessors, because there is one CPU
+
+**signals** are a way to notify the processes about system events. Processes can signal, or ignore. If ignored, default handlers for that signal is invoked, which might be terminate process, suspend it, ignore it, and others.
+
+There are 2 types of system events: asynchronous notifications - invoked by user (for example SIGINT), and synchronous notifications - triggered by kernel (for example SIGSEGV, which means invalid memory address access).
+
+Process becomes **zombie** if it finishes running and its parent doesn’t acknowledge it, and if parent is terminated without acknowledging it, it becomes child process of init process, which acknowledges all its children.
+
+A **process group** is collection of processes with a leader (has same pid as process, which created a group), which allows shell to manage them as a single unit (job).
+
+A **login session** is high level group of processes, which is created when user logs in (with ssh for example). Many groups can be children of this group that are started from the same terminal. When user logs out, all children processes terminate.
