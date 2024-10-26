@@ -11,6 +11,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
 - [Overview of filesystem](#overview-of-filesystem)
   - [Hard and soft links](#hard-and-soft-links)
 - [Overview of Unix kernels](#an-overview-of-unix-kernels)
+- [Interrupts](#interrupts)
 
 ## Introduction
 
@@ -107,3 +108,9 @@ Process becomes **zombie** if it finishes running and its parent doesn’t ackno
 A **process group** is collection of processes with a leader (has same pid as process, which created a group), which allows shell to manage them as a single unit (job).
 
 A **login session** is high level group of processes, which is created when user logs in (with ssh for example). Many groups can be children of this group that are started from the same terminal. When user logs out, all children processes terminate.
+
+## Interrupts
+
+Interrupt is signal to divert the processor to code outside normal flow. The difference between interrupt and context switch is that interrupt doesn’t operate in separate process, it’s kernel control path that runs in expense of the same process that was running when kernel was interrupted. The interrupt handler is lighter than process.
+
+All interrupt requests (IRQs) issued from I/O device controllers give rise to maskable interrupts. In comparison, all non maskable interrupts are issued by critical events as hardware component failures and always recognized by CPU.
