@@ -156,3 +156,9 @@ The 80x86 microprocessors issue ~20 exceptions, and kernel must provide handler 
 **Traps -** same as fault, but doesn’t require re-execution. Used for debugging purposes.
 
 **Aborts -** raises when a serious and not coverable error is occurred such as hardware failures. The process terminates when exception handler is executed.
+
+## APIC
+
+For multiprocessor systems, I/O APIC (advanced PIC) is used. To support previous versions, motherboard includes both PIC and APIC. Moreover, each core includes local APIC. All local I/O APICs are connected to external APICs.
+
+The main I/O APIC (not inside any core) consists of a set with 24 IRQ lines, a 24 entry **Interrupt Redirection Table (IRT),** each entry can be programmed to indicate interrupt vector priority, destination processor. This is used to redirect the IRQ to one or more local APIC units visa APIC bus.
