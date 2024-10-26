@@ -166,4 +166,8 @@ The main I/O APIC (not inside any core) consists of a set with 24 IRQ lines, a 2
 Distribution of signals can happen in two ways:
 
 1. **Static distribution -** The IRQ signal is delivered to the local APICs as listed in the corresponding entry of the Interrupt Redirection Table. The interrupt can be sent to a specific CPU, a subset of CPUs, or all CPUs simultaneously (broadcast mode).
-2. **Dynamic distribution -** The IRQ signal is delivered to the local APIC of the processor running the process with the lowest priority. Each local APIC has **programmable task priority register (TPR),** it’s used to calculate priority of process that is currently running. This register is modified with each process switch. If two or more local APIC have same priority, **arbitration** (each CPU has arbitration priority register from 0 - 15) \*\*\*\*is used.
+2. **Dynamic distribution -** The IRQ signal is delivered to the local APIC of the processor running the process with the lowest priority. Each local APIC has **programmable task priority register (TPR),** it’s used to calculate priority of process that is currently running. This register is modified with each process switch. If two or more local APIC have same priority, **arbitration** (each CPU has arbitration priority register from 0 - 15) is used.
+
+One CPU can also send an interrupt to another CPU, this is called **interprocess interrupts**.
+
+![Example of APIC usage](./assets/apic.png)
