@@ -114,3 +114,10 @@ A **login session** is high level group of processes, which is created when user
 Interrupt is signal to divert the processor to code outside normal flow. The difference between interrupt and context switch is that interrupt doesn’t operate in separate process, it’s kernel control path that runs in expense of the same process that was running when kernel was interrupted. The interrupt handler is lighter than process.
 
 All interrupt requests (IRQs) issued from I/O device controllers give rise to maskable interrupts. In comparison, all non maskable interrupts are issued by critical events as hardware component failures and always recognized by CPU.
+
+There are 2 types of interrupts:
+
+1. **Synchronous** - \***_synchronized with execution of instruction, caused by execution of instruction that cannot be properly handled. For example, divide by 0. Such interrupts are internally generated and called _**exceptions.\*\*\*
+2. **Asynchronous** - not synchronized with execution of instructions, and can occur at any time. Triggered by external devices, such as I/O hardware. Such interrupts are called regular **interrupts.**
+
+Each interrupt is associated with number ranging from 0 to 255. It’s called **vector.**
