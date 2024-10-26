@@ -162,3 +162,8 @@ The 80x86 microprocessors issue ~20 exceptions, and kernel must provide handler 
 For multiprocessor systems, I/O APIC (advanced PIC) is used. To support previous versions, motherboard includes both PIC and APIC. Moreover, each core includes local APIC. All local I/O APICs are connected to external APICs.
 
 The main I/O APIC (not inside any core) consists of a set with 24 IRQ lines, a 24 entry **Interrupt Redirection Table (IRT),** each entry can be programmed to indicate interrupt vector priority, destination processor. This is used to redirect the IRQ to one or more local APIC units visa APIC bus.
+
+Distribution of signals can happen in two ways:
+
+1. **Static distribution -** The IRQ signal is delivered to the local APICs as listed in the corresponding entry of the Interrupt Redirection Table. The interrupt can be sent to a specific CPU, a subset of CPUs, or all CPUs simultaneously (broadcast mode).
+2. **Dynamic distribution -** The IRQ signal is delivered to the local APIC of the processor running the process with the lowest priority. Each local APIC has **programmable task priority register (TPR),** it’s used to calculate priority of process that is currently running. This register is modified with each process switch. If two or more local APIC have same priority, **arbitration** (each CPU has arbitration priority register from 0 - 15) \*\*\*\*is used.
