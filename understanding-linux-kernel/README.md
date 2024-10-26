@@ -121,3 +121,15 @@ There are 2 types of interrupts:
 2. **Asynchronous** - not synchronized with execution of instructions, and can occur at any time. Triggered by external devices, such as I/O hardware. Such interrupts are called regular **interrupts.**
 
 Each interrupt is associated with number ranging from 0 to 255. It’s called **vector.**
+
+Every I/O controller is connected to the **PIC** (programmable interrupt controller). It’s middleware between controllers and CPU to manage the priority of interrupts, so the one with most priority reaches the CPU. PIC (specifically Intel 8259) supports up to eight I/O devices. To extend it, we can connect the output of one PIC to the next PIC _as input._ This is called **cascading**.
+
+Each IRQ line can be disabled, and when enabled again, _stored_ signals are sent to the CPU.
+
+PIC job cycle is as following:
+
+1. Monitor IRQ (interrupt request) lines for raised signals. If one or more signals are raised, select one with lower pin number.
+2. If a raised signal occurs in IRQ line, converts the signal into a corresponding vector, then stores this vector in interrupt controller i/o port, so CPU can read it via data bus. Send a raised signal to processor INTR pin (issue an interrupt). Then it waits until CPU acknowledges the interrupt signal by writing into one of PIC I/O ports.
+3. When acknowledgement occurs, it clears the INTR line and goes back to step 1.
+
+When CPU accepts interrupt, it acknowledges the PIC to get interrupt vector. When it receives it, it looks up the **IDT** for corresponding handler**.**
