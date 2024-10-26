@@ -132,4 +132,10 @@ PIC job cycle is as following:
 2. If a raised signal occurs in IRQ line, converts the signal into a corresponding vector, then stores this vector in interrupt controller i/o port, so CPU can read it via data bus. Send a raised signal to processor INTR pin (issue an interrupt). Then it waits until CPU acknowledges the interrupt signal by writing into one of PIC I/O ports.
 3. When acknowledgement occurs, it clears the INTR line and goes back to step 1.
 
-When CPU accepts interrupt, it acknowledges the PIC to get interrupt vector. When it receives it, it looks up the **IDT** for corresponding handler**.**
+When CPU accepts interrupt, it acknowledges the PIC to get interrupt vector. When it receives it, it looks up the **IDT** for corresponding handler.
+
+**IDT** - interrupt descriptor table, located in IDT register (meaning starting address is located in IDT register), firstly initialized by BIOS routines when computer still operates in Real Mode, but then reinitialized again and moved to the RAM. It consists of interrupt vector and address of its corresponding handler.
+
+**INTR** - a line that is connected to CPU. It receives maskable interrupt, meaning it can be ignored by CPU. After every instruction, CPU checks for **IF** (interrupt flag), if it’s set to 1, it checks for the pending interrupt requests, if there is one, it executes its handler in kernel mode.
+
+**NMI** - a line that is connected to CPU, which is used for interrupts that cannot be ignored by CPU. For example, if temperature of CPU is more that threshold, CPU is interrupted with this line to lower its temperature. Other examples include hardware failures and memory errors.
