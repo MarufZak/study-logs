@@ -143,3 +143,16 @@ When CPU accepts interrupt, it acknowledges the PIC to get interrupt vector. Whe
 ![PIC connection example](./assets/pic.png)
 
 This approach of connecting single output of PIC to the INTR line is used for uniprocessor systems. The approach for multiprocessor systems is different.
+
+## Exceptions
+
+The 80x86 microprocessors issue ~20 exceptions, and kernel must provide handler for each. Such exceptions include divide by zero (fault), debug (trap or fault), overflow (trap), bound check (fault) and others. Exceptions are classified into two:
+
+1. **Processor-detected exceptions** - raised when CPU detects anomalous condition while executing instruction. This is classified into 3 groups: **fault, trap, abort**.
+2. **Programmed exceptions** - occur at the request of programmer. For example `bound` instruction also rise such exception when condition (in this case address is outside the bound) is not true. Such exceptions are also called software interrupts, and is used for `syscall` or to notify debugger about specific event.
+
+**Faults -** exception, which can be corrected, and once corrected (when exception handler terminates), the instruction can be resumed (re-executed).
+
+**Traps -** same as fault, but doesn’t require re-execution. Used for debugging purposes.
+
+**Aborts -** raises when a serious and not coverable error is occurred such as hardware failures. The process terminates when exception handler is executed.
