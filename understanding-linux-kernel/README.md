@@ -139,3 +139,7 @@ When CPU accepts interrupt, it acknowledges the PIC to get interrupt vector. Whe
 **INTR** - a line that is connected to CPU. It receives maskable interrupt, meaning it can be ignored by CPU. After every instruction, CPU checks for **IF** (interrupt flag), if it’s set to 1, it checks for the pending interrupt requests, if there is one, it executes its handler in kernel mode.
 
 **NMI** - a line that is connected to CPU, which is used for interrupts that cannot be ignored by CPU. For example, if temperature of CPU is more that threshold, CPU is interrupted with this line to lower its temperature. Other examples include hardware failures and memory errors.
+
+![PIC connection example](./assets/pic.png)
+
+This approach of connecting single output of PIC to the INTR line is used for uniprocessor systems. The approach for multiprocessor systems is different.
