@@ -15,6 +15,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
 - [Exceptions](#exceptions)
 - [APIC](#apic)
 - [Nested execution of exception and interrupt handlers](#nested-execution-of-exception-and-interrupt-handlers)
+- [Initializing IDT](#initializing-idt)
 
 ## Introduction
 
@@ -186,3 +187,11 @@ The price to pay is that handler must never block, meaning no process switch can
 In kernel mode, only _Page fault_ exception may arise. In this case kernel creates another process to handle this error and make process switch. Interrupt handlers never perform operations that causes page fault, which would cause process switch.
 
 On multiprocessor systems, several kernel control paths may execute concurrently. Moreover, a kernel control path associated with exception may start executing on one CPU, and due to process switch, move to another CPU.
+
+## Initializing IDT
+
+Interrupt descriptor table is loaded to `idtr` register and all entries are initialized by BIOS routines when booting the system. Once Linux takes over, it’s re-initialized and moved to RAM, because Linux doesn’t use any BIOS routines.
+
+An entry in this table consists of **vector** (id of interrupt), **selector** and **offset.** By combining selector and offset, CPU constructs address of handler to execute.
+
+IDT contains entries for hardware interrupts, software interrupts (system calls), and processor exceptions. The signal handlers for processes are stored in that process space.
