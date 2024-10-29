@@ -16,6 +16,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
 - [APIC](#apic)
 - [Nested execution of exception and interrupt handlers](#nested-execution-of-exception-and-interrupt-handlers)
 - [Initializing IDT](#initializing-idt)
+- [Exception handling](#exception-handling)
 
 ## Introduction
 
@@ -201,3 +202,19 @@ IDT entry takes 8 bytes. Each entry in IDT is gate, and there are 3 types of gat
 1. **interrupt gate** - for hardware interrupts, sets IF to 1, no other interrupts are allowed. Used for events like keyboard input. Points to handler.
 2. **task gate** - for hardware task switches and for `double fault` exception. Doesn’t set IF to 1, other interrupts are allowed. Points to **TSS** (Task state segment), which initiates task switch.
 3. **trap gate** - for software interrupts and exceptions (`syscall`, divide by 0 exception). Doesn’t set IF to 1, other interrupts are allowed. Points to handler address.
+
+## Exception handling
+
+When exception issued by CPU occurs, it sends a signal to the current process.
+
+But sometimes kernel may use these exceptions to manage hardware resources more efficiently. For example `page fault` exception is used to defer loading necessary memory frames to the process until last moment.
+
+Exception handlers have a standard form with 3 steps:
+
+1. Save contents of most registers in Kernel Mode stack (coded in assembly).
+2. Handle exception of high-level C functions.
+3. Exit from handler with `ret_from_exception` function.
+
+Each exception handler starts with the same assembly code that does common tasks such that pushing the address of corresponding C function onto the stack, and prepares environment to handle the error.
+
+The process which triggered the exception gets a signal right after termination of exception handler.
