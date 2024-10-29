@@ -250,3 +250,7 @@ Usually interrupts handlers should be fast and the interrupt requests should be 
 **Softirqs** are statically allocated (defined at compile time). They can run concurrently (even if they are same type) on several CPUs, and because of this they are reentrant functions (use mechanisms such as spin locks).
 
 Softirqs are stored in **softirq_vec** array, each element is of **softirq_action** type (which includes action - pointer to softirq function, and data - pointer to data structure needed by softirq function). There is also a data structure that tracks pending softirqs - **per-CPU 32 bit mask,** that is stored in **\_\_softirq_pending** field of the **irq_cpustat_t** (there is one such structure per CPU in the system).
+
+**Tasklets** are built on top of softirqs, but can be allocated and initialized at runtime. Also same type tasklets do not run on several cores, only in one core, so they do not worry about resource locks. However, if tasklets types differ, they can run on several CPUs.
+
+Tasklets and high-priority tasklets are stored in `tasklet_vec` and `tasklet_hi_vec` arrays respectively. Each of them include `NR_CPUS` elements of type `tasklet_head` , and each element consists of pointer to a list of _tasklet descriptors_. Tasklet descriptor consists of next (Pointer to next descriptor in the list), state (status of the tasklet), count (lock counter), func (pointer to tasklet function), and data (unsigned long int, used by tasklet function).
