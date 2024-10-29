@@ -227,3 +227,7 @@ Interrupt handlers are stored inside IDT. In comparison to exception handling, i
 **I/O interrupts.** I/O device requires an attention, and corresponding handler must query the device to determine how to handle it. Handler should be flexible to service several i/o interrupts at the same time, for example running i/o disk operations in handler is not good.
 
 I/O interrupts _actions,_ which are executed inside interrupt handler, are classified into three:
+
+1. **critical action** (for example acknowledging or interrupting PIC, should be performed asap, and executed immediately with maskable interrupts disabled).
+2. **noncritical action** (for example updating data structures used only by processor, executed immediately with interrupts enabled).
+3. **noncritical deferrable action** (for ex copying buffer content into address space of process, may be deferred with no affect to kernel processing, and interested process will just wait for it).
