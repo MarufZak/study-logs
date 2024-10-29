@@ -246,7 +246,7 @@ I/O interrupt handlers perform same basic actions, which basically are saving IR
 2. **RESCHEDULE_VECTOR -** when the CPU receives this interrupt, it just notes that a reschedule (task switch) might be needed, and the real rescheduling happens as the CPU prepares to resume normal execution.
 3. **INVALIDATE_TLB_VECTOR** - sent to all CPUs except the sender, forces them to invalidate their TLBs
 
-### Softirqs and Tasklets
+## Softirqs and Tasklets
 
 Usually interrupts handlers should be fast and the interrupt requests should be serviced in small amount of time. There might be some tasks in handlers that are long-running. In Linux, such tasks can be deferred with **deferrable functions** using softirqs and tasklets.
 
