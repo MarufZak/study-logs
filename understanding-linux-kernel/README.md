@@ -21,6 +21,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
 - [Softirqs and Tasklets](#softirqs-and-tasklets)
 - [Work queues](#work-queues)
 - [Returning from exceptions and interrupts](#returning-from-exceptions-and-interrupts)
+- [FAQ](#faq)
 
 ## Introduction
 
@@ -273,3 +274,16 @@ It’s obvious that after returning from exceptions and interrupts, program that
 2. _Pending process switch requests -_ if \*\*there is any request, the kernel must perform process scheduling; otherwise, control is returned to the current process.
 3. _Pending signals -_ If a signal is sent to the current process, it must be handled.
 4. _Single-step mode -_ If a debugger is tracing the execution of the current process, single-step mode must be restored before switching back to User Mode.
+
+## FAQ
+
+- Is Linux kernel a process?
+  The Linux kernel is the underlying software that manages processes and system resources but is not a process itself. It provides the functionality required for creating and managing processes and facilitates communication between hardware and user applications. It can be thought as a collection of processes (kernel threads) that handle tasks such as managing i/o, handling interrupts and background tasks.
+- What’s difference between OS and kernel
+  Kernel is like orchestrator, which manages hardware resources like memory, processes, CPU, I/O devices, device drivers and others. OS without kernel would be just a set of programs and tools
+- What’s IEEE POSIX
+  It’s standard developed by IEEE to make Unix-like software portable (compatible between each other). It includes standards such as process management, error handling, thread management and others. Note that binary form of programs might not be compatible, because of possible different architectures.
+- What’s difference between microkernels and monolithic kernels.
+  Difference between two approaches is that in microkernels most services run in user mode and in user space, whereas in Linux approach modules are loaded into the kernel, where they are run in kernel mode and in kernel space. Note that there is no perfomance difference.
+  Also fault in module can crash the entire system in the case of monolithic appoach, whereas in microkernels approach it can’t.
+  The advantages microkernel approach has is **Fault Isolation,**
