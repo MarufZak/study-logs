@@ -195,3 +195,9 @@ Interrupt descriptor table is loaded to `idtr` register and all entries are init
 An entry in this table consists of **vector** (id of interrupt), **selector** and **offset.** By combining selector and offset, CPU constructs address of handler to execute.
 
 IDT contains entries for hardware interrupts, software interrupts (system calls), and processor exceptions. The signal handlers for processes are stored in that process space.
+
+IDT entry takes 8 bytes. Each entry in IDT is gate, and there are 3 types of gate:
+
+1. **interrupt gate** - for hardware interrupts, sets IF to 1, no other interrupts are allowed. Used for events like keyboard input. Points to handler.
+2. **task gate** - for hardware task switches and for `double fault` exception. Doesn’t set IF to 1, other interrupts are allowed. Points to **TSS** (Task state segment), which initiates task switch.
+3. **trap gate** - for software interrupts and exceptions (`syscall`, divide by 0 exception). Doesn’t set IF to 1, other interrupts are allowed. Points to handler address.
