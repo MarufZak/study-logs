@@ -20,6 +20,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
 - [Interrupt handling](#interrupt-handling)
 - [Softirqs and Tasklets](#softirqs-and-tasklets)
 - [Work queues](#work-queues)
+- [Returning from exceptions and interrupts](#returning-from-exceptions-and-interrupts)
 
 ## Introduction
 
@@ -263,3 +264,12 @@ Work queues allow kernel functions to be activated and executed later by special
 Data structure of work queue is descriptor called **workqueue_struct,** which contains number of CPUs in the system, NR_CPUS. Each element is descriptor of type **cpu_workqueue_struct** with spin lock, wait queues, head of list of pending functions and others. List is in form of doubly linked list, with timer, data, address of pending function and others.
 
 There is one predefined work queue in the system, called **events,** which can freely used by kernel developer. The execution of pending functions in predefined work queue is serialized to CPUs, so functions shouldn’t block for long, otherwise it might affect other users.
+
+## Returning from exceptions and interrupts
+
+It’s obvious that after returning from exceptions and interrupts, program that was previously freezed, will continue execution. But several cases that should be considered.
+
+1. _Number of kernel control paths being concurrently executed -_ If there is just one, the CPU must switch back to User Mode.
+2. _Pending process switch requests -_ if \*\*there is any request, the kernel must perform process scheduling; otherwise, control is returned to the current process.
+3. _Pending signals -_ If a signal is sent to the current process, it must be handled.
+4. _Single-step mode -_ If a debugger is tracing the execution of the current process, single-step mode must be restored before switching back to User Mode.
