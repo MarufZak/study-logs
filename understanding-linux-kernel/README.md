@@ -19,6 +19,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
 - [Exception handling](#exception-handling)
 - [Interrupt handling](#interrupt-handling)
 - [Softirqs and Tasklets](#softirqs-and-tasklets)
+- [Work queues](#work-queues)
 
 ## Introduction
 
@@ -254,3 +255,11 @@ Softirqs are stored in **softirq_vec** array, each element is of **softirq_actio
 **Tasklets** are built on top of softirqs, but can be allocated and initialized at runtime. Also same type tasklets do not run on several cores, only in one core, so they do not worry about resource locks. However, if tasklets types differ, they can run on several CPUs.
 
 Tasklets and high-priority tasklets are stored in `tasklet_vec` and `tasklet_hi_vec` arrays respectively. Each of them include `NR_CPUS` elements of type `tasklet_head` , and each element consists of pointer to a list of _tasklet descriptors_. Tasklet descriptor consists of next (Pointer to next descriptor in the list), state (status of the tasklet), count (lock counter), func (pointer to tasklet function), and data (unsigned long int, used by tasklet function).
+
+## **Work Queues**
+
+Work queues allow kernel functions to be activated and executed later by special kernel threads called **worker threads**, much like deferrable functions. Difference is that work queues execute in context of process ⇒ it can execute blocking procedures, whereas deferrable functions execute in context of interrupt ⇒ it can’t execute blocking procedures.
+
+Data structure of work queue is descriptor called **workqueue_struct,** which contains number of CPUs in the system, NR_CPUS. Each element is descriptor of type **cpu_workqueue_struct** with spin lock, wait queues, head of list of pending functions and others. List is in form of doubly linked list, with timer, data, address of pending function and others.
+
+There is one predefined work queue in the system, called **events,** which can freely used by kernel developer. The execution of pending functions in predefined work queue is serialized to CPUs, so functions shouldn’t block for long, otherwise it might affect other users.
