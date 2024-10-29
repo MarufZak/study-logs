@@ -18,6 +18,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
 - [Initializing IDT](#initializing-idt)
 - [Exception handling](#exception-handling)
 - [Interrupt handling](#interrupt-handling)
+- [Softirqs and Tasklets](#softirqs-and-tasklets)
 
 ## Introduction
 
@@ -241,3 +242,11 @@ I/O interrupt handlers perform same basic actions, which basically are saving IR
 1. **CALL_FUNCTION_VECTOR -** sent to all CPUs except the sender, forcing them to execute function passed by a sender.
 2. **RESCHEDULE_VECTOR -** when the CPU receives this interrupt, it just notes that a reschedule (task switch) might be needed, and the real rescheduling happens as the CPU prepares to resume normal execution.
 3. **INVALIDATE_TLB_VECTOR** - sent to all CPUs except the sender, forces them to invalidate their TLBs
+
+### Softirqs and Tasklets
+
+Usually interrupts handlers should be fast and the interrupt requests should be serviced in small amount of time. There might be some tasks in handlers that are long-running. In Linux, such tasks can be deferred with **deferrable functions** using softirqs and tasklets.
+
+**Softirqs** are statically allocated (defined at compile time). They can run concurrently (even if they are same type) on several CPUs, and because of this they are reentrant functions (use mechanisms such as spin locks).
+
+Softirqs are stored in **softirq_vec** array, each element is of **softirq_action** type (which includes action - pointer to softirq function, and data - pointer to data structure needed by softirq function). There is also a data structure that tracks pending softirqs - **per-CPU 32 bit mask,** that is stored in **\_\_softirq_pending** field of the **irq_cpustat_t** (there is one such structure per CPU in the system).
