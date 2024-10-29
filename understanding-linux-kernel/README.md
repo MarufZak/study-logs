@@ -12,6 +12,9 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
   - [Hard and soft links](#hard-and-soft-links)
 - [Overview of Unix kernels](#an-overview-of-unix-kernels)
 - [Interrupts](#interrupts)
+- [Exceptions](#exceptions)
+- [APIC](#apic)
+- [Nested execution of exception and interrupt handlers](#nested-execution-of-exception-and-interrupt-handlers)
 
 ## Introduction
 
@@ -171,3 +174,15 @@ Distribution of signals can happen in two ways:
 One CPU can also send an interrupt to another CPU, this is called **interprocess interrupts**.
 
 ![Example of APIC usage](./assets/apic.png)
+
+## Nested execution of exception and interrupt handlers
+
+Kernel allows us to nest execution of exception and interrupt handlers, meaning while executing handler of one interrupt, if second interrupt is occurred, control goes to the second handler. When second handler finishes executing, control goes back to first handler.
+
+All the data needed to resume the nested kernel control path is stored in the kernel mode stack, which is tightly bound to current process.
+
+The price to pay is that handler must never block, meaning no process switch can take place when interrupt handler is running.
+
+In kernel mode, only _Page fault_ exception may arise. In this case kernel creates another process to handle this error and make process switch. Interrupt handlers never perform operations that causes page fault, which would cause process switch.
+
+On multiprocessor systems, several kernel control paths may execute concurrently. Moreover, a kernel control path associated with exception may start executing on one CPU, and due to process switch, move to another CPU.
