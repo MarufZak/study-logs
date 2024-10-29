@@ -17,6 +17,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
 - [Nested execution of exception and interrupt handlers](#nested-execution-of-exception-and-interrupt-handlers)
 - [Initializing IDT](#initializing-idt)
 - [Exception handling](#exception-handling)
+- [Interrupt handling](#interrupt-handling)
 
 ## Introduction
 
@@ -218,3 +219,11 @@ Exception handlers have a standard form with 3 steps:
 Each exception handler starts with the same assembly code that does common tasks such that pushing the address of corresponding C function onto the stack, and prepares environment to handle the error.
 
 The process which triggered the exception gets a signal right after termination of exception handler.
+
+## Interrupt handling
+
+Interrupt handlers are stored inside IDT. In comparison to exception handling, in which the action to be taken is deferred until current process executes the handler in IDT, interrupt handling is different. In interrupt handling, the signal to process it’s related may arrive long after being sent. And it’s not sent to current process. The behavior differs based on class of interrupt:
+
+**I/O interrupts.** I/O device requires an attention, and corresponding handler must query the device to determine how to handle it. Handler should be flexible to service several i/o interrupts at the same time, for example running i/o disk operations in handler is not good.
+
+I/O interrupts _actions,_ which are executed inside interrupt handler, are classified into three:
