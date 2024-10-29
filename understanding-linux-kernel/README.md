@@ -231,3 +231,13 @@ I/O interrupts _actions,_ which are executed inside interrupt handler, are class
 1. **critical action** (for example acknowledging or interrupting PIC, should be performed asap, and executed immediately with maskable interrupts disabled).
 2. **noncritical action** (for example updating data structures used only by processor, executed immediately with interrupts enabled).
 3. **noncritical deferrable action** (for ex copying buffer content into address space of process, may be deferred with no affect to kernel processing, and interested process will just wait for it).
+
+I/O interrupt handlers perform same basic actions, which basically are saving IRQ value and register’s values in Kernel Mode stack, sending acknowledgment to PIC, executing the interrupt service routines (ISRs, which are actual functions IDT entries point to) associated with all devices that share the IRQ, and terminating by jumping to `ret_from_intr` address.
+
+**Timer interrupts.** Either local APIC or external timer issued an interrupt that certain fixed-time interval has elapsed. These interrupts are mostly handled as I/O interrupts.
+
+**Interprocessor interrupts.** CPU issued an interrupt to another CPU in multiprocessor system. An interprocessor interrupt (IPI) is delivered as a direct message through the bus that connects all local APICs and CPUs. In multiprocessor systems, Linux uses 3 types of ICI:
+
+1. **CALL_FUNCTION_VECTOR -** sent to all CPUs except the sender, forcing them to execute function passed by a sender.
+2. **RESCHEDULE_VECTOR -** when the CPU receives this interrupt, it just notes that a reschedule (task switch) might be needed, and the real rescheduling happens as the CPU prepares to resume normal execution.
+3. **INVALIDATE_TLB_VECTOR** - sent to all CPUs except the sender, forces them to invalidate their TLBs
