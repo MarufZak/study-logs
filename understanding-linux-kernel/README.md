@@ -21,6 +21,8 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
 - [Softirqs and Tasklets](#softirqs-and-tasklets)
 - [Work queues](#work-queues)
 - [Returning from exceptions and interrupts](#returning-from-exceptions-and-interrupts)
+- [Processes](#processes)
+
 - [FAQ](#faq)
 
 ## Introduction
@@ -274,6 +276,10 @@ It’s obvious that after returning from exceptions and interrupts, program that
 2. _Pending process switch requests -_ if \*\*there is any request, the kernel must perform process scheduling; otherwise, control is returned to the current process.
 3. _Pending signals -_ If a signal is sent to the current process, it must be handled.
 4. _Single-step mode -_ If a debugger is tracing the execution of the current process, single-step mode must be restored before switching back to User Mode.
+
+## Processes
+
+Process is an instance of program in execution. It’s a collection of data structures that describe how far process has progressed. For kernel it’s entity to which resources are allocated. Process has a single parent, and when it’s created, it may use shared (with parent) pages that contain program code, but the data (stack, heap) is separate, it’s copied from parent.
 
 ## FAQ
 
