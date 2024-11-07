@@ -22,7 +22,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
 - [Work queues](#work-queues)
 - [Returning from exceptions and interrupts](#returning-from-exceptions-and-interrupts)
 - [Processes](#processes)
-
+  - [Process descriptor](#process-descriptor)
 - [FAQ](#faq)
 
 ## Introduction
@@ -286,6 +286,10 @@ Process has execution flows, called threads. Threads share the data and code wit
 When context switching (doesn’t matter if it’s process or thread), the state (PC, stack pointer, general purpose registers) are stored in TSS.
 
 **TSS** (Task state segment) is a data structure to facilitate context switching by holding task-specific information that the CPU needs to switch contexts. TSS is stored in memory, and it exists one per process (in older systems). TSS is accessed through GDT table (global descriptor table, contains descriptors that define segments of memory). TSS descriptor in GDT contains TSS base address, size, and its permissions.
+
+### Process descriptor
+
+Each process has description, containing in which state process is, its priority, address space assigned to it, and others. All of these are stored inside process descriptor - a `task_struct` type structure, whose fields contain all this information.
 
 ## FAQ
 
