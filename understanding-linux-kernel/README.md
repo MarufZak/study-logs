@@ -23,6 +23,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
 - [Returning from exceptions and interrupts](#returning-from-exceptions-and-interrupts)
 - [Processes](#processes)
   - [Process descriptor](#process-descriptor)
+  - [Process state](#process-state)
 - [FAQ](#faq)
 
 ## Introduction
@@ -290,6 +291,10 @@ When context switching (doesn’t matter if it’s process or thread), the state
 ### Process descriptor
 
 Each process has description, containing in which state process is, its priority, address space assigned to it, and others. All of these are stored inside process descriptor - a `task_struct` type structure, whose fields contain all this information.
+
+### Process state
+
+A field in process descriptor that describes the state of process. It consists of an array of flags, each flag represents a state. In current version of Linux, only 1 flag is set, others are cleared. The flags are:
 
 ## FAQ
 
