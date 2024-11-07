@@ -281,6 +281,12 @@ It’s obvious that after returning from exceptions and interrupts, program that
 
 Process is an instance of program in execution. It’s a collection of data structures that describe how far process has progressed. For kernel it’s entity to which resources are allocated. Process has a single parent, and when it’s created, it may use shared (with parent) pages that contain program code, but the data (stack, heap) is separate, it’s copied from parent.
 
+Process has execution flows, called threads. Threads share the data and code with other threads in the same process. In early days Linux treated threads as a single process, meaning if one thread was blocked, all other threads were blocked too. After that Linux introduced **lightweight processes,** which represents an independent execution flow like a thread, but it’s structured like a process (it has its own PID, and can be scheduled independently by kernel). The fact that lightweight process shares data and code with other lightweight processes makes it lightweight, and easy to context switch from.
+
+When context switching (doesn’t matter if it’s process or thread), the state (PC, stack pointer, general purpose registers) are stored in TSS.
+
+**TSS** (Task state segment) is a data structure to facilitate context switching by holding task-specific information that the CPU needs to switch contexts. TSS is stored in memory, and it exists one per process (in older systems). TSS is accessed through GDT table (global descriptor table, contains descriptors that define segments of memory). TSS descriptor in GDT contains TSS base address, size, and its permissions.
+
 ## FAQ
 
 - Is Linux kernel a process?
