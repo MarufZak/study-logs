@@ -296,6 +296,23 @@ Each process has description, containing in which state process is, its priority
 
 A field in process descriptor that describes the state of process. It consists of an array of flags, each flag represents a state. In current version of Linux, only 1 flag is set, others are cleared. The flags are:
 
+1. _TASK_RUNNING -_ the process is being executed on a CPU or waiting to be executed.
+2. _TASK_INTERRUPTIBLE_ - the process is suspended (sleeping), until some condition becomes true. Examples of condition are raising hardware interrupt, releasing a system resource process is waiting for, or delivering a signal.
+3. _TASK_UNINTERRUPTIBLE -_ like TASK_INTERRUPTIBLE, but delivering signal doesn’t change its state. It waits for specific event without being interrupted, like waiting for response from device driver for probing the device.
+4. _TASK_STOPPED -_ process execution is stopped by a debugger. Process can be monitored by debugger with `ptrace` syscall, each signal may put the process in this state.
+5. _EXIT_ZOMBIE -_ can be stored in both state field and exit_state field. Process is terminated, but process has not yet issued an acknowledgement.
+6. _EXIT_DEAD -_ can be stored in both state field and exit_state field. Process is being removed from a system because its parent has issued acknowledgement.
+
+State of process can be set like:
+
+```c
+p->state = TASK_RUNNING;
+
+// kernel also uses set_task_state (for specified process) and set_current_state
+// (for current process) macros to set a state. These macros also ensure that
+// state assignments are done without interrupts.
+```
+
 ## FAQ
 
 - Is Linux kernel a process?
