@@ -363,3 +363,5 @@ A field in process descriptor that points to the corresponding `list_head` insid
   A soft link, or symbolic link, is a separate file that contains the path to another file or directory. Unlike hard links, soft links can link to directories, files across different filesystems, or even non-existent files. They use their own INode to store metadata about the link itself, not the target file.
 - What is an INode?
   An INode is a data structure that contains metadata about a file, including file type, size, permissions, owner information, timestamps, and pointers to the file’s data blocks on disk. It uniquely identifies a file within the filesystem.
+- What is a kernel thread?
+  A kernel thread is a privileged process running in kernel space. Unlike user processes, kernel threads do not interact directly with users and typically handle low-level tasks required for system operation. They are usually created during system startup and terminate when the system shuts down.
