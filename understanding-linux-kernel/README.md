@@ -329,6 +329,14 @@ All runnable processes (processes in _TASK_RUNNING_ state) are put in the same l
 
 In Linux 2.6, the processes are grouped by its priority ranging from 0 to 139 (140 lists in total). `run_list` field links the process descriptor based on its priority to the corresponding list. This way scheduler selects the best process to run in a constant time. On multiprocessor systems, each CPU has its own runqueue.
 
+The runqueue is implemented as `prio_array_t` data structure:
+
+| **type**               | **field** | **description**                                                                                                                                                    |
+| ---------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| int                    | nr_active | number of process descriptors linked into the lists.                                                                                                               |
+| unsigned long[5]       | bitmap    | a priority bitmap. Each flag is set if corresponding priority list is not empty. For example if first 3 lists have descriptors, we have: [1, 1, 1, 0, 0, 0, …, 0]. |
+| struct list_head [140] | queue     | The array of 140 heads of the priority lists.                                                                                                                      |
+
 ## FAQ
 
 - Is Linux kernel a process?
