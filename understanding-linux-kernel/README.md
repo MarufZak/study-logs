@@ -26,6 +26,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
   - [Process state](#process-state)
   - [List head](#list_head)
   - [Run list](#run_list)
+  - [prio](#prio)
 - [FAQ](#faq)
 
 ## Introduction
@@ -336,6 +337,10 @@ The runqueue is implemented as `prio_array_t` data structure:
 | int                    | nr_active | number of process descriptors linked into the lists.                                                                                                               |
 | unsigned long[5]       | bitmap    | a priority bitmap. Each flag is set if corresponding priority list is not empty. For example if first 3 lists have descriptors, we have: [1, 1, 1, 0, 0, 0, …, 0]. |
 | struct list_head [140] | queue     | The array of 140 heads of the priority lists.                                                                                                                      |
+
+### prio
+
+A field in process descriptor that stores dynamic priority of the process.
 
 ## FAQ
 
