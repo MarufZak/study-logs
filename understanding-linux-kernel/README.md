@@ -25,6 +25,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
   - [Process descriptor](#process-descriptor)
   - [Process state](#process-state)
   - [List head](#list_head)
+  - [Run list](#run_list)
 - [FAQ](#faq)
 
 ## Introduction
@@ -319,6 +320,14 @@ p->state = TASK_RUNNING;
 A field in process descriptor that points to previous and next `task_struct` elements. The process descriptors are organized as `list_head`, which is essentially a circular doubly linked list. The head of this process list is `init_task` descriptor, which is process 0.
 
 `SET_LINKS` and `REMOVE_LINKS` macros are used to insert and delete descriptors from the process list. There is also `for_each_process` macro to scan the list.
+
+### run_list
+
+A filed in process descriptor of type `list_head`.
+
+All runnable processes (processes in _TASK_RUNNING_ state) are put in the same list, called **runqueue**. Earlier versions of Linux used to iterate through this list in order to select “best” runnable process. Linux 2.6 implements it differently.
+
+In Linux 2.6, the processes are grouped by its priority ranging from 0 to 139 (140 lists in total). `run_list` field links the process descriptor based on its priority to the corresponding list. This way scheduler selects the best process to run in a constant time. On multiprocessor systems, each CPU has its own runqueue.
 
 ## FAQ
 
