@@ -365,3 +365,5 @@ A field in process descriptor that points to the corresponding `list_head` insid
   An INode is a data structure that contains metadata about a file, including file type, size, permissions, owner information, timestamps, and pointers to the file’s data blocks on disk. It uniquely identifies a file within the filesystem.
 - What is a kernel thread?
   A kernel thread is a privileged process running in kernel space. Unlike user processes, kernel threads do not interact directly with users and typically handle low-level tasks required for system operation. They are usually created during system startup and terminate when the system shuts down.
+- What is a reentrant kernel?
+  A reentrant kernel allows multiple processes to execute in kernel mode simultaneously. This is achieved using reentrant functions (which only modify local variables) or locking mechanisms to ensure only one process executes non-reentrant code at a time.
