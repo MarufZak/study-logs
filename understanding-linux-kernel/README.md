@@ -361,3 +361,5 @@ A field in process descriptor that points to the corresponding `list_head` insid
   The advantages microkernel approach has is **Fault Isolation,**
 - How is a soft link different from a hard link?
   A soft link, or symbolic link, is a separate file that contains the path to another file or directory. Unlike hard links, soft links can link to directories, files across different filesystems, or even non-existent files. They use their own INode to store metadata about the link itself, not the target file.
+- What is an INode?
+  An INode is a data structure that contains metadata about a file, including file type, size, permissions, owner information, timestamps, and pointers to the file’s data blocks on disk. It uniquely identifies a file within the filesystem.
