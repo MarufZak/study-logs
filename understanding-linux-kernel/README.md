@@ -24,6 +24,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
 - [Processes](#processes)
   - [Process descriptor](#process-descriptor)
   - [Process state](#process-state)
+  - [List head](#list_head)
 - [FAQ](#faq)
 
 ## Introduction
@@ -312,6 +313,12 @@ p->state = TASK_RUNNING;
 // (for current process) macros to set a state. These macros also ensure that
 // state assignments are done without interrupts.
 ```
+
+### list_head
+
+A field in process descriptor that points to previous and next `task_struct` elements. The process descriptors are organized as `list_head`, which is essentially a circular doubly linked list. The head of this process list is `init_task` descriptor, which is process 0.
+
+`SET_LINKS` and `REMOVE_LINKS` macros are used to insert and delete descriptors from the process list. There is also `for_each_process` macro to scan the list.
 
 ## FAQ
 
