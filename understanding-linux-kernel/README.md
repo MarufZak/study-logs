@@ -359,3 +359,5 @@ A field in process descriptor that points to the corresponding `list_head` insid
   Difference between two approaches is that in microkernels most services run in user mode and in user space, whereas in Linux approach modules are loaded into the kernel, where they are run in kernel mode and in kernel space. Note that there is no perfomance difference.
   Also fault in module can crash the entire system in the case of monolithic appoach, whereas in microkernels approach it can’t.
   The advantages microkernel approach has is **Fault Isolation,**
+- How is a soft link different from a hard link?
+  A soft link, or symbolic link, is a separate file that contains the path to another file or directory. Unlike hard links, soft links can link to directories, files across different filesystems, or even non-existent files. They use their own INode to store metadata about the link itself, not the target file.
