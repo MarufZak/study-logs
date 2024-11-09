@@ -27,6 +27,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
   - [List head](#list_head)
   - [Run list](#run_list)
   - [prio](#prio)
+  - [array](#array)
 - [FAQ](#faq)
 
 ## Introduction
@@ -341,6 +342,10 @@ The runqueue is implemented as `prio_array_t` data structure:
 ### prio
 
 A field in process descriptor that stores dynamic priority of the process.
+
+### array
+
+A field in process descriptor that points to the corresponding `list_head` inside the runqueue’s `prio_array_t` data structure.
 
 ## FAQ
 
