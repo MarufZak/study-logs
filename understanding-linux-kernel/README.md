@@ -347,6 +347,10 @@ A field in process descriptor that stores dynamic priority of the process.
 
 A field in process descriptor that points to the corresponding `list_head` inside the runqueue’s `prio_array_t` data structure.
 
+### relationship between processes
+
+All processes have relationship. A process that creates another process is marked as parent process. Processes 0 and 1 (init) are created by the kernel. Process 1 is ancestor of all the processes.
+
 ## FAQ
 
 - Is Linux kernel a process?
