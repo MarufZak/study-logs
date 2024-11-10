@@ -349,7 +349,20 @@ A field in process descriptor that points to the corresponding `list_head` insid
 
 ### relationship between processes
 
-All processes have relationship. A process that creates another process is marked as parent process. Processes 0 and 1 (init) are created by the kernel. Process 1 is ancestor of all the processes.
+All processes have relationship. A process that creates another process is marked as parent process. Processes 0 and 1 (init) are created by the kernel. Process 1 is ancestor of all the processes. Following fields in process descriptor are used to represent relationships:
+
+| **field**        | **description**                                                                                                          |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| real_parent      | points to process descriptor that created the process, or 1 if such process doesn’t exist.                               |
+| parent           | points to current parent of P. Usually same as real_parent, but may differ when another process issues ptrace() syscall. |
+| children         | head of list containing all children created by P.                                                                       |
+| sibling          | Pointers to next and prev elements in the list of sibling processes, those that have same parent as P.                   |
+| group_leader     | process descriptor pointer of group leader of P.                                                                         |
+| signal → pgrp    | PID of group leader of P                                                                                                 |
+| tgid             | PID of the thread group leader of P.                                                                                     |
+| signal → session | PID of login session leader of P                                                                                         |
+| ptrace_children  | The head of list containing all children of P being traced by debugger                                                   |
+| ptrace_list      | The pointers to next and prev elements in real parent’s list of traced processes. Used when P is being traced.           |
 
 ## FAQ
 
