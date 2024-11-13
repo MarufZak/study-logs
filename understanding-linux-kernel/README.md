@@ -31,6 +31,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
   - [hash tables](#hash-tables)
   - [pids](#pids)
   - [process organization](#processes-organization)
+  - [resource limits](#resource-limits)
 - [FAQ](#faq)
 
 ## Introduction
@@ -405,6 +406,10 @@ There are 2 kinds of procceses in wait queue: **exclusive** - denoted by value 1
 When resource becomes available, and when there is a lists of proccesses waiting for the same event, not all procceses at once are awaken. This can lead to CPU cycles waste and other problems. Nonexclusive proccesses in wait queue are awaken at the same time, it doesn’t lead to problems.
 
 It’s uncommon to have exclusive and unexclusive processes inside one wait queue.
+
+### resource limits
+
+Each process has its limits in order not to overwhelm the CPU, disk space and so on. They are stored in `process->signal->rlim` field in process descriptor. It’s an array of elements of type **rlimit,** one for each resource limit. This includes current, and the limit with **rlim_cur** and **rlim_max** fields respectively.
 
 ## FAQ
 
