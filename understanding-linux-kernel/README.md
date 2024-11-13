@@ -28,6 +28,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
   - [Run list](#run_list)
   - [prio](#prio)
   - [array](#array)
+  - [hash tables](#hash-tables)
 - [FAQ](#faq)
 
 ## Introduction
@@ -363,6 +364,10 @@ All processes have relationship. A process that creates another process is marke
 | signal → session | PID of login session leader of P                                                                                         |
 | ptrace_children  | The head of list containing all children of P being traced by debugger                                                   |
 | ptrace_list      | The pointers to next and prev elements in real parent’s list of traced processes. Used when P is being traced.           |
+
+### hash tables
+
+Scanning the process list to find process descriptor with specific PID is not efficient. Because of this, four hash tables were introduced. Why four? Because process descriptor includes different kinds of PIDs, and those hash tables refer to corresponding PID. The tables are dynamically allocated during initialization phase, and its size depends on RAM, if RAM is 512MB, the size is 2 page frames (8KB, 2,048 entries). Each value in the hash table is the head of doubly linked list, used for handling colliding, when two or more process descriptors resolve to the same entry.
 
 ## FAQ
 
