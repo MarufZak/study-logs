@@ -29,6 +29,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
   - [prio](#prio)
   - [array](#array)
   - [hash tables](#hash-tables)
+  - [pids](#pids)
 - [FAQ](#faq)
 
 ## Introduction
@@ -375,6 +376,16 @@ Scanning the process list to find process descriptor with specific PID is not ef
 | PIDTYPE_TGID        | tgid      | PID of thread group leader process |
 | PIDTYPE_PGID        | pgrp      | PID of the group leader process    |
 | PIDTYPE_SID         | session   | PID of the session leader process  |
+
+### pids
+
+Kernel may need process descriptors that are in the same group as P. For this, pids field exists in the process descriptor. It is an array of `pid` structure with fields:
+
+| **type**          | **name**  | **description**                                                    |
+| ----------------- | --------- | ------------------------------------------------------------------ |
+| int               | nr        | the PID number                                                     |
+| struct hlist_node | pid_chain | The links to the next and previous elements in the hash chain list |
+| struct list_head  | pid_list  | the head of the per-PID list                                       |
 
 ## FAQ
 
