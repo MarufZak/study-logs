@@ -410,6 +410,8 @@ It’s uncommon to have exclusive and unexclusive processes inside one wait queu
 ### resource limits
 
 Each process has its limits in order not to overwhelm the CPU, disk space and so on. They are stored in `process->signal->rlim` field in process descriptor. It’s an array of elements of type **rlimit,** one for each resource limit. This includes current, and the limit with **rlim_cur** and **rlim_max** fields respectively.
+The fields inside the table below are used as an index to the array of rlim, like `process->signal->rlim[RLIMIT_AS].rlim_cur`.
+It’s possible to resize the limit with getrlimit and setrlimit (this one is done by superuser) syscalls.
 
 | **field name** | **description**                                                                                                                |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------ |
