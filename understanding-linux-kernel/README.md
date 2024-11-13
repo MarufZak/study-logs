@@ -30,6 +30,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
   - [array](#array)
   - [hash tables](#hash-tables)
   - [pids](#pids)
+  - [process organization](#processes-organization)
 - [FAQ](#faq)
 
 ## Introduction
@@ -392,6 +393,16 @@ So essentially the addresses for hash tables are stored in `pid_hash` data struc
 In the image below, nr is the group pid.
 
 ![PIDS representation](./assets/pids.png)
+
+### processes organization
+
+The runqueue groups all _TASK_RUNNING_ state processes, but it doesn’t group processes with states _TASK_STOPPED, EXIT_ZOMBIE, EXIT_DEAD_, meaning they are not grouped into specific lists, because there is no need to. _TASK_INTERRUPTIBLE_ and _TASK_UNINTERRUPTIBLE_ are divided into many sublists, called **wait queues**.
+
+Wait queues are implemented as doubly linked lists, where each element is pointer to process descriptor. Element also includes pointers that link the element to list of processes waiting for same event, flags, and func fields. Func is pointer to function that handles the waking up process, by default it points to _default_wake_function_, which simply marks waiting task as runnable. Access to wait queue is synchronized with spin locks.
+
+There are 2 kinds of procceses in wait queue: **exclusive** - denoted by value 1 in the flags field, selectively woken up by kernel when event occurs, and **nonexclusive** - \*\*\*\*denoted by value 0, always waken up by kernel when event occurs.
+
+When resource becomes available, and when there is a lists of proccesses waiting for the same event, not all procceses at once are awaken. This can lead to CPU cycles waste and other problems. Nonexclusive proccesses in wait queue are awaken at the same time, it doesn’t lead to problems.
 
 ## FAQ
 
