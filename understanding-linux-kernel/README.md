@@ -389,6 +389,10 @@ Kernel may need process descriptors that are in the same group as P. For this, p
 
 So essentially the addresses for hash tables are stored in `pid_hash` data structure, which is an array. Array items are accesses through hash table type (like PIDTYPE_PID), and it points to the hash table address. The value of hash table is the doubly linked list that stores the process descriptors that mapped to the same index. To find related process descriptors kernel takes the pids array and takes the corresponding index (for ex PIDTYPE_TGID) and take pid_list property. `pids[PIDTYPE_TGID]→pid_list`.
 
+In the image below, nr is the group pid.
+
+![PIDS representation](./assets/pids.png)
+
 ## FAQ
 
 - Is Linux kernel a process?
