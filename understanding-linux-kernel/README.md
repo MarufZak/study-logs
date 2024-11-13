@@ -411,6 +411,12 @@ It’s uncommon to have exclusive and unexclusive processes inside one wait queu
 
 Each process has its limits in order not to overwhelm the CPU, disk space and so on. They are stored in `process->signal->rlim` field in process descriptor. It’s an array of elements of type **rlimit,** one for each resource limit. This includes current, and the limit with **rlim_cur** and **rlim_max** fields respectively.
 
+| **field name** | **description**                                                                                                                |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| RLIMIT_AS      | max size of process address space in bytes. Checked when enlarging process address space with malloc for example               |
+| RLIMIT_CPU     | max CPU time for the process in seconds. Kills the process if it doesn’t terminate after corresponding signal about exceeding. |
+| and many more… |                                                                                                                                |
+
 ## FAQ
 
 - Is Linux kernel a process?
