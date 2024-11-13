@@ -404,6 +404,8 @@ There are 2 kinds of procceses in wait queue: **exclusive** - denoted by value 1
 
 When resource becomes available, and when there is a lists of proccesses waiting for the same event, not all procceses at once are awaken. This can lead to CPU cycles waste and other problems. Nonexclusive proccesses in wait queue are awaken at the same time, it doesn’t lead to problems.
 
+It’s uncommon to have exclusive and unexclusive processes inside one wait queue.
+
 ## FAQ
 
 - Is Linux kernel a process?
