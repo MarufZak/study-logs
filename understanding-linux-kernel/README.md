@@ -369,6 +369,13 @@ All processes have relationship. A process that creates another process is marke
 
 Scanning the process list to find process descriptor with specific PID is not efficient. Because of this, four hash tables were introduced. Why four? Because process descriptor includes different kinds of PIDs, and those hash tables refer to corresponding PID. The tables are dynamically allocated during initialization phase, and its size depends on RAM, if RAM is 512MB, the size is 2 page frames (8KB, 2,048 entries). Each value in the hash table is the head of doubly linked list, used for handling colliding, when two or more process descriptors resolve to the same entry.
 
+| **hash table type** | **field** | **description**                    |
+| ------------------- | --------- | ---------------------------------- |
+| PIDTYPE_PID         | pid       | PID of the process                 |
+| PIDTYPE_TGID        | tgid      | PID of thread group leader process |
+| PIDTYPE_PGID        | pgrp      | PID of the group leader process    |
+| PIDTYPE_SID         | session   | PID of the session leader process  |
+
 ## FAQ
 
 - Is Linux kernel a process?
