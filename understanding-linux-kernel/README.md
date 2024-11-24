@@ -38,6 +38,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
 - [Process communication](#process-communication)
 
   - [pipe](#pipe)
+  - [fifo](#fifo)
 
 - [FAQ](#faq)
 
@@ -509,6 +510,10 @@ Read and write syscalls might block current process in two cases:
 
 1. Pipe buffer is empty, read syscall cannot read, waiting for data to be written.
 2. Pipe buffer is full, write syscall cannot write, waiting for data to be read.
+
+### FIFO
+
+One downside of pipes is that existing pipes cannot be opened unless the process is ancestor of process, which created pipe. FIFO (first data written is also first that is read) is a pipe that has data inside kernel buffer, and has disk INode, and therefore FIFO can be accessed by any process.
 
 ## FAQ
 
