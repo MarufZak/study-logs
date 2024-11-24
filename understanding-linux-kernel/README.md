@@ -426,6 +426,13 @@ Process switch is process of suspending execution of one process and resuming ex
 
 Each process has its own address space, but all of them share the same CPU registers. The set of data that need to be loaded to CPU registers before process resumes its execution is called **hardware context.** Some of it is saved in process descriptor, while some in Kernel Mode Stack. So, process switch is activity of saving hardware context of prev process and replacing it with next process hardware context, which happens in kernel mode.
 
+**TSS** is a memory area that keeps the info about CPU’s current state. It’s created one per CPU. TSS is stored in Global Descriptor Table (GDT, which is essentially a table that defines memory areas). Linux doesn’t fully use TSS, but it defines it. It is used for:
+
+1. CPU switches from user mode to kernel mode, it uses TSS to find Kernel Mode Stack.
+2. Check permissions for I/O ports. Bitmap is stored in TSS for corresponding ports with permissions.
+
+Linux can’t save hardware context on TSS, because it has TSS per CPU, not per process. Instead it uses `thread` field in process descriptor. Some general-purpose registers like eax, ebx, etc are saved in Kernel Mode Stack though.
+
 ## FAQ
 
 - Is Linux kernel a process?
