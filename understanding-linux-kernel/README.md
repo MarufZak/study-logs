@@ -533,6 +533,10 @@ IPC resource is created with `semget()` for semaphore, `msgget()` for message qu
 
 IPC resources can be controlled (get info, change owner, release resource) with `semctl()`, `msgctl()` and `shmctl()`
 
+Once created, semaphore can be acquired or released with `semop()` function. For message queue, `msgsnd()` is used to send, and `msgrcv()` is for receiving messages. Process can attach or detach shared memory area to its address space with `shmat()` and `shmdt()` functions respectively.
+
+In reality IPC functions are wrapper functions, which use `ipc()` function inside with corresponding flags and arguments, and so `ipc()` function is also called “multiplexer” syscall.
+
 ## FAQ
 
 - Is Linux kernel a process?
