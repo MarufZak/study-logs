@@ -471,9 +471,9 @@ In Unix, process descriptor is not removed from the memory right after the termi
 There are 5 ways for process communication in Linux:
 
 1. Pipes and FIFOs (named pipes). Good for producer/consumer interactions, where one fills the pipe, and other reads it.
-2. Semaphores. Described in System V IPC.
-3. Messages. Allow processes to exchange data by reading and writing to predefined message queues. Linux offers two types of it: System V IPC (covered in System V IPC) messages and POSIX messages (covered in POSIX message queues).
-4. Shared memory region. Allow processes to exchange data via shared block of memory. Good for apps where a huge amount data is shared. Discussed in System V IPC.
+2. Semaphores. A set of primitive semaphore counters to synchronize resource access.
+3. Messages. Allow processes to exchange data by reading and writing to predefined message queues. Linux offers two types of it: System V IPC messages and POSIX messages.
+4. Shared memory region. Allow processes to exchange data via shared block of memory. Good for apps where a huge amount data is shared.
 5. Sockets. Allow process on different computers to exchange data through network, can be on the same host computer.
 
 ### Pipe
