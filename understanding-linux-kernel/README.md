@@ -36,6 +36,9 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
   - [creating process](#creating-process)
   - [destroying process](#destroying-process)
 - [Process communication](#process-communication)
+
+  - [pipe](#pipe)
+
 - [FAQ](#faq)
 
 ## Introduction
@@ -471,6 +474,10 @@ There are 5 ways for process communication in Linux:
 3. Messages. Allow processes to exchange data by reading and writing to predefined message queues. Linux offers two types of it: System V IPC (covered in System V IPC) messages and POSIX messages (covered in POSIX message queues).
 4. Shared memory region. Allow processes to exchange data via shared block of memory. Good for apps where a huge amount data is shared. Discussed in System V IPC.
 5. Sockets. Allow process on different computers to exchange data through network, can be on the same host computer.
+
+### Pipe
+
+Pipe is one way data flow, where one process writes data into the buffer, and second process reads it from buffer. Process can create pipe with `pipe` syscall, which returns two file descriptors. First descriptor is used to read data, and second is to write. These descriptors can be passed to child processes through `fork`. POSIX defines _half-duplex pipes,_ meaning one should close before another uses it. But Linux adopts another approach. Each pipe’s file descriptors are still one-way, but it’s not necessary to close one before using another.
 
 ## FAQ
 
