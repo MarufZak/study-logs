@@ -443,6 +443,10 @@ In older Unix systems all the address space from the parent had to be copied to 
 2. Lightweight processes share most data structures, like User Mode address space, paging tables, open file tables, signal dispositions.
 3. The `vfork` syscall creates a process that shares an address space with parent. Parent execution is delayed until child exits or executes the program.
 
+Lightweight process is created with `clone` syscall. The `fork` syscall is implemented by Linux as a `clone` function with some specified arguments, and uses copy on write method. The `vfork` is also implemented as `clone` function with some params specified.
+
+There is a `do_fork` syscall called inside those described above. It creates a new process by copying parent’s process’s data (like file descriptors) and depending of flags given, it makes the copy of address space of parent to child, or make them share same memory address space. Then it attaches this process to scheduler and returns PID of this process.
+
 ## FAQ
 
 - Is Linux kernel a process?
