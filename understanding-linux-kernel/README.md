@@ -35,6 +35,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
   - [process switch](#process-switch)
   - [creating process](#creating-process)
   - [destroying process](#destroying-process)
+- [Process communication](#process-communication)
 - [FAQ](#faq)
 
 ## Introduction
@@ -460,6 +461,16 @@ When process ends up its execution, its resources should be released so it doesn
 In Linux there are 2 syscalls to terminate user mode application: `exit_group()` , which terminates the whole multithreaded application, invoked by `exit()` syscall, and `_exit()` , which terminates a single process regardless of other processes in the thread group.
 
 In Unix, process descriptor is not removed from the memory right after the termination of process. It’s done so when parent process issues `wait` like syscall, which checks if process has terminated. That’s why **EXIT_ZOMBIE** process state is introduced.
+
+## Process communication
+
+There are 5 ways for process communication in Linux:
+
+1. Pipes and FIFOs (named pipes). Good for producer/consumer interactions, where one fills the pipe, and other reads it.
+2. Semaphores. Described in System V IPC.
+3. Messages. Allow processes to exchange data by reading and writing to predefined message queues. Linux offers two types of it: System V IPC (covered in System V IPC) messages and POSIX messages (covered in POSIX message queues).
+4. Shared memory region. Allow processes to exchange data via shared block of memory. Good for apps where a huge amount data is shared. Discussed in System V IPC.
+5. Sockets. Allow process on different computers to exchange data through network, can be on the same host computer.
 
 ## FAQ
 
