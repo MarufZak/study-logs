@@ -433,6 +433,8 @@ Each process has its own address space, but all of them share the same CPU regis
 
 Linux can’t save hardware context on TSS, because it has TSS per CPU, not per process. Instead it uses `thread` field in process descriptor. Some general-purpose registers like eax, ebx, etc are saved in Kernel Mode Stack though.
 
+**fpu, mmx, xmm registers.** These registers are used for arithmetics. fpu and mmx share same set of registers that overlap, and xss includes set of registers used for SIMD (single instruction, multiple data) floating point operations. When process switching, they are saved in `thread.i387` field of process descriptor. Note that the kernel saves them only if process actually used them, triggered by “device not available” exception.
+
 ## FAQ
 
 - Is Linux kernel a process?
