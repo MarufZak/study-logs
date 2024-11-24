@@ -34,6 +34,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
   - [resource limits](#resource-limits)
   - [process switch](#process-switch)
   - [creating process](#creating-process)
+  - [destroying process](#destroying-process)
 - [FAQ](#faq)
 
 ## Introduction
@@ -451,6 +452,14 @@ There is a `do_fork` syscall called inside those described above. It creates a n
 There is `copy_process` function used inside `do_fork` syscall that does most of the job of `do_fork`. It allocates memory for new `task_struct`. It clones parent’s CPU registers, open file descriptors, and process memory if corresponding flag is specified. Assigns a PID for the process, and attaches process it to the scheduler. It also perform some security checks in parent `rlim` fields. Terminates by returning child’s process descriptor pointer.
 
 In simple words, clone function has some other function invokations inside with some params specified.
+
+### destroying process
+
+When process ends up its execution, its resources should be released so it doesn’t take unnecessary space. C compiler always puts `exit()` syscall at the end of the program.
+
+In Linux there are 2 syscalls to terminate user mode application: `exit_group()` , which terminates the whole multithreaded application, invoked by `exit()` syscall, and `_exit()` , which terminates a single process regardless of other processes in the thread group.
+
+In Unix, process descriptor is not removed from the memory right after the termination of process. It’s done so when parent process issues `wait` like syscall, which checks if process has terminated. That’s why **EXIT_ZOMBIE** process state is introduced.
 
 ## FAQ
 
