@@ -32,6 +32,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
   - [pids](#pids)
   - [process organization](#processes-organization)
   - [resource limits](#resource-limits)
+  - [process switch](#process-switch)
 - [FAQ](#faq)
 
 ## Introduction
@@ -418,6 +419,12 @@ It’s possible to resize the limit with getrlimit and setrlimit (this one is do
 | RLIMIT_AS      | max size of process address space in bytes. Checked when enlarging process address space with malloc for example               |
 | RLIMIT_CPU     | max CPU time for the process in seconds. Kills the process if it doesn’t terminate after corresponding signal about exceeding. |
 | and many more… |                                                                                                                                |
+
+### process switch
+
+Process switch is process of suspending execution of one process and resuming execution of another process, performed by the **schedule()** kernel function, used by the scheduler.
+
+Each process has its own address space, but all of them share the same CPU registers. The set of data that need to be loaded to CPU registers before process resumes its execution is called **hardware context.** Some of it is saved in process descriptor, while some in Kernel Mode Stack. So, process switch is activity of saving hardware context of prev process and replacing it with next process hardware context, which happens in kernel mode.
 
 ## FAQ
 
