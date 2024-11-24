@@ -435,6 +435,14 @@ Linux can’t save hardware context on TSS, because it has TSS per CPU, not per 
 
 **fpu, mmx, xmm registers.** These registers are used for arithmetics. fpu and mmx share same set of registers that overlap, and xss includes set of registers used for SIMD (single instruction, multiple data) floating point operations. When process switching, they are saved in `thread.i387` field of process descriptor. Note that the kernel saves them only if process actually used them, triggered by “device not available” exception.
 
+### creating process
+
+In older Unix systems all the address space from the parent had to be copied to child process, which is inefficient. Moreover most programs used `execve` that vipes out all the address space that was copied. Modern Unix systems include other techniques:
+
+1. Copy on write. Copy the address space for the one whenever child or parent tries to write to the address space.
+2. Lightweight processes share most data structures, like User Mode address space, paging tables, open file tables, signal dispositions.
+3. The `vfork` syscall creates a process that shares an address space with parent. Parent execution is delayed until child exits or executes the program.
+
 ## FAQ
 
 - Is Linux kernel a process?
