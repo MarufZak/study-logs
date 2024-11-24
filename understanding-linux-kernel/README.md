@@ -479,6 +479,24 @@ There are 5 ways for process communication in Linux:
 
 Pipe is one way data flow, where one process writes data into the buffer, and second process reads it from buffer. Process can create pipe with `pipe` syscall, which returns two file descriptors. First descriptor is used to read data, and second is to write. These descriptors can be passed to child processes through `fork`. POSIX defines _half-duplex pipes,_ meaning one should close before another uses it. But Linux adopts another approach. Each pipe’s file descriptors are still one-way, but it’s not necessary to close one before using another.
 
+When command `ls | more` is executed, following actions are done:
+
+1. `pipe()` syscall is invoked, and returns file descriptors 3 (read channel) and 4 (write channel).
+2. Two `fork()` syscalls are invoked.
+3. `close()` syscall is invoked twice to release file descriptors 3 and 4.
+
+First child does the following:
+
+1. Invokes `dup2(4,1)` syscall to copy descriptor 1 to descriptor 4. Now output descriptor refers to pipe’s write channel.
+2. Invokes `close()` two times to release file descriptors 3 and 4.
+3. Executes `execve()` syscall to execute `ls` command, and then output is written to file descriptor 1 (standart output), which is pipe.
+
+Second child does the following:
+
+1. Invokes `dup2(3,0)` to copy file descriptor 3 to file descriptor 0. Now file descriptor 0 (standart input) refers to pipe’s read channel.
+2. Invokes `close()` syscall twice to release file descriptors 3 and 4.
+3. Executes `execve` to execute `more` command. By default program reads from standart input, which is pipe’s read channel.
+
 ## FAQ
 
 - Is Linux kernel a process?
