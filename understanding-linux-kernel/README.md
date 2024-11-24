@@ -497,6 +497,10 @@ Second child does the following:
 2. Invokes `close()` syscall twice to release file descriptors 3 and 4.
 3. Executes `execve` to execute `more` command. By default program reads from standart input, which is pipe’s read channel.
 
+Note that `write` and `read` syscalls for pipes are VFS (Virtual File System) syscalls. Because of this, for each pipe kernel creates INode and two file objects (for reading and writing). In order to read/write, process needs its file descriptors. Besides that each pipe has its pipe buffer, which, for modern Linux systems, is 16 page frames size.
+
+Processes write and fill the buffer, while readers read and empty the buffer, meaning the read data is removed from the buffer. Buffers are organized as VFS objects, so users don’t see them, because they are not mounted in FS.
+
 ## FAQ
 
 - Is Linux kernel a process?
