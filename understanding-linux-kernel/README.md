@@ -33,6 +33,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
   - [process organization](#processes-organization)
   - [resource limits](#resource-limits)
   - [process switch](#process-switch)
+  - [creating process](#creating-process)
 - [FAQ](#faq)
 
 ## Introduction
