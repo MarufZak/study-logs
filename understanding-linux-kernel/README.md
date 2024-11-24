@@ -542,6 +542,12 @@ In reality IPC functions are wrapper functions, which use `ipc()` function insid
 
 Each IPC semaphore is a set of one or more semaphore values, meaning one IPC semaphore can protect multiple independant data structures. Semaphores inside IPC semaphore are called _primitive semaphores._ Maximum number of IPC semaphores is 128 by default, and each can contain 250 primitive semaphores by default.
 
+System V IPC semaphore provides fail-safe mechanism for situations where process dies without undoing operation, therefore making other processes waiting for the same resource wait infinitely. For System V IPC semaphores, if process dies, all its IPC semaphores can revert to state in which process hasn’t issued a semaphore. Process should mark operations as undoable , for example with _SEM_UNDO_ flag for `semop` operation. Kernel keeps track of state to make undo operation.
+
+Each IPC semaphore has `sem_base` field, which is an array of structures representing state of each primitive semaphore. Structure contains of `semval`, value of semaphore’s counter, and `sempid` , PID of last process that accessed the semaphore.
+
+Kernel also keeps track of all pending requests to identify procceses waiting for the one or more primitive semaphores in the array. it’s implemented as doubly linked list of `sem_queue` data structure.
+
 ## FAQ
 
 - Is Linux kernel a process?
