@@ -515,6 +515,13 @@ Read and write syscalls might block current process in two cases:
 
 One downside of pipes is that existing pipes cannot be opened unless the process is ancestor of process, which created pipe. FIFO (first data written is also first that is read) is a pipe that has data inside kernel buffer, and has disk INode, and therefore FIFO can be accessed by any process.
 
+FIFO has the same methods as pipe, almost same structure as pipe, but there are some differences:
+
+1. FIFO INode appear on system directory tree, rather than in VFS.
+2. FIFO is bidirectional communication channel.
+
+FIFO is created with `mkfifo` command, and opened, closed and manipulated with same commands as pipe, but the behavior differs.
+
 ## FAQ
 
 - Is Linux kernel a process?
