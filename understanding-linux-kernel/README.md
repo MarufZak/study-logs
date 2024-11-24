@@ -529,6 +529,10 @@ IPC is abbreviation for Inter Process Communication, which is used for synchroni
 
 IPC data structures are created dynamically when process requests IPC resource (semaphore, message queue, or shared memory area), and it’s persistent (removed when explicitly commanded to, or when shutting down the system). Each IPC resource has 32-bit IPC key (like pathname to file in FS, explicitly set by programmer), and 32-bit IPC ID (like file descriptor for open file, set by kernel). For communication between each other, processes refer to IPC ID of resource.
 
+IPC resource is created with `semget()` for semaphore, `msgget()` for message queue, and `shmget()` for shared memory area. IPC key is passed as an argument, and, depending on the flag, if resource doesn’t exist, it is created, or fail, if it exists. IPC key is usually passed as **IPC_PRIVATE** key, making kernel responsible for creating a key. Ensures other processes doesn’t create IPC resource with same key.
+
+IPC resources can be controlled (get info, change owner, release resource) with `semctl()`, `msgctl()` and `shmctl()`
+
 ## FAQ
 
 - Is Linux kernel a process?
