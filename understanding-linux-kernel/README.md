@@ -447,6 +447,10 @@ Lightweight process is created with `clone` syscall. The `fork` syscall is imple
 
 There is a `do_fork` syscall called inside those described above. It creates a new process by copying parent’s process’s data (like file descriptors) and depending of flags given, it makes the copy of address space of parent to child, or make them share same memory address space. Then it attaches this process to scheduler and returns PID of this process.
 
+There is `copy_process` function used inside `do_fork` syscall that does most of the job of `do_fork`. It allocates memory for new `task_struct`. It clones parent’s CPU registers, open file descriptors, and process memory if corresponding flag is specified. Assigns a PID for the process, and attaches process it to the scheduler. It also perform some security checks in parent `rlim` fields. Terminates by returning child’s process descriptor pointer.
+
+In simple words, clone function has some other function invokations inside with some params specified.
+
 ## FAQ
 
 - Is Linux kernel a process?
