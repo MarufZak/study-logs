@@ -501,6 +501,15 @@ Note that `write` and `read` syscalls for pipes are VFS (Virtual File System) sy
 
 Processes write and fill the buffer, while readers read and empty the buffer, meaning the read data is removed from the buffer. Buffers are organized as VFS objects, so users don’t see them, because they are not mounted in FS.
 
+Inside INode there is a pointer to `pipe_node_info` structure, which has counters of readers and writers. Forking doesn’t increment the counters (so it never becomes more than 1), but it increases the usage of counters of all file objects still used by parent process ⇒ pipe is not released when parent dies, it’s still open for children.
+
+If readers and writers counters of pipe both becomes 0, `release` method inside each buffer is called, releasing the page frames. This check happens whenever `close()` syscall associated with pipe is invoked. If it is not 0, it wakes up processes in pipe’s wait queue to notify about the change.
+
+Read and write syscalls might block current process in two cases:
+
+1. Pipe buffer is empty, read syscall cannot read, waiting for data to be written.
+2. Pipe buffer is full, write syscall cannot write, waiting for data to be read.
+
 ## FAQ
 
 - Is Linux kernel a process?
