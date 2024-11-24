@@ -40,6 +40,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
   - [pipe](#pipe)
   - [fifo](#fifo)
   - [system v ipc](#system-v-ipc)
+  - [ipc semaphores](#ipc-semaphores)
 
 - [FAQ](#faq)
 
@@ -536,6 +537,10 @@ IPC resources can be controlled (get info, change owner, release resource) with 
 Once created, semaphore can be acquired or released with `semop()` function. For message queue, `msgsnd()` is used to send, and `msgrcv()` is for receiving messages. Process can attach or detach shared memory area to its address space with `shmat()` and `shmdt()` functions respectively.
 
 In reality IPC functions are wrapper functions, which use `ipc()` function inside with corresponding flags and arguments, and so `ipc()` function is also called “multiplexer” syscall.
+
+### IPC semaphores
+
+Each IPC semaphore is a set of one or more semaphore values, meaning one IPC semaphore can protect multiple independant data structures. Semaphores inside IPC semaphore are called _primitive semaphores._ Maximum number of IPC semaphores is 128 by default, and each can contain 250 primitive semaphores by default.
 
 ## FAQ
 
