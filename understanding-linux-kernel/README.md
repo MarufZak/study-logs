@@ -39,6 +39,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
 
   - [pipe](#pipe)
   - [fifo](#fifo)
+  - [system v ipc](#system-v-ipc)
 
 - [FAQ](#faq)
 
@@ -521,6 +522,12 @@ FIFO has the same methods as pipe, almost same structure as pipe, but there are 
 2. FIFO is bidirectional communication channel.
 
 FIFO is created with `mkfifo` command, and opened, closed and manipulated with same commands as pipe, but the behavior differs.
+
+### System V IPC
+
+IPC is abbreviation for Inter Process Communication, which is used for synchronizing processes with semaphores, send/receive messages to other processes, share memory area with other processes. System V (early version of Unix OS) IPC can be found in Linux.
+
+IPC data structures are created dynamically when process requests IPC resource (semaphore, message queue, or shared memory area), and it’s persistent (removed when explicitly commanded to, or when shutting down the system). Each IPC resource has 32-bit IPC key (like pathname to file in FS, explicitly set by programmer), and 32-bit IPC ID (like file descriptor for open file, set by kernel). For communication between each other, processes refer to IPC ID of resource.
 
 ## FAQ
 
