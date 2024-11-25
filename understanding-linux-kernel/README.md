@@ -41,6 +41,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
   - [fifo](#fifo)
   - [system v ipc](#system-v-ipc)
   - [ipc semaphores](#ipc-semaphores)
+  - [ipc messages](#ipc-messages)
 
 - [FAQ](#faq)
 
@@ -547,6 +548,10 @@ System V IPC semaphore provides fail-safe mechanism for situations where process
 Each IPC semaphore has `sem_base` field, which is an array of structures representing state of each primitive semaphore. Structure contains of `semval`, value of semaphore’s counter, and `sempid` , PID of last process that accessed the semaphore.
 
 Kernel also keeps track of all pending requests to identify procceses waiting for the one or more primitive semaphores in the array. it’s implemented as doubly linked list of `sem_queue` data structure.
+
+### IPC messages
+
+Another way to communicate with another process is with IPC messages. It’s a queue containing messages, which stay until another process read it (kernel destroys the message). Message consists of fixed-size header, and variable-length text. Message can be labelled with integer value, also called as _message type_.
 
 ## FAQ
 
