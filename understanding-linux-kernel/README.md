@@ -568,6 +568,8 @@ Sending message to message queue can be blocking if the queue is full, or it can
 
 Common data structures can be accessed by one or more processes by placing them in IPC shared memory region. Each process that wants to access it need to place to its address space a new memory region, which maps the page frames associated with shared memory region, which is handled by kernel with technique called “demand paging”.
 
+`shmget()` is used to get id/create (if it doesn’t exist) ipc shared memory. `shmat()` is used to attach IPC shared memory region to calling process address space. `shmdt()` is used to detach IPC shared memory region from process address space.
+
 ## FAQ
 
 - Is Linux kernel a process?
