@@ -559,6 +559,8 @@ To retrieve message `msgrcv()` is used, with arguments of IPC identifier, pointe
 
 By default, limit number of IPC message queues is 16, the size limit of each message is 8,192 bytes (header takes 24 bytes), and limit for the queue size is 16,384 bytes. However, system admin can change the limits.
 
+IPC message queue is represented as `msg_queue` \*\*structure, which contains `q_messages` field, which is the head of doubly linked circular list containing all the messages in the queue. Message is broken into one or more dynamically allocated pages.
+
 ## FAQ
 
 - Is Linux kernel a process?
