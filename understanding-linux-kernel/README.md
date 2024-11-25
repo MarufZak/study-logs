@@ -570,6 +570,8 @@ Common data structures can be accessed by one or more processes by placing them 
 
 `shmget()` is used to get id/create (if it doesn’t exist) ipc shared memory. `shmat()` is used to attach IPC shared memory region to calling process address space. `shmdt()` is used to detach IPC shared memory region from process address space.
 
+By default, limit for the number of IPC shared memory regions is 4096, the size of each segment is 32MB, and total size of all segments is 8GB.
+
 ## FAQ
 
 - Is Linux kernel a process?
