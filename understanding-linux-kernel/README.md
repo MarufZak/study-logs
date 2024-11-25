@@ -557,6 +557,8 @@ To send a message `msgsnd()` is used, with arguments of destination IPC ideantif
 
 To retrieve message `msgrcv()` is used, with arguments of IPC identifier, pointer to buffer where message type and text should be copied to, the size of buffer, and **_t_** value specifying what message should be retrieved. If **_t_** is positive, first queue item with matched message type is retrieved. But if it’s negative, function returns first message with message type less or equal of absolute value of **_t._**
 
+By default, limit number of IPC message queues is 16, the size limit of each message is 8,192 bytes (header takes 24 bytes), and limit for the queue size is 16,384 bytes. However, system admin can change the limits.
+
 ## FAQ
 
 - Is Linux kernel a process?
