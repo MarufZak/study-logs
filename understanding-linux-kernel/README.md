@@ -572,6 +572,10 @@ Common data structures can be accessed by one or more processes by placing them 
 
 By default, limit for the number of IPC shared memory regions is 4096, the size of each segment is 32MB, and total size of all segments is 8GB.
 
+Data structure associated with it is `shmid_kernel`, which contains `shm_file` - which stores address of file object. Files are not mounted in FS, instead they exist in VFS.
+
+Demand paging works so that if process tries to get data from shared memory region, page fault exception is raised, and kernel allocated the missing page. So the pages are not allocated immediately when shared memory is attached, it’s not allocated until process tries to use it.
+
 ## FAQ
 
 - Is Linux kernel a process?
