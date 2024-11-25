@@ -553,6 +553,10 @@ Kernel also keeps track of all pending requests to identify procceses waiting fo
 
 Another way to communicate with another process is with IPC messages. It’s a queue containing messages, which stay until another process read it (kernel destroys the message). Message consists of fixed-size header, and variable-length text. Message can be labelled with integer value, also called as _message type_.
 
+To send a message `msgsnd()` is used, with arguments of destination IPC ideantifier, size of the message text, and address to User Mode buffer that contains the message type (integer) immediately followed by the message text.
+
+To retrieve message `msgrcv()` is used, with arguments of IPC identifier, pointer to buffer where message type and text should be copied to, the size of buffer, and **_t_** value specifying what message should be retrieved. If **_t_** is positive, first queue item with matched message type is retrieved. But if it’s negative, function returns first message with message type less or equal of absolute value of **_t._**
+
 ## FAQ
 
 - Is Linux kernel a process?
