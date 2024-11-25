@@ -42,6 +42,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
   - [system v ipc](#system-v-ipc)
   - [ipc semaphores](#ipc-semaphores)
   - [ipc messages](#ipc-messages)
+  - [ipc shared memory](#ipc-shared-memory)
 
 - [FAQ](#faq)
 
@@ -562,6 +563,10 @@ By default, limit number of IPC message queues is 16, the size limit of each mes
 IPC message queue is represented as `msg_queue` \*\*structure, which contains `q_messages` field, which is the head of doubly linked circular list containing all the messages in the queue. Message is broken into one or more dynamically allocated pages.
 
 Sending message to message queue can be blocking if the queue is full, or it can be blocking when receiving message from queue which is empty. For such cases there are special fields in `msg_queue`. `q_senders` and `q_receivers` fields are head of lists waiting for queue to have space to enqueue the message and read the message respectively.
+
+### IPC shared memory
+
+Common data structures can be accessed by one or more processes by placing them in IPC shared memory region. Each process that wants to access it need to place to its address space a new memory region, which maps the page frames associated with shared memory region, which is handled by kernel with technique called “demand paging”.
 
 ## FAQ
 
