@@ -561,6 +561,8 @@ By default, limit number of IPC message queues is 16, the size limit of each mes
 
 IPC message queue is represented as `msg_queue` \*\*structure, which contains `q_messages` field, which is the head of doubly linked circular list containing all the messages in the queue. Message is broken into one or more dynamically allocated pages.
 
+Sending message to message queue can be blocking if the queue is full, or it can be blocking when receiving message from queue which is empty. For such cases there are special fields in `msg_queue`. `q_senders` and `q_receivers` fields are head of lists waiting for queue to have space to enqueue the message and read the message respectively.
+
 ## FAQ
 
 - Is Linux kernel a process?
