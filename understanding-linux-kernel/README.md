@@ -43,6 +43,7 @@ My notes and takeaways from Understanding Linux Kernel book by Daniel P. Bovet a
   - [ipc semaphores](#ipc-semaphores)
   - [ipc messages](#ipc-messages)
   - [ipc shared memory](#ipc-shared-memory)
+  - [posix message queues](#posix-message-queues)
 
 - [FAQ](#faq)
 
@@ -575,6 +576,10 @@ By default, limit for the number of IPC shared memory regions is 4096, the size 
 Data structure associated with it is `shmid_kernel`, which contains `shm_file` - which stores address of file object. Files are not mounted in FS, instead they exist in VFS.
 
 Demand paging works so that if process tries to get data from shared memory region, page fault exception is raised, and kernel allocated the missing page. So the pages are not allocated immediately when shared memory is attached, it’s not allocated until process tries to use it.
+
+### POSIX message queues
+
+POSIX message queues have some advantages over System V IPC message queues, such as timeout for blocking operations, async notification of message arrivals, simpler file based interface for applications with corresponding functions. Other behavior is the same.
 
 ## FAQ
 
