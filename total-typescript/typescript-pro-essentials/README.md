@@ -660,7 +660,7 @@ Declaration files can be used in 2 types.
 
 ### Script
 
-In this case, ts compiler treats declaration file as a script, and you can choose not to export type from it, but it is still accessible in other modules. Even if you set moduleDetection to force, this option only works for .ts and .tsx files, not .d.ts. I noticed that if `.d.ts` and `.ts` files have same name, we cannot use type in declaration file from source file, we need to include declaration file in `types` option in tsconfig.
+In this case, ts compiler treats declaration file as a script, and you can choose not to export type from it, but it is still accessible in other modules. Even if you set moduleDetection to force, this option only works for .ts and .tsx files, not .d.ts. I noticed that if `.d.ts` and `.ts` files have same name, we cannot use type in declaration file from source file, we need to include declaration file in `types` option in tsconfig, and we need to make moduleDetection **force**
 
 ### Module
 
