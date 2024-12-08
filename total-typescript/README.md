@@ -8,3 +8,5 @@ Every workshop is divided into separate folders, with a README.md file containin
 ## Workshops
 
 1. [Typescript pro essentials](./typescript-pro-essentials/README.md)
+2. [Type transformations](./type-transformations/README.md)
+3. [Typescript generics](./typescript-generics/README.md)
