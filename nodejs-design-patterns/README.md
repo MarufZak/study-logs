@@ -199,6 +199,54 @@ b = {
 }; */
 ```
 
+Explanation
+
+1. **`main.js` requires `./a`:**
+
+   - Node checks its module cache for `"./a"` and finds nothing. It starts loading `a.js`.
+
+2. **Inside `a.js`:**
+
+   1. `module.exports.loaded = false;`
+      - So far, `module.exports` is `{ loaded: false }`.
+   2. `const b = require("./b");`
+      - Node checks if `"./b"` is in the cache. It isn’t, so it starts loading `b.js`.
+
+3. **Inside `b.js`:**
+
+   1. `module.exports.loaded = false;`
+      - So far, `module.exports` is `{ loaded: false }`.
+   2. `const a = require("./a");`
+      - Node sees `"./a"` is **in the process** of loading (so it’s partially complete). It returns that partial export of `a`: `{ loaded: false }`.
+   3. `module.exports = { a, loaded: true };`
+      - Final export for `b` becomes:
+      ```js
+      {
+        a: { loaded: false }, // partial version of a
+        loaded: true
+      }
+      ```
+      - `b.js` finishes, and Node caches this export under `"./b"`.
+
+4. **Back to `a.js`:**
+
+   - We resume after `const b = require("./b");`, which at this point is `{ a: { loaded: false }, loaded: true }`.
+
+   1. `module.exports = { b, loaded: true };`
+      - Final export for `a` becomes:
+      ```js
+      {
+        b: { a: { loaded: false }, loaded: true },
+        loaded: true
+      }
+      ```
+
+   - `a.js` finishes, and Node caches this export under `"./a"`.
+
+5. **Back to `main.js`:**
+   - `const a = require("./a");` now returns the **fully** exported `a`.
+   - `const b = require("./b");` returns the cached export of `b`.
+
 #### Monkey patching
 
 It’s a practice of modifying existing objects (other modules exports) at runtime to change or extend behaviour, or apply temporary fixes. Monkey patching is considered harmful.
