@@ -302,11 +302,11 @@ In simple terms, phase 1 is finding dots, phase 2 is connecting them, phase 3 is
 
 Difference from CJS is that in cjs the code before `require` is already executed, whereas no code is executed until phase 3 in ESM, this makes exports and imports to be static.
 
-In case of ESM, all modules will have up-to-date imports from other modules, because the evaluation step happens from bottom to top, to make sure that other modules that import this module has this module up-to-date. In other words, ESM modules have live bindings, meaning if module export is modified, the module that imported it gets the modified module. Circular deps problem with CJS is now resolved.
+In case of ESM, all modules will have up-to-date imports from other modules, because ESM uses live bindings, and evaluation order ensures every module imports fresh exports from other modules and that dependencies are resolved before execution. Circular deps problem with CJS is now resolved.
 
 #### Read-only live binding and live binding
 
-When entity is imported from other module, it is readonly (read-only live binding) and cannot be mutated directly, whereas it can be mutated in its original module (live binding). We can provide a function as an export to mutate the readon-only live binding variables.
+When entity is imported from other module, it is readonly (read-only live binding) and cannot be mutated directly, whereas it can be mutated in its original module (live binding). We can provide a function as an export to mutate the read-only live binding variables.
 
 ```js
 // count.js
