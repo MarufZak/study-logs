@@ -442,7 +442,7 @@ There are other ways also to defer the execution of some code like `setImmediate
 
 In synchronous direct style functions, errors are propagated with `throw` keyword, in which errors are propagated in the callstack. Whereas in continuation-passing style (CPS), errors are propagated by passing error to next callback in the chain.
 
-Sometimes we may have CPS async function, and inside callback the error might be thrown. In this case, even if we surround the entire function with `try catch` block, it will not catch our error, because the stack in which the block operates is different from the one in which our callback is invoked. So, the error will go straight to the event loop, where it is caugth and thrown to the console.
+Sometimes we may have CPS async function, and inside callback the error might be thrown. In this case, even if we surround the entire function with `try catch` block, it will not catch our error, because the stack in which the block operates is different from the one in which our callback is invoked. So, the error will go straight to the event loop, where it is caught and thrown to the console.
 
 ```tsx
 // example on how error is not caught inside catch block and propagated
@@ -456,7 +456,9 @@ try {
 }
 ```
 
-However in Node.js we can still catch the error with `process.on("uncaughtException")` event. It’s not recommended to let the app continue after such event anyway. The process of exiting and making some cleanups is called fail-fast approach, and is recommended approach in Node.js
+However in Node.js we can still catch the error with `process.on("uncaughtException")` event. It’s not recommended to let the app continue after such event anyway.
+
+The process of exiting and making some cleanups is called fail-fast approach, and is recommended approach in Node.js
 
 ### Observer pattern
 
