@@ -554,7 +554,7 @@ Examples of modules extending from EventEmitter are `http` server, in which Even
 
 One thing to note with observable pattern is that it can cause memory leaks.
 
-If the observables we are subscribing to have a long life span, we have to unsubscribe from them once there are not needed, otherwise it’s going to cause memory leaks.
+If the observables we are subscribing to have a long life span, we have to unsubscribe from them once there is no need, otherwise it’s going to cause memory leaks.
 
 Following code demonstrates an example. Variable `thisTakesMemory` is referenced inside listener, and is not garbage collected until listener is released from emitter, or until emitter is not garbage collected itself.
 
