@@ -411,11 +411,11 @@ And you want to turn it into asynchronous function. You might think of next impl
 function readAsync(filename, callback) {
   if (cache.has(filename)) {
     callback(cache.get(filename));
+  } else {
+    const data = fs.readFileSync(filename);
+    cache.set(filename, data);
+    callback(data);
   }
-
-  const data = fs.readFileSync(filename);
-  cache.set(filename, data);
-  callback(data);
 }
 ```
 
