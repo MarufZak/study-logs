@@ -981,13 +981,7 @@ promise.then(onFullfilled, onRejected);
 // Both are optional
 
 // usage example. asyncOperation returns a promise
-asyncOperation().then((result, reason) => {
-  if (reason) {
-    console.error(reason);
-  } else {
-    console.log(result);
-  }
-});
+asyncOperation().then(console.log, console.log);
 ```
 
 Important notes:
