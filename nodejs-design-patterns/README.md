@@ -1093,7 +1093,7 @@ Promise instance methods:
   ```
 
   - Answer
-    Rejected promise with reason “error”, and the error is propagated to the event loop, because it’s not catched across the chain. There is a little catch, you can see that there is callback given to `then()`, but that callback is for fulfilled promise, not rejected. We can handle the rejected promise by giving second callback to any promises in the chain. By doing this, unhandled Promise rejection is not propagated to the event loop.
+    Fulfilled promise, error is not propagated to the event loop, because it’s caught by the second argument of then. Unless we do this, error is propagated to the event loop.
 
 - Question 5
 
