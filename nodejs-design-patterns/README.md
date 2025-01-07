@@ -41,6 +41,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Exercises](#async-control-flow-patterns-with-callbacks-exercises)
 - [Asynchronous Control Flow Patterns with Promises and Async/Await](#asynchronous-control-flow-patterns-with-promises-and-asyncawait)
   - [Promises/A+ and thennables](#promisesa-and-thennables)
+  - [The Promise API](#the-promise-api)
 
 ## The Node.js platform
 
@@ -1009,3 +1010,10 @@ Historically, there were many implementations of promises, and they varied such 
 According to Promises/A+ spec, any object with `then()` method is considered Promise-like object **(thennable)**.
 
 > If it looks like a duck, swims like a duck, and quacks like a duck, then it probably is a duck - **Duck typing,** technique of recognizing (or typing) objects based on their external behavior, rather than their actual type.
+
+### **The promise API**
+
+The Promise constructor `new Promise((resolve, reject) => {})` creates a new Promise instance that fulfills or rejects based on the behavior of the function provided as an argument. The function provided to the constructor will receive two arguments.
+
+- `resolve(obj)`: This function will fulfill the Promise with the provided fulfillment value, which will be obj if obj is a value. If obj is Promise, it’ll be the fullfillment value of the obj.
+- `reject(err)`: This rejects the Promise with the reason err.
