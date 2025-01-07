@@ -1031,3 +1031,44 @@ Promise instance methods:
 - `promise.then(onFulfilled, onRejected)`: This is the essential method of a Promise. Its behavior is compatible with the Promises/A+ standard.
 - `promise.catch(onRejected)`: This method is just syntactic sugar for promise.then(undefined, onRejected).
 - `promise.finally(onFinally)`: This method allows us to set up an onFinally callback, which is invoked when the Promise is settled. Unlike onFulfilled and onRejected, the onFinally callback will not receive any argument as input, and any value returned from it will be ignored. The Promise returned by finally will settle with the same fulfillment value or rejection reason of the current Promise instance. There is only once exception to all this, which is the case in which we throw inside the onFinally callback or return a rejected Promise. In this case, the returned Promise will reject with the error that is thrown or the rejection reason of the rejected Promise returned.
+
+- Question 1
+
+  ```jsx
+  // What’s returned?
+  Promise.resolve({
+    then: () => {},
+  });
+  ```
+
+  - Answer
+    Pending promise, because Promise.resolve will resolve with given value if value is not promise. If promise, it fullfills with fullfillment value of that promise or thennable.
+
+- Question 2
+
+  ```jsx
+  Promise.resolve({
+    then: (resolve) => {
+      resolve(5);
+    },
+  });
+  ```
+
+  - Answer
+    Fulfilled promise with 5.
+
+- Question 3
+
+  ```jsx
+  // what's returned?
+  new Promise((resolve) => {
+    return {
+      then: () => {
+        resolve("then");
+      },
+    };
+  });
+  ```
+
+  - Answer
+    Pending promise
