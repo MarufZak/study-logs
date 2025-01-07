@@ -219,13 +219,16 @@ Explanation
    2. `const a = require("./a");`
       - Node sees `"./a"` is **in the process** of loading (so it’s partially complete). It returns that partial export of `a`: `{ loaded: false }`.
    3. `module.exports = { a, loaded: true };`
+
       - Final export for `b` becomes:
+
       ```js
       {
         a: { loaded: false }, // partial version of a
         loaded: true
       }
       ```
+
       - `b.js` finishes, and Node caches this export under `"./b"`.
 
 4. **Back to `a.js`:**
@@ -233,7 +236,9 @@ Explanation
    - We resume after `const b = require("./b");`, which at this point is `{ a: { loaded: false }, loaded: true }`.
 
    1. `module.exports = { b, loaded: true };`
+
       - Final export for `a` becomes:
+
       ```js
       {
         b: { a: { loaded: false }, loaded: true },
