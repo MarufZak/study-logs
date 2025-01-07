@@ -1072,3 +1072,36 @@ Promise instance methods:
 
   - Answer
     Pending promise
+
+- Question 4
+
+  ```jsx
+  // what's returned?
+
+  new Promise((resolve, reject) => {
+    reject("error");
+  })
+    .then((result, rejectedReason) => {
+      if (rejectedReason) {
+        return console.log({ rejectedReason });
+      }
+      return "value";
+    })
+    .then((undefined, err) => {
+      console.log({ err });
+    });
+  ```
+
+  - Answer
+    Rejected promise with reason “error”, and the error is propagated to the event loop, because it’s not catched across the chain. There is a little catch, you can see that there is callback given to `then()`, but that callback is for fulfilled promise, not rejected. We can handle the rejected promise by giving second callback to any promises in the chain. By doing this, unhandled Promise rejection is not propagated to the event loop.
+
+- Question 5
+
+  ```jsx
+  // what's get logged?
+  Promise.resolve(1).then((value) => console.log(value));
+  console.log(2);
+  ```
+
+  - Answer
+    2, then 1. Because the onFulfilled and onRejected callbacks are guaranteed to be invoked asynchronously.
