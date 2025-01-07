@@ -1042,7 +1042,7 @@ Promise instance methods:
   ```
 
   - Answer
-    Pending promise, because Promise.resolve will resolve with given value if value is not promise. If promise, it fullfills with fullfillment value of that promise or thennable.
+    Pending promise, because Promise.resolve will resolve with given value if value is not promise. If promise, it fulfills with fulfillment value of that promise or thennable.
 
 - Question 2
 
@@ -1055,7 +1055,7 @@ Promise instance methods:
   ```
 
   - Answer
-    Fulfilled promise with 5.
+    Fulfilled promise with 5, because returning promise fulfils with the value of inner promise.
 
 - Question 3
 
@@ -1071,7 +1071,7 @@ Promise instance methods:
   ```
 
   - Answer
-    Pending promise
+    Pending promise, because the return value of the executor function is ignored. If we resolve with the object, and inner promise is fulfilled with value, then the returning promise will be fulfilled with that value.
 
 - Question 4
 
@@ -1104,4 +1104,4 @@ Promise instance methods:
   ```
 
   - Answer
-    2, then 1. Because the onFulfilled and onRejected callbacks are guaranteed to be invoked asynchronously.
+    2, then 1. Because the onFulfilled and onRejected callbacks are guaranteed to be invoked asynchronously, later than the synchronous code in the event loop cycle.
