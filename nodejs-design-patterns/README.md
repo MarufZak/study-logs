@@ -46,6 +46,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Limited parallel execution with promises](#limited-parallel-execution-with-promises)
   - [Async/await](#asyncawait)
   - [Error handling](#error-handling)
+  - [Trap when returning](#trap-when-returning)
 
 ## The Node.js platform
 
@@ -1242,3 +1243,7 @@ async/await normalizes the error handling with asynchronous code, because awaite
   playingWithErrors(false);
   // both errors are catched by catch block.
   ```
+
+### trap when returning
+
+When we have a `try-catch` block, and if we are returning a promise **_without_** using `await` , the rejection of a promise (do not forget that error thrown in `then/catch` of a promise instance resolves to rejected promise) is not caught in catch block. Instead we should use `await` before returning it to the consumer.
