@@ -1247,3 +1247,36 @@ async/await normalizes the error handling with asynchronous code, because awaite
 ### trap when returning
 
 When we have a `try-catch` block, and if we are returning a promise **_without_** using `await` , the rejection of a promise (do not forget that error thrown in `then/catch` of a promise instance resolves to rejected promise) is not caught in catch block. Instead we should use `await` before returning it to the consumer.
+
+- Example
+  ```jsx
+  // delayError(){ ... }
+
+  async function errorNotCaught() {
+    try {
+      return delayError(1000);
+    } catch (err) {
+      // error is not caught in catch block
+      console.error("Error caught by the async function: " + err.message);
+    }
+  }
+
+  errorNotCaught().catch((err) =>
+    // consumer will have to deal with the rejection.
+    console.error("Error caught by the caller: " + err.message)
+  );
+
+  // instead do:
+
+  async function errorCaught() {
+    try {
+      return await delayError(1000);
+    } catch (err) {
+      console.error("Error caught by the async function: " + err.message);
+    }
+  }
+
+  errorCaught().catch((err) =>
+    console.error("Error caught by the caller: " + err.message)
+  );
+  ```
