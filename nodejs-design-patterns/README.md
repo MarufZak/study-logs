@@ -45,6 +45,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Sequential iteration with promises](#pattern-sequential-iteration-with-promises)
   - [Limited parallel execution with promises](#limited-parallel-execution-with-promises)
   - [Async/await](#asyncawait)
+  - [Error handling](#error-handling)
 
 ## The Node.js platform
 
@@ -1197,7 +1198,7 @@ export class TaskQueue {
 }
 ```
 
-## async/await
+### async/await
 
 The async/await allows us to write functions that appear to block at each asynchronous operation, waiting for the results before continuing with the following statement. Also it has readability similar to synchronous code.
 
@@ -1208,3 +1209,36 @@ The await expression works with any value, not just promises. If a value other t
 Async functions return a Promise synchronously. That Promise will then eventually settle based on the result or error produced by the function.
 
 async/await is just a syntatic sugar for a simpler consumption of promises.
+
+### Error handling
+
+async/await normalizes the error handling with asynchronous code, because awaited promise rejections are catched by `catch` block in `try-catch` .
+
+- Example
+
+  ```jsx
+  function delayError(milliseconds) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        reject(new Error(`Error after ${milliseconds}ms`));
+      }, milliseconds);
+    });
+  }
+
+  async function playingWithErrors(throwSyncError) {
+    try {
+      if (throwSyncError) {
+        throw new Error("This is a synchronous error");
+      }
+      await delayError(1000);
+    } catch (err) {
+      console.error(`We have an error: ${err.message}`);
+    } finally {
+      console.log("Done");
+    }
+  }
+
+  playingWithErrors(true);
+  playingWithErrors(false);
+  // both errors are catched by catch block.
+  ```
