@@ -1158,3 +1158,38 @@ const tasks = [
 
 runSequentially(tasks).then(() => console.log("All tasks completed"));
 ```
+
+### Limited parallel execution with promises
+
+Same TaskQueue can be built with promises. Complete code is as follows. In the runTask method, we are making wrapper function, and deferring its execution to prevent Zalgo issues.
+
+```jsx
+export class TaskQueue {
+  constructor(concurrency) {
+    super();
+    this.concurrency = concurrency;
+    this.running = 0;
+    this.queue = [];
+  }
+
+  next() {
+    while (this.running < this.concurrency && this.queue.length) {
+      const task = this.queue.shift();
+      task().finally(() => {
+        this.running--;
+        this.next();
+      });
+      this.running++;
+    }
+  }
+
+  runTask(task) {
+    return new Promise((resolve, reject) => {
+      this.queue.push(() => {
+        return task().then(resolve, reject);
+      });
+      process.nextTick(this.next.bind(this));
+    });
+  }
+}
+```
