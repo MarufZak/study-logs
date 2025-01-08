@@ -1083,13 +1083,13 @@ Promise instance methods:
   new Promise((resolve, reject) => {
     reject("error");
   })
-    .then((result, rejectedReason) => {
+    .then(undefined, (rejectedReason) => {
       if (rejectedReason) {
         return console.log({ rejectedReason });
       }
       return "value";
     })
-    .then((undefined, err) => {
+    .then(undefined, (err) => {
       console.log({ err });
     });
   ```
