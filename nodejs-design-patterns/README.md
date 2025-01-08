@@ -44,6 +44,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [The Promise API](#the-promise-api)
   - [Sequential iteration with promises](#pattern-sequential-iteration-with-promises)
   - [Limited parallel execution with promises](#limited-parallel-execution-with-promises)
+  - [Async/await](#asyncawait)
 
 ## The Node.js platform
 
@@ -1195,3 +1196,15 @@ export class TaskQueue {
   }
 }
 ```
+
+## async/await
+
+The async/await allows us to write functions that appear to block at each asynchronous operation, waiting for the results before continuing with the following statement. Also it has readability similar to synchronous code.
+
+Async functions always return a promise. If the function has `await` inside, the promise will have a status of pending. Otherwise, if it has no `await` , it will be just a `Promise {<fulfilled>: undefined}`
+
+The await expression works with any value, not just promises. If a value other than a Promise is provided, then its behavior is similar to awaiting a value that it first passed to `Promise.resolve()` . So `const result = await 10` results in 10 being the value of result.
+
+Async functions return a Promise synchronously. That Promise will then eventually settle based on the result or error produced by the function.
+
+async/await is just a syntatic sugar for a simpler consumption of promises.
