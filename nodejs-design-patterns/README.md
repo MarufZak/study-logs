@@ -42,6 +42,8 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
 - [Asynchronous Control Flow Patterns with Promises and Async/Await](#asynchronous-control-flow-patterns-with-promises-and-asyncawait)
   - [Promises/A+ and thennables](#promisesa-and-thennables)
   - [The Promise API](#the-promise-api)
+  - [Sequential iteration with promises](#pattern-sequential-iteration-with-promises)
+  - [Limited parallel execution with promises](#limited-parallel-execution-with-promises)
 
 ## The Node.js platform
 
