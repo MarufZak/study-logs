@@ -1105,3 +1105,56 @@ Promise instance methods:
 
   - Answer
     2, then 1. Because the onFulfilled and onRejected callbacks are guaranteed to be invoked asynchronously, later than the synchronous code in the event loop cycle.
+
+### **Pattern (sequential iteration with promises)**
+
+Dynamically build a chain of promises using a loop. The promises are executed synchronously, meaning next promise starts executing when the previous is settled.
+
+```jsx
+// first implementation
+
+function runSequentially(tasks) {
+  let promise = Promise.resolve();
+
+  for (const task of tasks) {
+    promise = promise.then(() => task());
+  }
+
+  return promise;
+}
+
+// second implementation
+
+function runSequentially(tasks) {
+  return tasks.reduce((promise, task) => {
+    return promise.then(() => task());
+  }, Promise.resolve());
+}
+
+// Example usage
+const tasks = [
+  () =>
+    new Promise((resolve) =>
+      setTimeout(() => {
+        console.log("Task 1");
+        resolve();
+      }, 1000)
+    ),
+  () =>
+    new Promise((resolve) =>
+      setTimeout(() => {
+        console.log("Task 2");
+        resolve();
+      }, 500)
+    ),
+  () =>
+    new Promise((resolve) =>
+      setTimeout(() => {
+        console.log("Task 3");
+        resolve();
+      }, 1500)
+    ),
+];
+
+runSequentially(tasks).then(() => console.log("All tasks completed"));
+```
