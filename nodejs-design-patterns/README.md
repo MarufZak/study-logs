@@ -1341,3 +1341,16 @@ Parallel execution can be done in 2 ways.
 
 - `Promise.all` - recommended approach, it runs all asynchronous callbacks provided as an array in parallel, and returns a promise with resolves when all of the provided callbacks resolve, or rejects immediately when one of them rejects.
 - Collecting all the executed promises, and then awaiting each of them. This is not as good as `Promise.all` , because we will have to wait for all the promises to settle, even if one of them rejects.
+
+- Example
+
+```jsx
+async function example() {
+  const promises = [delay(100), delay(200), delay(300)];
+  for (const promise of promises) {
+    await promise;
+  }
+  // code to be executed when all promises fulfill.
+}
+example();
+```
