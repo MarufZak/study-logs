@@ -48,6 +48,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Error handling](#error-handling)
   - [Trap when returning](#trap-when-returning)
   - [Sequential execution and iteration](#sequential-execution-and-iteration)
+  - [The problem with infinite recursive promise resolution chains](#the-problem-with-infinite-recursive-promise-resolution-chains)
 
 ## The Node.js platform
 
@@ -1353,4 +1354,25 @@ async function example() {
   // code to be executed when all promises fulfill.
 }
 example();
+```
+
+### **The problem with infinite recursive promise resolution chains.**
+
+Suppose you want to create a infinite recursive promise resolution chains, in this case your solution might be:
+
+```tsx
+function leakingLoop() {
+  return delay(1).then(() => {
+    console.log(`Tick ${Date.now()}`);
+    return leakingLoop();
+  });
+}
+
+// or
+
+async function leakingLoop() {
+  await delay(1);
+  console.log(`Tick ${Date.now()}`);
+  return leakingLoop();
+}
 ```
