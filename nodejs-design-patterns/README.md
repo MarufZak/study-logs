@@ -1290,6 +1290,7 @@ The code using `async/await` looks like it’s being executed synchronously.
 One thing i liked about `async/await` is that there is no any specific pattern to learn when we want to execute the asynchronous operations sequentially. See example below.
 
 - Example
+
   ```jsx
   function delay(ms) {
     return new Promise((resolve) => {
@@ -1311,4 +1312,24 @@ One thing i liked about `async/await` is that there is no any specific pattern t
   // console.log after 1 second: 1000
   // console.log after 3 seconds: 2000
   // console.log after 6 seconds: 3000
+  ```
+
+Sometimes developers use `forEach` or `map` to execute the asynchronous code sequentially, but it’s not correct. Using `async/await` with `Array.forEach` for serial execution is anti-pattern, and is considered incorrect. See example with explanation below.
+
+- Example
+  Here, we can see that all of the asynchronous operations run in parallel, instead of running sequentially. This is because `forEach` invokes every callback sequentially, and those callbacks return promises, and `forEach` doesn’t wait for them, and instead invokes next callback.
+  ```jsx
+  const msArray = [2000, 1000, 500, 100];
+
+  function example() {
+    msArray.forEach(async (ms) => {
+      await delay(ms);
+      console.log(ms);
+    });
+  }
+  example();
+  // console.log after 100ms: 100
+  // console.log after 500ms: 500
+  // console.log after 1000ms: 1000
+  // console.log after 2000ms: 2000
   ```
