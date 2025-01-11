@@ -1397,3 +1397,31 @@ async function nonLeakingLoop() {
   nonLeakingLoop();
 }
 ```
+
+In this case, the issue is fixed we break the promise chain. But one problem is that the errors are not going to be propagated to the first function we declared, so we can’t catch errors with `catch` with function we invoked. We can also fix this problem:
+
+```tsx
+function nonLeakingLoopWithErrors() {
+  return new Promise((resolve, reject) => {
+    (function internalLoop() {
+      delay(1)
+        .then(() => {
+          console.log(`Tick ${Date.now()}`);
+          internalLoop();
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    })();
+  });
+}
+
+// or
+
+async function nonLeakingLoopAsync() {
+  while (true) {
+    await delay(1);
+    console.log(`Tick ${Date.now()}`);
+  }
+}
+```
