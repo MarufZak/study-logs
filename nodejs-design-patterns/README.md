@@ -1318,6 +1318,7 @@ Sometimes developers use `forEach` or `map` to execute the asynchronous code seq
 
 - Example
   Here, we can see that all of the asynchronous operations run in parallel, instead of running sequentially. This is because `forEach` invokes every callback sequentially, and those callbacks return promises, and `forEach` doesn’t wait for them, and instead invokes next callback.
+
   ```jsx
   const msArray = [2000, 1000, 500, 100];
 
@@ -1333,3 +1334,10 @@ Sometimes developers use `forEach` or `map` to execute the asynchronous code seq
   // console.log after 1000ms: 1000
   // console.log after 2000ms: 2000
   ```
+
+### Parallel execution
+
+Parallel execution can be done in 2 ways.
+
+- `Promise.all` - recommended approach, it runs all asynchronous callbacks provided as an array in parallel, and returns a promise with resolves when all of the provided callbacks resolve, or rejects immediately when one of them rejects.
+- Collecting all the executed promises, and then awaiting each of them. This is not as good as `Promise.all` , because we will have to wait for all the promises to settle, even if one of them rejects.
