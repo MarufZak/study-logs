@@ -1523,3 +1523,11 @@ In terms of space efficiency, consider the case when we need to process a large 
   ```
 
   Now, we don’t have the problem of memory outage, because we don’t store chunks in the buffer, we send the chunks right away.
+
+In terms of time efficiency, it’s described in the following image.
+
+![Streams efficiency](./assets/streams-efficiency.png)
+
+In terms of composability, streams can be composed with `pipe` method, which allows us to connect different processing units, each responsible for single functionality. They can understand each other in terms of API, but the next stream must understand the output produced by previous stream.
+
+The order of the data chunks matters, and Node.js manages the order for us under the hood.
