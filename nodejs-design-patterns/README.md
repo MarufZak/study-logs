@@ -1505,3 +1505,21 @@ In terms of space efficiency, consider the case when we need to process a large 
   ```
 
   If we try to compress large file, we get error: `RangeError [ERR_FS_FILE_TOO_LARGE]: File size (10737418240) is greater than 2 GiB`. This is, again, because V8 has Buffer size limit.
+
+- Gzipping using streams example
+
+  ```jsx
+  import { createReadStream, createWriteStream } from "fs";
+  import { createGzip } from "zlib";
+
+  const filename = process.argv[2];
+
+  createReadStream(filename)
+    .pipe(createGzip())
+    .pipe(createWriteStream(`${filename}.gz`))
+    .on("finish", () => {
+      console.log(`Successfully compressed file`);
+    });
+  ```
+
+  Now, we don’t have the problem of memory outage, because we don’t store chunks in the buffer, we send the chunks right away.
