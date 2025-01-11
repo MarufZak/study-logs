@@ -47,6 +47,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Async/await](#asyncawait)
   - [Error handling](#error-handling)
   - [Trap when returning](#trap-when-returning)
+  - [Sequential execution and iteration](#sequential-execution-and-iteration)
 
 ## The Node.js platform
 
@@ -1249,6 +1250,7 @@ async/await normalizes the error handling with asynchronous code, because awaite
 When we have a `try-catch` block, and if we are returning a promise **_without_** using `await` , the rejection of a promise (do not forget that error thrown in `then/catch` of a promise instance resolves to rejected promise) is not caught in catch block. Instead we should use `await` before returning it to the consumer.
 
 - Example
+
   ```jsx
   // delayError(){ ... }
 
@@ -1280,3 +1282,9 @@ When we have a `try-catch` block, and if we are returning a promise **_without_*
     console.error("Error caught by the caller: " + err.message)
   );
   ```
+
+### Sequential execution and iteration
+
+The code using `async/await` looks like it’s being executed synchronously.
+
+One thing i liked about `async/await` is that there is no any specific pattern to learn when we want to execute the asynchronous operations sequentially. See example below.
