@@ -49,6 +49,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Trap when returning](#trap-when-returning)
   - [Sequential execution and iteration](#sequential-execution-and-iteration)
   - [The problem with infinite recursive promise resolution chains](#the-problem-with-infinite-recursive-promise-resolution-chains)
+  - [Exercises](#exercises-1)
 
 ## The Node.js platform
 
@@ -1425,3 +1426,47 @@ async function nonLeakingLoopAsync() {
   }
 }
 ```
+
+### Exercises
+
+- `Promise.all` from scratch
+
+  ```tsx
+  // Implement your own version of Promise. all() leveraging promises,
+  // async/await, or a combination of the two. The function must be
+  // functionally equivalent to its original counterpart.
+
+  function delay(ms, value) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(value);
+      }, ms);
+    });
+  }
+
+  async function myPromiseAll(tasks) {
+    const list = tasks.map((task) => task());
+
+    for (let i = 0; i < list.length; i++) {
+      try {
+        const value = await list[i];
+        list[i] = value;
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    }
+
+    // we can also just return list
+    return Promise.resolve(list);
+  }
+
+  async function main() {
+    const list = await myPromiseAll([
+      () => delay(1000, "a"),
+      () => delay(2000, "b"),
+      () => delay(3000, "c"),
+    ]);
+  }
+
+  main();
+  ```
