@@ -1482,3 +1482,26 @@ On the other side, streams allow us to pass the data as soon as it’s arrives f
 Node.js streams have advantages of space efficiency, time efficiency, and composability.
 
 In terms of space efficiency, consider the case when we need to process a large file, creating buffer for that is probably not a good idea, and in fact buffer size is limited. We can check it with `console.log(buffer.constants.MAX_LENGTH);` with `import buffer from 'buffer'`.
+
+- Gzipping using buffer example
+
+  ```jsx
+  import { readFile, writeFile } from "fs/promises";
+  import { gzip } from "zlib";
+  import { promisify } from "util";
+  const promiseGzip = promisify(gzip);
+
+  const filename = process.argv[2];
+
+  async function main() {
+    const data = await readFile(filename);
+    // notice that the data type returned is Buffer
+    const gzippedData = await promiseGzip(data);
+    await writeFile(`${filename}.gz`, gzippedData);
+    console.log(`File successfully compressed`);
+  }
+
+  main();
+  ```
+
+  If we try to compress large file, we get error: `RangeError [ERR_FS_FILE_TOO_LARGE]: File size (10737418240) is greater than 2 GiB`. This is, again, because V8 has Buffer size limit.
