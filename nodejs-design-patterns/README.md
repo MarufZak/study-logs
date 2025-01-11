@@ -1470,3 +1470,9 @@ async function nonLeakingLoopAsync() {
 
   main();
   ```
+
+## Coding with streams
+
+In event-based Node.js, almost all asynchronous APIs we have seen so far work using **buffer mode.** Buffering is creating a buffer (storage), and pushing there the chunks of data received from resource, and when the whole input is processed, passing it back as single blob of data to the caller.
+
+![Buffering example](./assets/buffering.png)
