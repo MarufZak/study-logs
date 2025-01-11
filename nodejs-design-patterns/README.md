@@ -1376,3 +1376,24 @@ async function leakingLoop() {
   return leakingLoop();
 }
 ```
+
+In this case, it’s easy to introduce memory leak in our program, and both implementations above have memory leak. Remember when a promise **(a)** returns a promise **(b)**, promise **a** resolves only when promise **b** resolves. In our case, it’s going infinitely down the chain, so the first promise returned from the function never resolves. We can see how memory goes indefinitely for the process in process view monitor (Activity Monitor in Mac).
+
+To fix this issue, we should omit the `return` keyword.
+
+```tsx
+function nonLeakingLoop() {
+  delay(1).then(() => {
+    console.log(`Tick ${Date.now()}`);
+    nonLeakingLoop();
+  });
+}
+
+// or
+
+async function nonLeakingLoop() {
+  await delay(1);
+  console.log(`Tick ${Date.now()}`);
+  nonLeakingLoop();
+}
+```
