@@ -1288,3 +1288,27 @@ When we have a `try-catch` block, and if we are returning a promise **_without_*
 The code using `async/await` looks like it’s being executed synchronously.
 
 One thing i liked about `async/await` is that there is no any specific pattern to learn when we want to execute the asynchronous operations sequentially. See example below.
+
+- Example
+  ```jsx
+  function delay(ms) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, ms);
+    });
+  }
+  const msArray = [1000, 2000, 3000];
+
+  async function example() {
+    for (const ms of msArray) {
+      await delay(ms);
+      console.log(ms);
+    }
+  }
+
+  example();
+  // console.log after 1 second: 1000
+  // console.log after 3 seconds: 2000
+  // console.log after 6 seconds: 3000
+  ```
