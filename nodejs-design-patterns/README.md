@@ -1546,3 +1546,26 @@ Streams support 2 operating modes: **Binary mode** (data is transferred in form 
 ### Readable
 
 A `Readable` stream represents a source of data, and in node.js implemented using the Readable abstract class. We can receive a data from Readable stream with 2 approaches:
+
+1.  **non-flowing (paused).** Using this approach the data is pulled from the stream, and is not continuously sent by stream. It involves attaching a listener to the stream for the readable event (which signals the availability of new chunk of data), and continuously reading the internal buffer until it’s emptied. This can be done with `read` method, which synchronously reads from the internal buffer and returns a Buffer object representing the chunk of data.
+    When `read` method returns `null` , there is no more data available in internal buffer. Readable stream also emits `end` event when stream ends. We can also set encoding of the stream with `[stream].setEncoding(encoding)`, so we don’t read buffers, but strings.
+
+- Example
+
+```jsx
+// process.stdin.setEncoding("utf8");
+
+process.stdin;
+on("readable", () => {
+  let chunk;
+  console.log("New data is available");
+  while ((chunk = process.stdin.read()) !== null) {
+    console.log(`Chunk read (${chunk.length} bytes): ${chunk.toString()}`);
+  }
+});
+on("end", () => {
+  console.log(`End of stream`);
+});
+```
+
+Note that if we don’t continuously pull the data from stream, the size of internal buffer grows to a certain limit (can be specified with highWaterMark option), and once the buffer is full, stream stops reading more data from source until you pull data from buffer. This is called **.**
