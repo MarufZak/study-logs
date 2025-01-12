@@ -51,6 +51,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [The problem with infinite recursive promise resolution chains](#the-problem-with-infinite-recursive-promise-resolution-chains)
   - [Exercises](#exercises-1)
 - [Coding with streams](#coding-with-streams)
+  - [Getting started with streams](#getting-started-with-streams)
 
 ## The Node.js platform
 
@@ -1532,3 +1533,11 @@ In terms of time efficiency, it’s described in the following image.
 In terms of composability, streams can be composed with `pipe` method, which allows us to connect different processing units, each responsible for single functionality. They can understand each other in terms of API, but the next stream must understand the output produced by previous stream.
 
 The order of the data chunks matters, and Node.js manages the order for us under the hood.
+
+### Getting started with streams
+
+Streams are everywhere in Node.js, examples include write and read functions with streaming support, http request/response objects (which are basically streams)
+
+Every stream in Node.js is implementation of one of four base abstract classes available in `stream` core module: `Readable`, `Writable`, `Duplex`, `Transform`. Each stream class is instance of `EventEmitter`.
+
+Streams support 2 operating modes: **Binary mode** (data is transferred in form of chunks such as buffers or strings), and **Object mode** (data is transferred as sequence of discrete objects, allowing us to use almost any js value).
