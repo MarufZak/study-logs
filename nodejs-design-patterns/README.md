@@ -50,6 +50,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Sequential execution and iteration](#sequential-execution-and-iteration)
   - [The problem with infinite recursive promise resolution chains](#the-problem-with-infinite-recursive-promise-resolution-chains)
   - [Exercises](#exercises-1)
+- [Coding with streams](#coding-with-streams)
 
 ## The Node.js platform
 
