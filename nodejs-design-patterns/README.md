@@ -52,6 +52,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Exercises](#exercises-1)
 - [Coding with streams](#coding-with-streams)
   - [Getting started with streams](#getting-started-with-streams)
+  - [Readable](#readable)
 
 ## The Node.js platform
 
@@ -1541,3 +1542,7 @@ Streams are everywhere in Node.js, examples include write and read functions wit
 Every stream in Node.js is implementation of one of four base abstract classes available in `stream` core module: `Readable`, `Writable`, `Duplex`, `Transform`. Each stream class is instance of `EventEmitter`.
 
 Streams support 2 operating modes: **Binary mode** (data is transferred in form of chunks such as buffers or strings), and **Object mode** (data is transferred as sequence of discrete objects, allowing us to use almost any js value).
+
+### Readable
+
+A `Readable` stream represents a source of data, and in node.js implemented using the Readable abstract class. We can receive a data from Readable stream with 2 approaches:
