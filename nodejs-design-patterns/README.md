@@ -1584,3 +1584,18 @@ process.stdin
 ```
 
 Because default operating mode for stream is non-flowing, we can switch to flowing by attaching listener to `data` event, or explicitly invoking `resume` method. To temporality stop the stream from emitting data events, we can invoke `pause` method, causing incoming data be cached in internal buffer. So, calling `pause` method switches the stream back to non-flowing mode.
+
+Readable streams are also async iterators.
+
+- Example
+
+```jsx
+async function main() {
+  for await (const chunk of process.stdin) {
+    console.log("New data available");
+    console.log(`Chunk read (${chunk.length} bytes): "${chunk.toString()}"`);
+  }
+  console.log("End of stream");
+}
+main();
+```
