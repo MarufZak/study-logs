@@ -1569,3 +1569,16 @@ on("end", () => {
 ```
 
 Note that if we don’t continuously pull the data from stream, the size of internal buffer grows to a certain limit (can be specified with highWaterMark option), and once the buffer is full, stream stops reading more data from source until you pull data from buffer. This is called **.**
+
+2. **flowing.** In this case, the data is automatically pushed when it’s arrived, and `Readable` stream emits `data` event for this.
+
+- Example
+
+```jsx
+process.stdin
+  .on("data", (chunk) => {
+    console.log("New data available");
+    console.log(`Chunk read (${chunk.length} bytes): "${chunk.toString()}"`);
+  })
+  .on("end", () => console.log("End of stream"));
+```
