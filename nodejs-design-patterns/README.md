@@ -1644,3 +1644,25 @@ We can implement our own custom readable stream. For this we need to inherit fro
   ```
 
   Fun fact: in the `options`, consumer can pass an option of highWaterMark to limit the size of buffer, but stream can ignore it. Default highWaterMark is 16KB. We can check if buffer is full when `push` method of stream returns `false`.
+
+We can specify the construction of our custom readable stream by passing a `read` method as an option. The behaviour is the same as in our previous approach.
+
+- Example
+
+  ```jsx
+  import { Readable } from "stream";
+  import Chance from "chance";
+  const chance = new Chance();
+  let emittedBytes = 0;
+
+  const randomStream = new Readable({
+    read(size) {
+      const chunk = chance.string({ length: size });
+      this.push(chunk, "utf8");
+      emittedBytes += chunk.length;
+      if (chance.bool({ likelihood: 5 })) {
+        this.push(null);
+      }
+    },
+  });
+  ```
