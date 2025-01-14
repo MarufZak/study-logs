@@ -53,6 +53,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
 - [Coding with streams](#coding-with-streams)
   - [Getting started with streams](#getting-started-with-streams)
   - [Readable](#readable)
+  - [Implementing Readable streams](#implementing-readable-streams)
 
 ## The Node.js platform
 
@@ -1599,3 +1600,7 @@ async function main() {
 }
 main();
 ```
+
+### Implementing Readable streams
+
+We can implement our own custom readable stream. For this we need to inherit from `Readable` class and specify `_read` method, which is called by internals of `Readable` to start filling the internal buffer using `push` (meaning \_read method can use push method to push to the buffer). `_read` must not be called by stream consumers, and is for internal purposes only.
