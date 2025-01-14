@@ -1604,3 +1604,43 @@ main();
 ### Implementing Readable streams
 
 We can implement our own custom readable stream. For this we need to inherit from `Readable` class and specify `_read` method, which is called by internals of `Readable` to start filling the internal buffer using `push` (meaning \_read method can use push method to push to the buffer). `_read` must not be called by stream consumers, and is for internal purposes only.
+
+- Example
+
+  ```jsx
+  import { Readable } from "stream";
+  import Chance from "chance";
+  const chance = new Chance();
+
+  export class RandomStream extends Readable {
+    constructor(options) {
+      super(options);
+      this.emittedBytes = 0;
+    }
+    _read(size) {
+      const chunk = chance.string({ length: size });
+      // because we are pushing string, we need to specify encoding
+      this.push(chunk, "utf8");
+      this.emittedBytes += chunk.length;
+      if (chance.bool({ likelihood: 5 })) {
+        this.push(null);
+      }
+    }
+  }
+
+  // usage
+
+  const randomStream = new RandomStream();
+  randomStream
+    .on("data", (chunk) => {
+      console.log(
+        `Chunk received (${chunk.length} bytes): ${chunk.toString()}`
+      );
+    })
+    .on("end", () => {
+      console.log(`Produced ${randomStream.emittedBytes} bytes of random
+  data`);
+    });
+  ```
+
+  Fun fact: in the `options`, consumer can pass an option of highWaterMark to limit the size of buffer, but stream can ignore it. Default highWaterMark is 16KB. We can check if buffer is full when `push` method of stream returns `false`.
