@@ -32,10 +32,10 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
     - [Memory leaks](#memory-leaks)
     - [Antipatterns](#antipatterns)
     - [Combining](#combining)
-    - [Exercises](#exercises)
+    - [Exercises for Callbacks and Events](#exercises-for-callbacks-and-events)
 - [Asynchronous Control Flow Patterns with Callbacks](#asynchronous-control-flow-patterns-with-callbacks)
   - [The Sequential Iterator pattern](#the-sequential-iterator-pattern)
-  - [Parallel execution](#parallel-execution)
+  - [Parallel execution with callbacks](#parallel-execution-with-callbacks)
   - [Fix race conditions with concurrent tasks](#fix-race-conditions-with-concurrent-tasks)
   - [Limited parallel execution](#limited-parallel-execution)
   - [Exercises](#async-control-flow-patterns-with-callbacks-exercises)
@@ -49,7 +49,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Trap when returning](#trap-when-returning)
   - [Sequential execution and iteration](#sequential-execution-and-iteration)
   - [The problem with infinite recursive promise resolution chains](#the-problem-with-infinite-recursive-promise-resolution-chains)
-  - [Exercises](#exercises-1)
+  - [Exercises](#exercises)
 - [Coding with streams](#coding-with-streams)
   - [Getting started with streams](#getting-started-with-streams)
   - [Readable](#readable)
@@ -599,7 +599,7 @@ There is also a pattern of combining callbacks with events, where callback is pa
 
 For example in `glob` package in nodejs, we can pass a callback, which will have error as first arg, and matched files as second arg. The function returns event emitter, which is used for advanced scenarios, for example attaching a listener for each file match.
 
-### Exercises
+### Exercises for Callbacks and Events
 
 - Write a function that accepts a number and a callback as the arguments. The function will return an `EventEmitter` that emits an event called tick every 50 milliseconds until the number of milliseconds is passed from the invocation of the function. The function will also call the callback when the number of milliseconds has passed, providing, as the result, the total count of tick events emitted. recursively.
 
@@ -753,7 +753,7 @@ iterator(
 );
 ```
 
-### Parallel execution
+### Parallel execution with callbacks
 
 In fact word “parallel” is improper here, because, knowing the underlying mechanism of node.js with event loop, we know that these tasks do not run in different threads. The proper way is to say this kind of flow is concurrent, but word parallel is used for simplicity.
 
@@ -1547,8 +1547,8 @@ Streams support 2 operating modes: **Binary mode** (data is transferred in form 
 
 A `Readable` stream represents a source of data, and in node.js implemented using the Readable abstract class. We can receive a data from Readable stream with 2 approaches:
 
-1.  **non-flowing (paused).** Using this approach the data is pulled from the stream, and is not continuously sent by stream. It involves attaching a listener to the stream for the readable event (which signals the availability of new chunk of data), and continuously reading the internal buffer until it’s emptied. This can be done with `read` method, which synchronously reads from the internal buffer and returns a Buffer object representing the chunk of data.
-    When `read` method returns `null` , there is no more data available in internal buffer. Readable stream also emits `end` event when stream ends. We can also set encoding of the stream with `[stream].setEncoding(encoding)`, so we don’t read buffers, but strings.
+- **non-flowing (paused).** Using this approach the data is pulled from the stream, and is not continuously sent by stream. It involves attaching a listener to the stream for the readable event (which signals the availability of new chunk of data), and continuously reading the internal buffer until it’s emptied. This can be done with `read` method, which synchronously reads from the internal buffer and returns a Buffer object representing the chunk of data.
+  When `read` method returns `null` , there is no more data available in internal buffer. Readable stream also emits `end` event when stream ends. We can also set encoding of the stream with `[stream].setEncoding(encoding)`, so we don’t read buffers, but strings.
 
 - Example
 
@@ -1570,7 +1570,7 @@ on("end", () => {
 
 Note that if we don’t continuously pull the data from stream, the size of internal buffer grows to a certain limit (can be specified with highWaterMark option), and once the buffer is full, stream stops reading more data from source until you pull data from buffer. This is called **.**
 
-2. **flowing.** In this case, the data is automatically pushed when it’s arrived, and `Readable` stream emits `data` event for this.
+- **flowing.** In this case, the data is automatically pushed when it’s arrived, and `Readable` stream emits `data` event for this.
 
 - Example
 
