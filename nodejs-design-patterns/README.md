@@ -1681,6 +1681,8 @@ To signal that no more data will be written, we can invoke `writable.end([chunk]
 - Example
   Note that the response is an object, instance of `http.ServerResponse`, and also a `Writable` stream.
 
+  If you test this in browser, note that browser might choose to buffer the chunks.
+
   ```jsx
   import { createServer } from "http";
   import Chance from "chance";
