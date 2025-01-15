@@ -54,6 +54,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Getting started with streams](#getting-started-with-streams)
   - [Readable](#readable)
   - [Implementing Readable streams](#implementing-readable-streams)
+  - [Writable](#writable)
 
 ## The Node.js platform
 
@@ -1666,3 +1667,7 @@ We can specify the construction of our custom readable stream by passing a `read
     },
   });
   ```
+
+### Writable
+
+A `Writable` stream represents a data destination, for example file in filesystem, a database table, a socket, or standard output interface. In Node.js, all of these are implemented with `Writable` abstract class from `stream` module.
