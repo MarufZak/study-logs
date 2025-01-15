@@ -1709,3 +1709,36 @@ To signal that no more data will be written, we can invoke `writable.end([chunk]
 ### Backpressure
 
 `writable.write` will return `false` if the `highWaterMark` is reached, meaning the internal buffer is full. We can ignore this, but it’s not recommended to ignore. When the data is emptied from buffer, a `drain` event is emitted, saying it’s now safe to write. This mechanism is called **backpressure.**
+
+- Example
+
+  ```jsx
+  import { createServer } from "http";
+  import Chance from "chance";
+
+  const chance = new Chance();
+  const server = createServer((req, res) => {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+
+    function generateMore() {
+      while (chance.bool({ likelihood: 95 })) {
+        const randomChunk = chance.string({
+          length: 16 * 1024 - 1,
+        });
+        const shouldContinue = res.write(`${randomChunk}\n`);
+        if (!shouldContinue) {
+          console.log("back-pressure");
+          return res.once("drain", generateMore);
+        }
+      }
+      res.end("\n\n");
+    }
+
+    generateMore();
+    res.on("finish", () => console.log("All data sent"));
+  });
+
+  server.listen(3000, () => {
+    console.log("Server running on port 3000");
+  });
+  ```
