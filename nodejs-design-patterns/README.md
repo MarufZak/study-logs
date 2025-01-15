@@ -1677,3 +1677,27 @@ To write to a writable stream we need to invoke `writable.write(chunk, [encoding
 Note that the `write` method of writable is not asynchronous unless async API is used inside. You can verify this by logging some message. But the callback provided is run async.
 
 To signal that no more data will be written, we can invoke `writable.end([chunk], [encoding], [callback])` , where chunk is final chunk to stream, and callback is equivalent to registering listener to `finish` event, which is fired when all data in stream has been flushed into underlying resource.
+
+- Example
+  Note that the response is an object, instance of `http.ServerResponse`, and also a `Writable` stream.
+
+  ```jsx
+  import { createServer } from "http";
+  import Chance from "chance";
+
+  const chance = new Chance();
+  const server = createServer((request, response) => {
+    response.writeHead(200, { "Content-Type": "text/plain" });
+    while (chance.bool({ likelihood: 95 })) {
+      response.write(`${chance.string()}\n`);
+    }
+    response.end("\n\n");
+    response.on("finish", () => {
+      console.log("All data is sent");
+    });
+  });
+
+  server.listen(3000, () => {
+    console.log("Server running on port 3000");
+  });
+  ```
