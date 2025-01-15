@@ -1788,3 +1788,22 @@ We can implement our own stream with `Writable` abstract class. We can either ex
   });
   tfs.end(() => console.log("All files created"));
   ```
+
+- Example with simplified construction
+
+  ```jsx
+  import { Writable } from "stream";
+  import { promises as fs } from "fs";
+  import { dirname } from "path";
+  import mkdirp from "mkdirp-promise";
+
+  const tfs = new Writable({
+    objectMode: true,
+    write(chunk, encoding, cb) {
+      mkdirp(dirname(chunk.path))
+        .then(() => fs.writeFile(chunk.path, chunk.content))
+        .then(() => cb())
+        .catch(cb);
+    },
+  });
+  ```
