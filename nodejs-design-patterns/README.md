@@ -55,6 +55,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Readable](#readable)
   - [Implementing Readable streams](#implementing-readable-streams)
   - [Writable](#writable)
+  - [Backpressure](#backpressure)
 
 ## The Node.js platform
 
@@ -1679,6 +1680,7 @@ Note that the `write` method of writable is not asynchronous unless async API is
 To signal that no more data will be written, we can invoke `writable.end([chunk], [encoding], [callback])` , where chunk is final chunk to stream, and callback is equivalent to registering listener to `finish` event, which is fired when all data in stream has been flushed into underlying resource.
 
 - Example
+
   Note that the response is an object, instance of `http.ServerResponse`, and also a `Writable` stream.
 
   If you test this in browser, note that browser might choose to buffer the chunks.
@@ -1703,3 +1705,7 @@ To signal that no more data will be written, we can invoke `writable.end([chunk]
     console.log("Server running on port 3000");
   });
   ```
+
+### Backpressure
+
+`writable.write` will return `false` if the `highWaterMark` is reached, meaning the internal buffer is full. We can ignore this, but it’s not recommended to ignore. When the data is emptied from buffer, a `drain` event is emitted, saying it’s now safe to write. This mechanism is called **backpressure.**
