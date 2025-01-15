@@ -56,6 +56,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Implementing Readable streams](#implementing-readable-streams)
   - [Writable](#writable)
   - [Backpressure](#backpressure)
+  - [Implementing Writable streams](#implementing-writable-streams)
 
 ## The Node.js platform
 
@@ -1741,4 +1742,49 @@ To signal that no more data will be written, we can invoke `writable.end([chunk]
   server.listen(3000, () => {
     console.log("Server running on port 3000");
   });
+  ```
+
+### Implementing Writable streams
+
+We can implement our own stream with `Writable` abstract class. We can either extend from it, or use simplified construction.
+
+- Example with extending
+
+  ```jsx
+  import { Writable } from "stream";
+  import { promises as fs } from "fs";
+  import { dirname } from "path";
+  import mkdirp from "mkdirp-promise";
+
+  export class ToFileStream extends Writable {
+    constructor(options) {
+      super({ ...options, objectMode: true });
+    }
+
+    _write(chunk, encoding, cb) {
+      mkdirp(dirname(chunk.path))
+        .then(() => fs.writeFile(chunk.path, chunk.content))
+        .then(() => cb())
+        .catch(cb);
+    }
+  }
+
+  // usage
+
+  import { join } from "path";
+  import { ToFileStream } from "./to-file-stream.js";
+  const tfs = new ToFileStream();
+  tfs.write({
+    path: join("files", "file1.txt"),
+    content: "Hello",
+  });
+  tfs.write({
+    path: join("files", "file2.txt"),
+    content: "Node.js",
+  });
+  tfs.write({
+    path: join("files", "file3.txt"),
+    content: "streams",
+  });
+  tfs.end(() => console.log("All files created"));
   ```
