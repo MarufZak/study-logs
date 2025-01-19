@@ -1898,3 +1898,9 @@ We can implement our own stream with `Writable` abstract class. We can either ex
 ### Duplex
 
 A `Duplex` stream is both `Readable` and `Writable`, used to describe an entity that is both data source and destination. To create custom Duplex, we have to specify both `_write` and `_read` methods, which are internally forwarded to `Writable` and `Readable` constructors. Options are same, except `allowHalfOpen` (default true), which, if false, closes the second part if one part closes.
+
+We can configure it to operate in both parts differently, with `readableObjectMode` and `writableObjectMode` options.
+
+In Duplex streams, there is no relationship between data written and data read.
+
+![Duplex stream](./assets/duplex-stream.png)
