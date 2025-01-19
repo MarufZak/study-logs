@@ -1901,6 +1901,6 @@ A `Duplex` stream is both `Readable` and `Writable`, used to describe an entity 
 
 We can configure it to operate in both parts differently, with `readableObjectMode` and `writableObjectMode` options.
 
-In Duplex streams, there is no relationship between data written and data read.
+In Duplex streams, there is no relationship between data written and data read, meaning Readable and Writable channels are independent of each other, and we need to explicitly manage the logic to transfer the data between the two.
 
 ![Duplex stream](./assets/duplex-stream.png)
