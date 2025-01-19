@@ -1904,3 +1904,42 @@ We can configure it to operate in both parts differently, with `readableObjectMo
 In Duplex streams, there is no relationship between data written and data read, meaning Readable and Writable channels are independent of each other, and we need to explicitly manage the logic to transfer the data between the two.
 
 ![Duplex stream](./assets/duplex-stream.png)
+
+- Example program that outputs uppercase letter to readable side from letters received from writable side.
+
+```jsx
+import { Duplex } from "stream";
+
+class UppercaseStream extends Duplex {
+  constructor() {
+    super({ objectMode: true });
+    this.buffer = [];
+  }
+
+  _write(data, encoding, callback) {
+    const chunk = data.toUpperCase();
+    this.push(chunk);
+    callback();
+  }
+
+  _read() {
+    if (this.buffer.length > 0) {
+      this.push(this.buffer.shift());
+    } else {
+      this.push(null);
+    }
+  }
+}
+
+const uppercaseStream = new UppercaseStream();
+uppercaseStream.write("hello");
+uppercaseStream.write("world");
+
+uppercaseStream
+  .on("data", (chunk) => {
+    console.log(chunk);
+  })
+  .on("end", () => {
+    console.log("end of stream");
+  });
+```
