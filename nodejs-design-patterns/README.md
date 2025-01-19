@@ -1894,3 +1894,7 @@ We can implement our own stream with `Writable` abstract class. We can either ex
 
   createReadStream(inputFilename).pipe(logsWritableStream);
   ```
+
+### Duplex
+
+A `Duplex` stream is both `Readable` and `Writable`, used to describe an entity that is both data source and destination. To create custom Duplex, we have to specify both `_write` and `_read` methods, which are internally forwarded to `Writable` and `Readable` constructors. Options are same, except `allowHalfOpen` (default true), which, if false, closes the second part if one part closes.
