@@ -1943,3 +1943,11 @@ uppercaseStream
     console.log("end of stream");
   });
 ```
+
+### Transform
+
+`Transform` stream is special kind of `Duplex` stream, where the data read has relationship with data written, and is designed to handle data transformations. It applies transformations to each chunk they receive from `Writable` part, and send it to `Readable` part.
+
+![Screenshot 2024-09-23 at 19.53.04.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/7c84aec7-3b30-4803-92a4-b6ccffedd598/56d79419-6ce7-4ac7-a342-98a9dbec047f/Screenshot_2024-09-23_at_19.53.04.png)
+
+To implement transform streams, we need to pass `_transform` and `_flush` methods.
