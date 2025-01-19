@@ -1807,3 +1807,87 @@ We can implement our own stream with `Writable` abstract class. We can either ex
     },
   });
   ```
+
+- Here is a program that reads logs file and writes error logs into specified file, and summary of other logs to another specified file. Note that the input being taken is pathname to file, which has logs in following format: [Timestamp] [LogLevel] [Message]
+
+  ```jsx
+  import { createReadStream, createWriteStream } from "fs";
+  import { Writable } from "stream";
+
+  const inputFilename = process.argv[2];
+  const HIGH_WATER_MARK = 16;
+  const ERROR_FLAG = "ERROR";
+  const ERROR_LOG_PATHNAME = "./output/error.log";
+  const SUMMARY_LOG_PATH = "./output/summary.log";
+
+  class LogsWritableStream extends Writable {
+    logLevels = {};
+    bufferedLine = "";
+    errorFlag = "";
+    summaryLogStream;
+    errorLogStream;
+
+    constructor({
+      highWaterMark,
+      errorFlag,
+      summaryLogPathname,
+      errorLogPathname,
+    }) {
+      super({ highWaterMark, objectMode: true });
+      this.errorFlag = errorFlag;
+      this.summaryLogStream = createWriteStream(summaryLogPathname);
+      this.errorLogStream = createWriteStream(errorLogPathname);
+    }
+
+    _write(data, _, callback) {
+      const { logLevels, bufferedLine, errorFlag, errorLogStream } = this;
+
+      if (data.includes("\n") === false) {
+        bufferedLine += data;
+        return;
+      }
+
+      const chunks = (bufferedLine + data).split("\n");
+      this.bufferedLine = chunks.pop() || "";
+
+      for (let i = 0; i < chunks.length; i++) {
+        const chunk = chunks[i];
+        if (chunk.includes(errorFlag)) {
+          errorLogStream.write(chunk + "\n");
+          continue;
+        }
+
+        const match = chunk.match(/\[([A-Z]+)\]/);
+
+        if (match) {
+          const level = match[1];
+          logLevels[level] = (logLevels[level] || 0) + 1;
+        }
+      }
+
+      callback();
+    }
+
+    _final() {
+      let chunk = "";
+      const { logLevels, summaryLogStream } = this;
+      for (const level in logLevels) {
+        chunk += `${level}: ${logLevels[level]}\n`;
+      }
+      summaryLogStream.write(chunk);
+    }
+
+    _destroy(error) {
+      console.log(`Error reading a file: ${error}`);
+    }
+  }
+
+  const logsWritableStream = new LogsWritableStream({
+    highWaterMark: HIGH_WATER_MARK,
+    errorFlag: ERROR_FLAG,
+    errorLogPathname: ERROR_LOG_PATHNAME,
+    summaryLogPathname: SUMMARY_LOG_PATH,
+  });
+
+  createReadStream(inputFilename).pipe(logsWritableStream);
+  ```
