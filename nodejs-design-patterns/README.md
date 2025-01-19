@@ -1875,6 +1875,9 @@ We can implement our own stream with `Writable` abstract class. We can either ex
         chunk += `${level}: ${logLevels[level]}\n`;
       }
       summaryLogStream.write(chunk);
+
+      this.summaryLogStream.close();
+      this.errorLogStream.close();
     }
 
     _destroy(error) {
