@@ -2066,3 +2066,25 @@ To implement transform streams, we need to pass `_transform` and `_flush` method
     .pipe(new SumProfit())
     .pipe(process.stdout);
   ```
+
+- Another simple example
+
+```jsx
+import { createReadStream, createWriteStream } from "fs";
+import { Transform } from "stream";
+
+class CapitalizeStream extends Transform {
+  constructor(options) {
+    super(options);
+  }
+
+  _transform(chunk, encoding, callback) {
+    this.push(chunk.toString().toUpperCase());
+    callback();
+  }
+}
+
+createReadStream("./input.txt", { highWaterMark: 1 })
+  .pipe(new CapitalizeStream())
+  .pipe(createWriteStream("./output.txt"));
+```
