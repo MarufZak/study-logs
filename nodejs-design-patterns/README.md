@@ -1951,3 +1951,7 @@ uppercaseStream
 ![Transform stream](./assets/transform-stream.png)
 
 To implement transform streams, we need to pass `_transform` and `_flush` methods.
+
+`_transform` method has practically the same signature as `_write` of writable, but instead of writing it to an underlying resource, it writes it to the internal buffer with `this.push`, from where it’s then read.
+
+`_flush` method is invoked when stream is ready to be closed. It has callback argument, which should be invoked by us (in stream implementation) when all operations are complete. It terminates the stream.
