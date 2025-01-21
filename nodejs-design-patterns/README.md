@@ -1955,3 +1955,43 @@ To implement transform streams, we need to pass `_transform` and `_flush` method
 `_transform` method has practically the same signature as `_write` of writable, but instead of writing it to an underlying resource, it writes it to the internal buffer with `this.push`, from where it’s then read.
 
 `_flush` method is invoked when stream is ready to be closed. It has callback argument, which should be invoked by us (in stream implementation) when all operations are complete. It terminates the stream.
+
+- Example with class
+
+  ```jsx
+  import { Transform } from "stream";
+
+  export class ReplaceStream extends Transform {
+    constructor(searchStr, replaceStr, options) {
+      super({ ...options });
+      this.searchStr = searchStr;
+      this.replaceStr = replaceStr;
+      this.tail = "";
+    }
+
+    _transform(chunk, encoding, callback) {
+      const pieces = (this.tail + chunk).split(this.searchStr);
+      const lastPiece = pieces[pieces.length - 1];
+      const tailLen = this.searchStr.length - 1;
+
+      pieces[pieces.length - 1] = lastPiece.slice(0, -tailLen);
+      this.push(pieces.join(this.replaceStr));
+      callback();
+    }
+
+    _flush(callback) {
+      this.push(this.tail);
+      callback();
+    }
+  }
+
+  const replaceStream = new ReplaceStream("Python", "Node.js");
+  replaceStream.write("Hello Python");
+  console.log(replaceStream.read().toString());
+  replaceStream.write("Goodbye Python");
+  console.log(replaceStream.read().toString());
+  replaceStream.write("Python is the best");
+  console.log(replaceStream.read().toString());
+
+  replaceStream.end();
+  ```
