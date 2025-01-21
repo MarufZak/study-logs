@@ -61,6 +61,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Transform](#transform)
   - [PassThrough](#passthrough)
   - [Late piping](#late-piping)
+  - [Lazy streams](#lazy-streams)
 
 ## The Node.js platform
 
@@ -2157,3 +2158,18 @@ createReadStream(filepath).pipe(createBrotliCompress()).pipe(contentStream);
 In this example we are delaying uploading until the chunk is compressed, and PassThrough stream acts as a placeholder. This is another use case of PassThrough stream.
 
 Use a PassThrough stream when you need to provide a placeholder for data that will be read or written in the future.
+
+### Lazy streams
+
+Sometimes we want to create a large number of streams to consume later. For example to use [archiver](https://www.npmjs.com/package/archiver) package. The problem is that if we try to open many files with `createReadStream` we would get `EMFILE`, too many open files error. Even though we haven’t used the stream yet, the function triggers opening of file descriptor.
+
+Solution is to use lazy streams, which are created only when they are used. We can use [lazystream](https://www.npmjs.com/package/lazystream) for this. Under the hood it uses proxies for actual stream instances, and proxies instance is not created until it’s used:
+
+```jsx
+import lazystream from "lazystream";
+const lazyURandom = new lazystream.Readable(function (options) {
+  return fs.createReadStream("/dev/urandom");
+});
+```
+
+It also uses PassThrough stream, and when `_read` method is invoked for the first time, creates proxied instance by invoking factory function, and then pipes generated stream into the PassThrough stream.
