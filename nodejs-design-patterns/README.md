@@ -60,6 +60,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Duplex](#duplex)
   - [Transform](#transform)
   - [PassThrough](#passthrough)
+  - [Late piping](#late-piping)
 
 ## The Node.js platform
 
@@ -2115,3 +2116,18 @@ There is another type of streams called PassThrough. It receives the chunks and 
   passThrough.write("there");
   passThrough.end();
   ```
+
+### Late piping
+
+Let’s suppose we have a function that accepts a Readable stream, and uploads the content to S3:
+
+```jsx
+function upload(filename, contentStream) {
+  // ...
+}
+
+import { createReadStream } from "fs";
+upload("a-picture.jpg", createReadStream("path/image.jpg"));
+```
+
+But what if we want to make a transformation, for instance, compressing, before pushing to the server? We can do this with placeholder stream, which is done with PassThrough stream. It holds until data arrives, and is not closed until source stream closes.
