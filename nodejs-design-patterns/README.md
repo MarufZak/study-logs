@@ -2095,3 +2095,23 @@ createReadStream("./input.txt", { highWaterMark: 1 })
 ### PassThrough
 
 There is another type of streams called PassThrough. It receives the chunks and pushes it next in the pipeline without any modification or delay. This behaviour can be achieved with transform stream, but in this case we would need to implement write method ourselves. This is what PassThrough stream does for us.
+
+- Example
+
+  ```jsx
+  import { PassThrough } from "stream";
+
+  let bytesWritten = 0;
+
+  const passThrough = new PassThrough();
+  passThrough.on("data", (chunk) => {
+    bytesWritten += chunk.length;
+  });
+  passThrough.on("finish", () => {
+    console.log(`${bytesWritten} bytes written`);
+  });
+
+  passThrough.write("hello");
+  passThrough.write("there");
+  passThrough.end();
+  ```
