@@ -1995,3 +1995,24 @@ To implement transform streams, we need to pass `_transform` and `_flush` method
 
   replaceStream.end();
   ```
+
+- Example with simplified construction
+
+  ```jsx
+  const replaceStream = new Transform({
+    defaultEncoding: "utf8",
+    transform(chunk, encoding, cb) {
+      const pieces = (tail + chunk).split(searchStr);
+      const lastPiece = pieces[pieces.length - 1];
+      const tailLen = searchStr.length - 1;
+      tail = lastPiece.slice(-tailLen);
+      pieces[pieces.length - 1] = lastPiece.slice(0, -tailLen);
+      this.push(pieces.join(replaceStr));
+      cb();
+    },
+    flush(cb) {
+      this.push(tail);
+      cb();
+    },
+  });
+  ```
