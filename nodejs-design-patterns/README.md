@@ -57,6 +57,8 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Writable](#writable)
   - [Backpressure](#backpressure)
   - [Implementing Writable streams](#implementing-writable-streams)
+  - [Duplex](#duplex)
+  - [Transform](#transform)
 
 ## The Node.js platform
 
