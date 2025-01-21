@@ -62,6 +62,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [PassThrough](#passthrough)
   - [Late piping](#late-piping)
   - [Lazy streams](#lazy-streams)
+  - [Connecting streams using pipes](#connecting-streams-using-pipes)
 
 ## The Node.js platform
 
@@ -2173,3 +2174,19 @@ const lazyURandom = new lazystream.Readable(function (options) {
 ```
 
 It also uses PassThrough stream, and when `_read` method is invoked for the first time, creates proxied instance by invoking factory function, and then pipes generated stream into the PassThrough stream.
+
+### Connecting streams using pipes
+
+Piping concept is taken from Unix, where `echo hello | pbcopy` copies hello to the clipboard (in mac). The output of first command is forwarded to second as an input.
+
+In NodeJS streams it’s similar. `pipe` method takes output from readable and forward it as an input to the writable stream. `pipe` method of Readable stream takes the output produced by `readable` event, and pumps it into writable stream.
+
+Piping two streams creates `suction`, which allows data to flow automatically from one stream to another, and the most important thing is we don’t have to worry about backpressure.
+
+`pipe` method returns Writable given as an argument. We can chain pipes if this argument is also Readable (such as Transform or Duplex streams).
+
+Writable stream is ended automatically when Readable stream emits an `end` event.
+
+```jsx
+process.stdin.pipe(process.stdout);
+```
