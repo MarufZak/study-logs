@@ -2,7 +2,7 @@
   "check_status": true,
   "commit_type": {
     "enable": true,
-    "initial_value": "typescript-pro-essentials",
+    "initial_value": "nodejs-design-patterns",
     "infer_type_from_branch": true,
     "options": [
       {
