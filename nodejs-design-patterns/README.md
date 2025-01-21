@@ -2131,3 +2131,29 @@ upload("a-picture.jpg", createReadStream("path/image.jpg"));
 ```
 
 But what if we want to make a transformation, for instance, compressing, before pushing to the server? We can do this with placeholder stream, which is done with PassThrough stream. It holds until data arrives, and is not closed until source stream closes.
+
+```jsx
+import { createReadStream } from "fs";
+import { createBrotliCompress } from "zlib";
+import { PassThrough } from "stream";
+import { basename } from "path";
+import { upload } from "./upload.js";
+const filepath = process.argv[2];
+const filename = basename(filepath);
+const contentStream = new PassThrough();
+
+upload(`${filename}.br`, contentStream)
+  .then((response) => {
+    console.log(`Server response: ${response.data}`);
+  })
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+
+createReadStream(filepath).pipe(createBrotliCompress()).pipe(contentStream);
+```
+
+In this example we are delaying uploading until the chunk is compressed, and PassThrough stream acts as a placeholder. This is another use case of PassThrough stream.
+
+Use a PassThrough stream when you need to provide a placeholder for data that will be read or written in the future.
