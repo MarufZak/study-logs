@@ -2026,17 +2026,9 @@ To implement transform streams, we need to pass `_transform` and `_flush` method
   ```jsx
   import { createReadStream } from "fs";
   import parse from "csv-parse";
-  import { FilterByCountry } from "./filter-by-country.js";
-  import { SumProfit } from "./sum-profit.js";
   import { Transform } from "stream";
 
   const csvParser = parse({ columns: true });
-
-  createReadStream("data.csv")
-    .pipe(csvParser)
-    .pipe(new FilterByCountry("Italy"))
-    .pipe(new SumProfit())
-    .pipe(process.stdout);
 
   class FilterByCountry extends Transform {
     constructor(country, options = {}) {
@@ -2067,4 +2059,10 @@ To implement transform streams, we need to pass `_transform` and `_flush` method
       cb();
     }
   }
+
+  createReadStream("data.csv")
+    .pipe(csvParser)
+    .pipe(new FilterByCountry("Italy"))
+    .pipe(new SumProfit())
+    .pipe(process.stdout);
   ```
