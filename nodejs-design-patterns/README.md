@@ -59,6 +59,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Implementing Writable streams](#implementing-writable-streams)
   - [Duplex](#duplex)
   - [Transform](#transform)
+  - [PassThrough](#passthrough)
 
 ## The Node.js platform
 
@@ -2090,3 +2091,7 @@ createReadStream("./input.txt", { highWaterMark: 1 })
   .pipe(new CapitalizeStream())
   .pipe(createWriteStream("./output.txt"));
 ```
+
+### PassThrough
+
+There is another type of streams called PassThrough. It receives the chunks and pushes it next in the pipeline without any modification or delay. This behaviour can be achieved with transform stream, but in this case we would need to implement write method ourselves. This is what PassThrough stream does for us.
