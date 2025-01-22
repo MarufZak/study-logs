@@ -2228,3 +2228,5 @@ stream1
   .pipe(stream3)
   .on("error", handleError);
 ```
+
+For such cases there is a `pipeline` function in stream module which that does what we did, in essence it pipes every stream we provided as an argument to next one, and registers proper error and close listeners to each one, properly destroying streams for us. The last argument is optional, and is called when stream finishes. If it finishes with error, first argument of error is provided.
