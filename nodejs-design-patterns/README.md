@@ -63,6 +63,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Late piping](#late-piping)
   - [Lazy streams](#lazy-streams)
   - [Connecting streams using pipes](#connecting-streams-using-pipes)
+  - [Pipes and error handling](#pipes-and-error-handling)
 
 ## The Node.js platform
 
@@ -2190,3 +2191,7 @@ Writable stream is ended automatically when Readable stream emits an `end` event
 ```jsx
 process.stdin.pipe(process.stdout);
 ```
+
+### Pipes and error handling
+
+In the pipelines of streams, errors are not propagated through the pipeline. Instead, error is caught where the listener is attached to. To make things worse, failing stream is only unpiped from the stream, meaning we need to explicitly destroy stream ourselves to cleanup resources properly, with `destroy` method.
