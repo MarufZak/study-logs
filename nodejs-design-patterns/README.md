@@ -2195,3 +2195,18 @@ process.stdin.pipe(process.stdout);
 ### Pipes and error handling
 
 In the pipelines of streams, errors are not propagated through the pipeline. Instead, error is caught where the listener is attached to. To make things worse, failing stream is only unpiped from the stream, meaning we need to explicitly destroy stream ourselves to cleanup resources properly, with `destroy` method.
+
+```jsx
+const stream1 = new PassThrough();
+const stream2 = new PassThrough();
+const stream3 = new PassThrough();
+
+stream2.on("data", () => stream2.emit("error", new Error("error")));
+stream2.on("error", () => console.log("Error on stream 2"));
+stream3.on("error", () => console.log("Error on stream 3"));
+
+stream1.pipe(stream2).pipe(stream3);
+stream1.write("hello");
+
+// Error on stream 2 is logged
+```
