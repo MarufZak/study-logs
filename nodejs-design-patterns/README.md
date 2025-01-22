@@ -2230,3 +2230,22 @@ stream1
 ```
 
 For such cases there is a `pipeline` function in stream module which that does what we did, in essence it pipes every stream we provided as an argument to next one, and registers proper error and close listeners to each one, properly destroying streams for us. The last argument is optional, and is called when stream finishes. If it finishes with error, first argument of error is provided.
+
+```jsx
+import { pipeline, Transform } from "stream";
+
+class UppercaseStream extends Transform {
+  _transform(chunk, encoding, callback) {
+    this.push(chunk.toString().toUpperCase());
+    callback();
+  }
+}
+const uppercaseStream = new UppercaseStream();
+
+pipeline(process.stdin, uppercaseStream, process.stdout, (err) => {
+  if (err) {
+    console.error(err);
+    process.exit(1);
+  }
+});
+```
