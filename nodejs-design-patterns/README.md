@@ -2210,3 +2210,21 @@ stream1.write("hello");
 
 // Error on stream 2 is logged
 ```
+
+We can do the following to look better and destroy the streams, but it’s not ideal still:
+
+```jsx
+const handleError = (error) => {
+  console.log(error.message);
+  stream1.destroy();
+  stream2.destroy();
+  stream3.destroy();
+};
+
+stream1
+  .on("error", handleError)
+  .pipe(stream2)
+  .on("error", handleError)
+  .pipe(stream3)
+  .on("error", handleError);
+```
