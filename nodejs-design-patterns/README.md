@@ -65,6 +65,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Connecting streams using pipes](#connecting-streams-using-pipes)
   - [Pipes and error handling](#pipes-and-error-handling)
 - [Creational design patterns](#creational-design-patterns)
+  - [Factory](#factory)
 
 ## The Node.js platform
 
@@ -2256,3 +2257,7 @@ pipeline(process.stdin, uppercaseStream, process.stdout, (err) => {
 A design pattern is reusable solution to a recurring problem. It’s often associated with well-known set of object-oriented patterns that were popularized in the 90s by book _Design Patterns: Elements of Reusable Object-Oriented Software_, _Pearson Education._
 
 Applying these design patterns in JavaScript is not simple. As we know JS is object-oriented, prototype-based, and with dynamic typing. These characteristics give JS a lot of power, but also enough freedom to create fragmentation of design patterns. Easy example is libraries and frameworks in ecosystem. This way there are also there are patterns that can be implemented in JS, which are not relevant in other languages.
+
+### Factory
+
+Factory pattern has ability of _separating the creation of an object from its implementation_, it allows us for ex to create an object whose class is determined at runtime. Factory allows us to expose a small surface area, so consumer doesn’t extend or manipulate it. It also allow us to force encapsulation with closures.
