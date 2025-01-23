@@ -2285,3 +2285,37 @@ function createImage(name) {
   }
 }
 ```
+
+We can enforce encapsulation by:
+
+- Function scopes and closures
+  ```jsx
+  function createPerson(name) {
+    const privateProperties = {};
+    const person = {
+      setName(name) {
+        if (!name) {
+          throw new Error("A person must have a name");
+        }
+        privateProperties.name = name;
+      },
+      getName() {
+        return privateProperties.name;
+      },
+    };
+    person.setName(name);
+    return person;
+  }
+  ```
+- Private fields
+  ```jsx
+  class Tree {
+    #apple = "apple";
+
+    getApple() {
+      return this.#apple;
+    }
+  }
+  ```
+- Symbols
+  [Explained here](https://2ality.com/2016/01/private-data-classes.html#using-symbols-as-keys-for-private-properties)
