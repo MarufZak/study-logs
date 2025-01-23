@@ -2261,3 +2261,27 @@ Applying these design patterns in JavaScript is not simple. As we know JS is obj
 ### Factory
 
 Factory pattern has ability of _separating the creation of an object from its implementation_, it allows us for ex to create an object whose class is determined at runtime. Factory allows us to expose a small surface area, so consumer doesn’t extend or manipulate it. It also allow us to force encapsulation with closures.
+
+```jsx
+const image = new Image("photo.jpeg");
+
+// can be converted to:
+function createImage(name) {
+  return new Image(name);
+}
+
+// Why? Let's consider when we want to split Image class into multiple classses,
+// depending on extension. With factory pattern, it's piece of cake.
+
+function createImage(name) {
+  if (name.match(/\.jpe?g$/)) {
+    return new ImageJpeg(name);
+  } else if (name.match(/\.gif$/)) {
+    return new ImageGif(name);
+  } else if (name.match(/\.png$/)) {
+    return new ImagePng(name);
+  } else {
+    throw new Error("Unsupported format");
+  }
+}
+```
