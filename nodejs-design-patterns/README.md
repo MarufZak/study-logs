@@ -66,6 +66,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Pipes and error handling](#pipes-and-error-handling)
 - [Creational design patterns](#creational-design-patterns)
   - [Factory](#factory)
+    - [Simple profiler](#simple-profiler)
 
 ## The Node.js platform
 
@@ -2323,3 +2324,26 @@ We can enforce encapsulation by:
 
 - Symbols
   [Explained here](https://2ality.com/2016/01/private-data-classes.html#using-symbols-as-keys-for-private-properties)
+
+#### Simple profiler
+
+Let's say we have a profiler class that logs start and end time:
+
+```jsx
+class Profiler {
+  constructor(label) {
+    this.label = label;
+    this.lastTime = null;
+  }
+  start() {
+    this.lastTime = process.hrtime();
+  }
+  end() {
+    const diff = process.hrtime(this.lastTime);
+    console.log(
+      `Timer "${this.label}" took ${diff[0]} seconds ` +
+        `and ${diff[1]} nanoseconds.`
+    );
+  }
+}
+```
