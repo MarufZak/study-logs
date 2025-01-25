@@ -2393,3 +2393,53 @@ const myBoat = new Boat({
   hasCabin: false,
 });
 ```
+
+Builder pattern simplifies it by creating object step by step. Also builder pattern is self-documenting. In our Boat class, if we pass hasMotor, we are not aware that we also need to pass other params related to motor, in which case documentation or even the code of class has to be read. Let’s see how builder pattern solves it:
+
+```jsx
+class BoatBuilder {
+  withMotor(count, brand, model) {
+    this.hasMotor = true;
+    this.motorCount = count;
+    this.motorBrand = brand;
+    this.motorModel = model;
+    return this;
+  }
+  withSails(count, material, color) {
+    this.hasSails = true;
+    this.sailsCount = count;
+    this.sailsMaterial = material;
+    this.sailsColor = color;
+    return this;
+  }
+  hullColor(color) {
+    this.hullColor = color;
+    return this;
+  }
+  withCabin() {
+    this.hasCabin = true;
+    return this;
+  }
+  build() {
+    return new Boat({
+      hasMotor: this.hasMotor,
+      motorCount: this.motorCount,
+      motorBrand: this.motorBrand,
+      motorModel: this.motorModel,
+      hasSails: this.hasSails,
+      sailsCount: this.sailsCount,
+      sailsMaterial: this.sailsMaterial,
+      sailsColor: this.sailsColor,
+      hullColor: this.hullColor,
+      hasCabin: this.hasCabin,
+    });
+  }
+}
+
+const myBoat = new BoatBuilder()
+  .withMotor(2, "Best Motor Co. ", "OM123")
+  .withSails(1, "fabric", "white")
+  .withCabin()
+  .hullColor("blue")
+  .build();
+```
