@@ -2443,3 +2443,12 @@ const myBoat = new BoatBuilder()
   .hullColor("blue")
   .build();
 ```
+
+So the rules for implementing Builder pattern are:
+
+1. Break down complex construction into small and more readable steps.
+2. Try to create builder methods that can set multiple related params at once.
+3. Implicitly set params based on values of input, try to encapsulate param setting logic into setter methods so consumer doesn’t have to do so.
+4. If necessary, it’s possible to further manipulate params, for example validating.
+
+In JavaScript builder pattern is not limited to objects creation, it can also be used for functions invocations. But the difference is we have `invoke()` method, not `build()`.
