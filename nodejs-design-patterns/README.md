@@ -67,6 +67,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
 - [Creational design patterns](#creational-design-patterns)
   - [Factory](#factory)
     - [Simple profiler](#simple-profiler)
+  - [Builder pattern](#builder-pattern)
 
 ## The Node.js platform
 
@@ -2365,4 +2366,30 @@ function createProfiler(label) {
 
   return new Profiler(label);
 }
+```
+
+### Builder pattern
+
+Builder pattern is creational pattern that simplifies creation of complex object or invocation of complex functions (takes many arguments).
+
+Simple example is when we have Boat class, we have to pass many arguments there:
+
+```jsx
+class Boat {
+  constructor(allParameters) {
+    // ...
+  }
+}
+const myBoat = new Boat({
+  hasMotor: true,
+  motorCount: 2,
+  motorBrand: "Best Motor Co. ",
+  motorModel: "OM123",
+  hasSails: true,
+  sailsCount: 1,
+  sailsMaterial: "fabric",
+  sailsColor: "white",
+  hullColor: "blue",
+  hasCabin: false,
+});
 ```
