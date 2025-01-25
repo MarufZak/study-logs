@@ -2347,3 +2347,22 @@ class Profiler {
   }
 }
 ```
+
+If we wanted it to log only in development mode, we would have to include this logic inside this class, or in the client side when we invoke it with new keyword.
+
+Factory function offers better solution:
+
+```jsx
+const noopProfiler = {
+  start() {},
+  end() {},
+};
+
+function createProfiler(label) {
+  if (process.env.NODE_ENV === "production") {
+    return noopProfiler;
+  }
+
+  return new Profiler(label);
+}
+```
