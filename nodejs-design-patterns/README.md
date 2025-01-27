@@ -68,6 +68,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Factory](#factory)
     - [Simple profiler](#simple-profiler)
   - [Builder pattern](#builder-pattern)
+  - [Revealing pattern](#revealing-pattern)
 
 ## The Node.js platform
 
@@ -2452,3 +2453,11 @@ So the rules for implementing Builder pattern are:
 4. If necessary, it’s possible to further manipulate params, for example validating.
 
 In JavaScript builder pattern is not limited to objects creation, it can also be used for functions invocations. But the difference is we have `invoke()` method, not `build()`.
+
+### Revealing pattern
+
+The revealing constructor pattern is the pattern that is originated from the NodeJS community, and is not used or popular in other languages. It lets us to reveal some functionalities of an object only at creation time. It’s useful when we want an object internals to be manipulated only at creation time. Benefits:
+
+1. Creating objects that can be modified only at creation time
+2. Creating objects whose custom behavior can be defined only at creation time
+3. Creating objects that can be initialized only once at creation time
