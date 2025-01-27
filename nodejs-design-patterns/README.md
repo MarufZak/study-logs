@@ -2461,3 +2461,14 @@ The revealing constructor pattern is the pattern that is originated from the Nod
 1. Creating objects that can be modified only at creation time
 2. Creating objects whose custom behavior can be defined only at creation time
 3. Creating objects that can be initialized only once at creation time
+
+Skeleton for the pattern looks like the following:
+
+```jsx
+const object = new SomeClass((revealedMembers) => {
+  // manipulation code
+});
+
+// where revealed members are private members that are
+// accessible at creation time.
+```
