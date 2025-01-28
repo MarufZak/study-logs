@@ -2510,3 +2510,5 @@ console.log(buffer.toString()); // okayokayokayokay
 
 // this raises error: buffer.write();
 ```
+
+Other example is Promise class. It accepts resolve and reject callbacks to mutate internal state, and once created, state of promise cannot be altered. All we can do it receive fulfillment or rejection reason.
