@@ -69,6 +69,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
     - [Simple profiler](#simple-profiler)
   - [Builder pattern](#builder-pattern)
   - [Revealing pattern](#revealing-pattern)
+    - [Immutable buffer](#immutable-buffer)
 
 ## The Node.js platform
 
@@ -2471,4 +2472,41 @@ const object = new SomeClass((revealedMembers) => {
 
 // where revealed members are private members that are
 // accessible at creation time.
+```
+
+#### Immutable buffer
+
+Following example is example of immutable buffer, which exposes only properties and methods that don’t mutate the buffer. Buffer can be mutated only at construction, creation time.
+
+```jsx
+const MODIFIER_NAMES = ["write", "fill", "swap"];
+
+export class ImmutableBuffer {
+  constructor(size, executor) {
+    const buffer = Buffer.alloc(size);
+    const modifiers = {};
+
+    for (const prop in buffer) {
+      if (typeof buffer[prop] !== "function") {
+        continue;
+      }
+
+      if (MODIFIER_NAMES.some((name) => prop.startsWith(name))) {
+        modifiers[prop] = buffer[prop].bind(buffer);
+      } else {
+        this[prop] = buffer[prop].bind(buffer);
+      }
+    }
+
+    executor(modifiers);
+  }
+}
+
+const buffer = new ImmutableBuffer(16, ({ fill }) => {
+  fill("okay");
+});
+
+console.log(buffer.toString()); // okayokayokayokay
+
+// this raises error: buffer.write();
 ```
