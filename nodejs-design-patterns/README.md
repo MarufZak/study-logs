@@ -2517,3 +2517,22 @@ Other example is Promise class. It accepts resolve and reject callbacks to mutat
 ### Singleton pattern
 
 Singleton pattern is popular in OOP. It allows us to create only one instance of an object, and centralize its access. It shares stateful info, optimizes resource usage, and synchronize access to resource. For example Database class. It doesn’t make sense to create new DB instance for every request, one instance can keep pool of db connections, and it may share stateful info. So we need only one such class across application.
+
+```jsx
+export class Database {
+  constructor(dbName, connectionDetails) {
+    // ...
+  }
+  // ...
+}
+```
+
+In Node.JS its implementation is very simple.
+
+```jsx
+export const dbInstance = new Database("my-app-db", {
+  url: "localhost:5432",
+  username: "user",
+  password: "password",
+});
+```
