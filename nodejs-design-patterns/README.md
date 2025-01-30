@@ -2564,3 +2564,11 @@ console.log(
 ```
 
 If two packages in node_modules folder share a package that is NOT compatible between each other, package manager like npm downloads two different versions to fix the error. If they share package that IS compatible between each other (for example ^2.0.1 and ^2.0.7), package manager would install it into the top-level node_modules directory (this practice is called dependency hoisting).
+
+```jsx
+global.dbInstance = new Database("my-app-db", {
+  /*...*/
+});
+```
+
+However, most of the time we don’t need pure singleton, or our code is not for public package. We usually create and import singletons within the main package of an application or, at worst, in a subcomponent of the application that has been modularized into a dependency.
