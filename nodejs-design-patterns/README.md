@@ -410,6 +410,10 @@ const json = require("./j.json");
 console.log({ json });
 ```
 
+### Similarities
+
+> If module is imported multiple times in different files, it is executed only once, and subsequent imports use cached version of the module.
+
 ## Callbacks and Events
 
 ### CPS and direct style
@@ -2571,4 +2575,4 @@ global.dbInstance = new Database("my-app-db", {
 });
 ```
 
-However, most of the time we don’t need pure singleton, or our code is not for public package. We usually create and import singletons within the main package of an application or, at worst, in a subcomponent of the application that has been modularized into a dependency.
+> However, most of the time we don’t need pure singleton, or our code is not for public package. We usually create and import singletons within the main package of an application or, at worst, in a subcomponent of the application that has been modularized into a dependency.
