@@ -70,6 +70,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Builder pattern](#builder-pattern)
   - [Revealing pattern](#revealing-pattern)
     - [Immutable buffer](#immutable-buffer)
+  - [Singleton](#singleton-pattern)
 
 ## The Node.js platform
 
@@ -2512,3 +2513,7 @@ console.log(buffer.toString()); // okayokayokayokay
 ```
 
 Other example is Promise class. It accepts resolve and reject callbacks to mutate internal state, and once created, state of promise cannot be altered. All we can do it receive fulfillment or rejection reason.
+
+### Singleton pattern
+
+Singleton pattern is popular in OOP. It allows us to create only one instance of an object, and centralize its access. It shares stateful info, optimizes resource usage, and synchronize access to resource. For example Database class. It doesn’t make sense to create new DB instance for every request, one instance can keep pool of db connections, and it may share stateful info. So we need only one such class across application.
