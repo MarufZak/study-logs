@@ -2551,6 +2551,7 @@ export function getDbInstance() {
   return dbInstance;
 }
 
+// our program
 import { getDbInstance as getDbFromA } from "package-a";
 import { getDbInstance as getDbFromB } from "package-b";
 const isSame = getDbFromA() === getDbFromB();
