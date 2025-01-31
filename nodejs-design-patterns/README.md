@@ -71,6 +71,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Revealing pattern](#revealing-pattern)
     - [Immutable buffer](#immutable-buffer)
   - [Singleton](#singleton-pattern)
+  - [Dependency Injection](#dependency-injection)
 
 ## The Node.js platform
 
@@ -2576,3 +2577,7 @@ global.dbInstance = new Database("my-app-db", {
 ```
 
 > However, most of the time we don’t need pure singleton, or our code is not for public package. We usually create and import singletons within the main package of an application or, at worst, in a subcomponent of the application that has been modularized into a dependency.
+
+### Dependency injection
+
+Dependency injection is pattern where dependencies of a component are provided as input by external entity, ofter referred as injector. Injector initializes components and ties their dependencies together. It improves decoupling, and dependent module can use any compatible dependency, and module can be used in many contexts differently with minimum effort.
