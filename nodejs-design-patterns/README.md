@@ -2585,3 +2585,34 @@ Dependency injection is pattern where dependencies of a component are provided a
 Injector is responsible for creating actual instance that implements interface compatible with the dependency of service.
 
 ![Dependency injection](./assets/dependency-injection.png)
+
+Rewritten Blog class now looks like the following. It is identical, but now db is not imported from another module, and instead expects a dependency. Injector, in this case client component that uses Blog class, should provide db as a dependency. It can be any class that implements [db.run](http://db.run) and db.all methods (referred as a duck typing).
+
+```jsx
+// blog.js
+
+class Blog {
+  constructor(db) {
+    this.db = db;
+    this.dbRun = promisify(db.run.bind(db));
+    this.dbAll = promisify(db.all.bind(db));
+  }
+  // ... methods, which reference db as this.db
+}
+
+// db.js
+// we can also refactor db module to be more reusable with factory
+
+import sqlite3 from "sqlite3";
+export function createDb(dbFile) {
+  return new sqlite3.Database(dbFile);
+}
+
+// main.js
+
+const db = createDb(/* filepath */);
+const blog = new Blog(db);
+// ...
+```
+
+Now Blog class is totally decoupled from db module, making it more composable and easy to test in isolation.
