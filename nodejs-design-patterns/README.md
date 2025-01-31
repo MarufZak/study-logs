@@ -2581,3 +2581,7 @@ global.dbInstance = new Database("my-app-db", {
 ### Dependency injection
 
 Dependency injection is pattern where dependencies of a component are provided as input by external entity, ofter referred as injector. Injector initializes components and ties their dependencies together. It improves decoupling, and dependent module can use any compatible dependency, and module can be used in many contexts differently with minimum effort.
+
+Injector is responsible for creating actual instance that implements interface compatible with the dependency of service.
+
+![Dependency injection](./assets/dependency-injection.png)
