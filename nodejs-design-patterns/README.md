@@ -2616,3 +2616,7 @@ const blog = new Blog(db);
 ```
 
 Now Blog class is totally decoupled from db module, making it more composable and easy to test in isolation.
+
+Dependency injection comes with its own price. Although we decoupled the modules, it may make it harder to understand the dependencies of a module in large projects. Also, we can see that db should have been instantiated before passing to Blog class. This means that we should manually build dependency graph of the application by hand, making everything in the right order.
+
+> What we saw in this example is known as constructor injection. But dependencies can also be passed when invoking functions (function injection) or assigning relevant property of an object (property injection).
