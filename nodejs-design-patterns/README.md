@@ -72,6 +72,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
     - [Immutable buffer](#immutable-buffer)
   - [Singleton](#singleton-pattern)
   - [Dependency Injection](#dependency-injection)
+  - [Inversion of control](#inversion-of-control)
 
 ## The Node.js platform
 
@@ -2620,3 +2621,7 @@ Now Blog class is totally decoupled from db module, making it more composable an
 Dependency injection comes with its own price. Although we decoupled the modules, it may make it harder to understand the dependencies of a module in large projects. Also, we can see that db should have been instantiated before passing to Blog class. This means that we should manually build dependency graph of the application by hand, making everything in the right order.
 
 > What we saw in this example is known as constructor injection. But dependencies can also be passed when invoking functions (function injection) or assigning relevant property of an object (property injection).
+
+### Inversion of control
+
+Inversion of control lets us to shift responsibility of wiring the modules of an application to third party entity. It can be service locator (component that can retrieve a dependency), or dependency injection container (system that injects the dependencies into component based on some metadata in code or config file).
