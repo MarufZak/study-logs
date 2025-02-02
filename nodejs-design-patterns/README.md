@@ -2768,3 +2768,7 @@ Structural design patterns focus on providing ways to realize relationships betw
 ### Proxy (surrogate)
 
 A proxy is an object that controls access to another object, called subject. It has same interface as subject, and intercepts all operations meant to be executed on subject, augmenting or complementing its behavior.
+
+![Proxy](./assets/proxy.png)
+
+Proxy can be used for data validation, security checks, caching, lazy initialization (when subject is expensive, and creating it when it’s really needed), logging (params for example), remote objects (take a remote object and make it appear local).
