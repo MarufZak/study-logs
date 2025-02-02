@@ -74,6 +74,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Dependency Injection](#dependency-injection)
   - [Inversion of control](#inversion-of-control)
   - [Exercises for patterns](#exercises-for-patterns)
+- [Structural design patterns](#structural-design-patterns)
 
 ## The Node.js platform
 
@@ -2758,3 +2759,7 @@ userService.getUser(1);
 
   colorfulConsole.log(textToPrint);
   ```
+
+## Structural design patterns
+
+Structural design patterns focus on providing ways to realize relationships between entities.
