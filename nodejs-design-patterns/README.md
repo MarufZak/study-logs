@@ -2667,3 +2667,42 @@ Inversion of control lets us to shift responsibility of wiring the modules of an
 
   export default { serviceLocator };
   ```
+
+- Example with dependency injection container
+
+Following example uses awilix library to create container.
+
+```jsx
+import { createContainer, asClass } from "awilix";
+
+class Database {
+  query(sql) {
+    console.log(`Executing query: ${sql}`);
+  }
+}
+
+class UserService {
+  constructor({ db }) {
+    this.db = db;
+  }
+
+  getUser(id) {
+    return this.db.query(`SELECT * FROM users WHERE id = ${id}`);
+  }
+}
+
+const container = createContainer();
+
+// Register services and components
+container.register({
+  db: asClass(Database).singleton(),
+  userService: asClass(UserService),
+});
+
+// Resolve the UserService with its dependencies injected.
+// In this step dependencies are already injected, because awilix
+// look for the keys in constructor of userService, and maps
+// dependencies to components passed to it.
+const userService = container.resolve("userService");
+userService.getUser(1);
+```
