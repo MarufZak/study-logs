@@ -76,6 +76,8 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Exercises for patterns](#exercises-for-patterns)
 - [Structural design patterns](#structural-design-patterns)
   - [Proxy, surrogate](#proxy-surrogate)
+    - [Object composition](#object-composition)
+    - [Object augmentation, monkey patching](#object-augmentation-monkey-patching)
 
 ## The Node.js platform
 
@@ -2881,3 +2883,26 @@ function createSafeCalculator(calculator) {
 ```
 
 As we can see, we delegate many methods to the original methods of the subject. In more complex scenarios, this might lead to a lot of code.
+
+### Object augmentation (monkey patching)
+
+This technique involves modifying subject directly by replacing method with its proxied implementation.
+
+```jsx
+function patchToSafeCalculator(calculator) {
+  const divideOrig = calculator.divide;
+  calculator.divide = () => {
+    // additional validation logic
+    const divisor = calculator.peekValue();
+    if (divisor === 0) {
+      throw Error("Division by 0");
+    }
+    // if valid delegates to the subject
+    return divideOrig.apply(calculator);
+  };
+  return calculator;
+}
+
+const calculator = new StackCalculator();
+const safeCalculator = patchToSafeCalculator(calculator);
+```
