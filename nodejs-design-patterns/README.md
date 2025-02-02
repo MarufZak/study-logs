@@ -73,6 +73,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Singleton](#singleton-pattern)
   - [Dependency Injection](#dependency-injection)
   - [Inversion of control](#inversion-of-control)
+  - [Exercises for patterns](#exercises-for-patterns)
 
 ## The Node.js platform
 
@@ -2706,3 +2707,54 @@ container.register({
 const userService = container.resolve("userService");
 userService.getUser(1);
 ```
+
+### Exercises for patterns
+
+- Console log factory
+
+  Create a class called ColorConsole that has just one empty method called log(). Then, create three subclasses: RedConsole, BlueConsole, and GreenConsole. The log() method of every ColorConsole subclass will accept a string as input and will print that string to the console using the color that gives the name to the class. Then, create a factory function that takes color as input, such as 'red', and returns the related ColorConsole subclass. Finally, write a small command-line script to try the new console color factory. You can use this Stack Overflow answer as a reference for using colors in the console: nodejsdp.link/console-colors.
+
+  ```jsx
+  class ColorConsole {
+    log(_message) {
+      throw new Error("method log must be implemented in subclass");
+    }
+  }
+
+  class RedConsole extends ColorConsole {
+    // overriding parent class method
+    log(message) {
+      console.log("\x1b[31m", message);
+    }
+  }
+
+  class BlueConsole extends ColorConsole {
+    log(message) {
+      console.log("\x1b[34m", message);
+    }
+  }
+
+  class GreenConsole extends ColorConsole {
+    log(message) {
+      console.log("\x1b[32m", message);
+    }
+  }
+
+  function createColorfulConsole(color) {
+    if (color === "red") {
+      return new RedConsole();
+    } else if (color === "blue") {
+      return new BlueConsole();
+    } else if (color === "green") {
+      return new GreenConsole();
+    }
+
+    throw new Error("Available colors are red, blur and green");
+  }
+
+  const specifiedColor = process.argv[2];
+  const textToPrint = process.argv[3];
+  const colorfulConsole = createColorfulConsole(specifiedColor);
+
+  colorfulConsole.log(textToPrint);
+  ```
