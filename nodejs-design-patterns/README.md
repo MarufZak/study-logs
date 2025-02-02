@@ -2808,3 +2808,76 @@ class StackCalculator {
 ```
 
 As we know, in JavaScript if we divide by zero, we get Infinity. It’s not common for other languages, so lets make behavior same here. Let’s use proxy pattern with stack calculator to make division throw an error if divided by 0.
+
+### Object composition
+
+Following solution uses object composition technique, which is combining object with another object in purpose of extending it or using its functionality. In case of proxy pattern, new object with same interface is created, and reference to subject is stored internally. Subject can be created by proxy itself, or injected by the client.
+
+```jsx
+class SafeCalculator {
+  constructor(calculator) {
+    this.calculator = calculator;
+  }
+  // proxied method
+  divide() {
+    // additional validation logic
+    const divisor = this.calculator.peekValue();
+    if (divisor === 0) {
+      throw Error("Division by 0");
+    }
+    // if valid delegates to the subject
+    return this.calculator.divide();
+  }
+  // delegated methods
+  putValue(value) {
+    return this.calculator.putValue(value);
+  }
+  getValue() {
+    return this.calculator.getValue();
+  }
+  peekValue() {
+    return this.calculator.peekValue();
+  }
+  clear() {
+    return this.calculator.clear();
+  }
+  multiply() {
+    return this.calculator.multiply();
+  }
+}
+
+// or with factory
+
+function createSafeCalculator(calculator) {
+  return {
+    // proxied method
+    divide() {
+      // additional validation logic
+      const divisor = calculator.peekValue();
+      if (divisor === 0) {
+        throw Error("Division by 0");
+      }
+      // if valid delegates to the subject
+      return calculator.divide();
+    },
+    // delegated methods
+    putValue(value) {
+      return calculator.putValue(value);
+    },
+    getValue() {
+      return calculator.getValue();
+    },
+    peekValue() {
+      return calculator.peekValue();
+    },
+    clear() {
+      return calculator.clear();
+    },
+    multiply() {
+      return calculator.multiply();
+    },
+  };
+}
+```
+
+As we can see, we delegate many methods to the original methods of the subject. In more complex scenarios, this might lead to a lot of code.
