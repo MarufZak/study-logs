@@ -75,6 +75,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Inversion of control](#inversion-of-control)
   - [Exercises for patterns](#exercises-for-patterns)
 - [Structural design patterns](#structural-design-patterns)
+  - [Proxy, surrogate](#proxy-surrogate)
 
 ## The Node.js platform
 
@@ -2763,3 +2764,7 @@ userService.getUser(1);
 ## Structural design patterns
 
 Structural design patterns focus on providing ways to realize relationships between entities.
+
+### Proxy (surrogate)
+
+A proxy is an object that controls access to another object, called subject. It has same interface as subject, and intercepts all operations meant to be executed on subject, augmenting or complementing its behavior.
