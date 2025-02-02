@@ -2772,3 +2772,39 @@ A proxy is an object that controls access to another object, called subject. It 
 ![Proxy](./assets/proxy.png)
 
 Proxy can be used for data validation, security checks, caching, lazy initialization (when subject is expensive, and creating it when it’s really needed), logging (params for example), remote objects (take a remote object and make it appear local).
+
+```jsx
+class StackCalculator {
+  constructor() {
+    this.stack = [];
+  }
+  putValue(value) {
+    this.stack.push(value);
+  }
+  getValue() {
+    return this.stack.pop();
+  }
+  peekValue() {
+    return this.stack[this.stack.length - 1];
+  }
+  clear() {
+    this.stack = [];
+  }
+  divide() {
+    const divisor = this.getValue();
+    const dividend = this.getValue();
+    const result = dividend / divisor;
+    this.putValue(result);
+    return result;
+  }
+  multiply() {
+    const multiplicand = this.getValue();
+    const multiplier = this.getValue();
+    const result = multiplier * multiplicand;
+    this.putValue(result);
+    return result;
+  }
+}
+```
+
+As we know, in JavaScript if we divide by zero, we get Infinity. It’s not common for other languages, so lets make behavior same here. Let’s use proxy pattern with stack calculator to make division throw an error if divided by 0.
