@@ -2625,3 +2625,45 @@ Dependency injection comes with its own price. Although we decoupled the modules
 ### Inversion of control
 
 Inversion of control lets us to shift responsibility of wiring the modules of an application to third party entity. It can be service locator (component that can retrieve a dependency), or dependency injection container (system that injects the dependencies into component based on some metadata in code or config file).
+
+- Example with service locator
+  Service locator decides how to wire the dependencies, and consumer doesn’t instantiate them directly. This makes dependencies management more configurable. Consumers of service locator don’t register or manage services, but rather retrieve them.
+
+  ```jsx
+  class ServiceLocator {
+    constructor() {
+      this.services = new Map();
+    }
+
+    register(name, instance) {
+      this.services.set(name, instance);
+    }
+
+    get(name) {
+      if (!this.services.has(name)) {
+        throw new Error("No such service");
+      }
+
+      return this.services.get(name);
+    }
+  }
+
+  class Logger {
+    log(message) {
+      console.log(`Log: ${message}`);
+    }
+  }
+
+  class Database {
+    query(sql) {
+      console.log(`Executing SQL: ${sql}`);
+    }
+  }
+
+  // Register services
+  const serviceLocator = new ServiceLocator();
+  serviceLocator.register("logger", new Logger());
+  serviceLocator.register("database", new Database());
+
+  export default { serviceLocator };
+  ```
