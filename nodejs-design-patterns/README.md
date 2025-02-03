@@ -2884,6 +2884,17 @@ function createSafeCalculator(calculator) {
 
 As we can see, we delegate many methods to the original methods of the subject. In more complex scenarios, this might lead to a lot of code.
 
+Object properties can be delegated with Object.defineProperty. In our calculator, constructor would look like:
+
+```jsx
+constructor(calculator) {
+    this.calculator = calculator;
+    Object.defineProperty(this, "stack", {
+      value: calculator.stack,
+    });
+  }
+```
+
 ### Object augmentation (monkey patching)
 
 This technique involves modifying subject directly by replacing method with its proxied implementation.
