@@ -78,6 +78,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Proxy, surrogate](#proxy-surrogate)
     - [Object composition](#object-composition)
     - [Object augmentation, monkey patching](#object-augmentation-monkey-patching)
+    - [Built in proxy object](#built-in-proxy-object)
 
 ## The Node.js platform
 
@@ -3043,3 +3044,7 @@ const safeCalculator = patchToSafeCalculator(calculator);
 ```
 
 Here we don’t have to delegate all other methods. Simplicity comes with cost. We are mutating the subject directly, which is dangerous. Such technique should be avoided, or used when such component is in private scope, because if it’s shared with other components, this might lead to undesirable side effects. When other components divide by zero, they now have error thrown, not infinity.
+
+### Built-in Proxy object
+
+The ES2015 spec introduced native way to create proxy objects with Proxy constructor that accepts target and handler arguments. Target is the subject, and handler defines behavior of proxy. Handler is an object with predefined methods called traps (for getting, setting, and defining properties), that are called when corresponding operation is performed on proxy instance.
