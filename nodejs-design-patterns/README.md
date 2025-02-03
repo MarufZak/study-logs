@@ -3048,3 +3048,29 @@ Here we don’t have to delegate all other methods. Simplicity comes with cost. 
 ### Built-in Proxy object
 
 The ES2015 spec introduced native way to create proxy objects with Proxy constructor that accepts target and handler arguments. Target is the subject, and handler defines behavior of proxy. Handler is an object with predefined methods called traps (for getting, setting, and defining properties), that are called when corresponding operation is performed on proxy instance.
+
+Our safe calculator would look like this with Proxy constructor:
+
+```jsx
+const calculator = new StackCalculator();
+const safeCalculator = new Proxy(calculator, {
+  get: (target, method) => {
+    // redefine proxied method
+    if (method === "divide") {
+      return () => {
+        const divisor = target.peekValue();
+        if (divisor === 0) {
+          throw new Error("Division by 0, Carl");
+        }
+        // else delegate to original method
+        target.divide();
+      };
+    }
+
+    // delegate other methods
+    return target[method];
+  },
+});
+```
+
+This is clearly better than our older solutions.
