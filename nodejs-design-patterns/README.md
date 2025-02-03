@@ -2765,6 +2765,7 @@ userService.getUser(1);
 
 - Request builder
   Create your own Builder class around the built-in http.request() function. The builder must be able to provide at least basic facilities to specify the HTTP method, the URL, the query component of the URL, the header parameters, and the eventual body data to be sent. To send the request, provide an invoke() method that returns a Promise for the invocation.
+
   ```jsx
   import http from "http";
 
@@ -2848,6 +2849,39 @@ userService.getUser(1);
         }
 
         req.end();
+      });
+    }
+  }
+  ```
+
+- A tamper-free queue
+
+  Create a Queue class that has only one publicly accessible method called dequeue(). Such a method returns a Promise that resolves with a new element extracted from an internal queue data structure. If the queue is empty, then the Promise will resolve when a new item is added. The Queue class must also have a revealing constructor that provides a function called enqueue() to the executor that pushes a new element to the end of the internal queue. The enqueue() function can be invoked asynchronously and it must also take care of "unblocking" any eventual Promise returned by the dequeue() method. To try out the Queue class, you could build a small HTTP server into the executor function. Such a server would receive messages or tasks from a client and would push them into the queue. A loop would then consume all those messages using the dequeue() method.
+
+  ```jsx
+  class Queue {
+    queue = [];
+    resolvers = [];
+
+    constructor(executor) {
+      const enqueue = (item) => {
+        if (this.resolvers.length > 0) {
+          this.resolvers.pop()(item);
+        } else {
+          this.queue.push(item);
+        }
+      };
+
+      executor(enqueue);
+    }
+
+    dequeue() {
+      return new Promise((resolve) => {
+        if (this.queue.length === 0) {
+          this.resolvers.push(resolve);
+        } else {
+          resolve(this.queue.shift());
+        }
       });
     }
   }
