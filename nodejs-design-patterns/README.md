@@ -2763,6 +2763,96 @@ userService.getUser(1);
   colorfulConsole.log(textToPrint);
   ```
 
+- Request builder
+  Create your own Builder class around the built-in http.request() function. The builder must be able to provide at least basic facilities to specify the HTTP method, the URL, the query component of the URL, the header parameters, and the eventual body data to be sent. To send the request, provide an invoke() method that returns a Promise for the invocation.
+  ```jsx
+  import http from "http";
+
+  class HttpRequestBuilder {
+    constructor() {
+      this.method = "GET";
+      this.url = "";
+      this.queryParams = {};
+      this.headers = {};
+      this.body = null;
+    }
+
+    setMethod(method) {
+      this.method = method.toUpperCase();
+      return this;
+    }
+
+    setUrl(url) {
+      this.url = url;
+      return this;
+    }
+
+    setQueryParams(params) {
+      this.queryParams = params;
+      return this;
+    }
+
+    setHeaders(headers) {
+      this.headers = headers;
+      return this;
+    }
+
+    setBody(body) {
+      this.body = body;
+      return this;
+    }
+
+    _buildFullUrl() {
+      const urlObj = new URL(this.url);
+      for (const [key, value] of Object.entries(this.queryParams)) {
+        urlObj.searchParams.append(key, value);
+      }
+      return urlObj.toString();
+    }
+
+    invoke() {
+      return new Promise((resolve, reject) => {
+        const fullUrl = this._buildFullUrl();
+        const urlObj = new URL(fullUrl);
+
+        const options = {
+          hostname: urlObj.hostname,
+          port: urlObj.port,
+          path: urlObj.pathname + urlObj.search,
+          method: this.method,
+          headers: this.headers,
+        };
+
+        const req = http.request(options, (res) => {
+          let responseData = "";
+
+          res.on("data", (chunk) => {
+            responseData += chunk;
+          });
+
+          res.on("end", () => {
+            resolve({
+              statusCode: res.statusCode,
+              headers: res.headers,
+              body: responseData,
+            });
+          });
+        });
+
+        req.on("error", (error) => {
+          reject(error);
+        });
+
+        if (this.body) {
+          req.write(this.body);
+        }
+
+        req.end();
+      });
+    }
+  }
+  ```
+
 ## Structural design patterns
 
 Structural design patterns focus on providing ways to realize relationships between entities.
