@@ -3074,3 +3074,21 @@ const safeCalculator = new Proxy(calculator, {
 ```
 
 This is clearly better than our older solutions.
+
+Proxy constructor comes with many patterns that can be used, for example next example uses it to virtualize an array:
+
+```jsx
+const evenNumbers = new Proxy([], {
+  get: (_, index) => index * 2,
+  has: (_, index) => index % 2 === 0,
+  set: (_, _) => "i dont allow you",
+});
+
+console.log(2 in evenNumbers); // true
+console.log(3 in evenNumbers); // false
+console.log(evenNumbers[8]); // 16
+console.log((evenNumbers[3] = 3)); // 3
+console.log(evenNumbers); // []
+```
+
+Other traps include set, delete, and construct, and allows us to create proxies that can be revoked on demand, disable all the traps and restore original behavior.
