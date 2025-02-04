@@ -3096,7 +3096,9 @@ Other traps include set, delete, and construct, and allows us to create proxies 
 Downside of Proxy class is that it cannot be transpiled (convert to equivalent with older syntax) or polyfilled (provide implementation in plain JS for where API is not available), because some of the traps can only be implemented at runtime level and cannot be rewritten in another in plain JS.
 
 - Example with stream
+
   In this example, we are intercepting call to write method. Note that proxiedWritable.end closes original stream, because proxy is not another instance, but the original instance itself.
+
   ```jsx
   import { createWriteStream } from "fs";
 
@@ -3123,4 +3125,46 @@ Downside of Proxy class is that it cannot be transpiled (convert to equivalent w
   proxiedWritable.write("with log there");
   writable.write("no log ok");
   proxiedWritable.end();
+  ```
+
+- Example with change observer
+
+  Proxy is effective to create observable objects. Observer pattern from chapter 3 is broader term. Here, this pattern allows us to detect property changes.
+  Also observables are cornerstone to reactive programming and functional reactive programming.
+
+  ```jsx
+  const createObservable = (target, observer) => {
+    const observable = new Proxy(target, {
+      set(target, key, value) {
+        if (value !== target[key]) {
+          const prev = target[key];
+          target[key] = value;
+          observer({ key, prev, curr: value });
+        }
+        return true;
+      },
+    });
+
+    return observable;
+  };
+
+  function calculateTotal(invoice) {
+    return invoice.subtotal - invoice.discount + invoice.tax;
+  }
+  const invoice = {
+    subtotal: 100,
+    discount: 10,
+    tax: 20,
+  };
+  let total = calculateTotal(invoice);
+  console.log(`Starting total: ${total}`);
+
+  const obsInvoice = createObservable(invoice, ({ key, prev, curr }) => {
+    total = calculateTotal(invoice);
+    console.log(`TOTAL: ${total} (${key} changed: ${prev} ->
+    ${curr})`);
+  });
+
+  obsInvoice.subtotal = 200;
+  console.log(`Final total: ${total}`);
   ```
