@@ -3094,3 +3094,33 @@ console.log(evenNumbers); // []
 Other traps include set, delete, and construct, and allows us to create proxies that can be revoked on demand, disable all the traps and restore original behavior.
 
 Downside of Proxy class is that it cannot be transpiled (convert to equivalent with older syntax) or polyfilled (provide implementation in plain JS for where API is not available), because some of the traps can only be implemented at runtime level and cannot be rewritten in another in plain JS.
+
+- Example with stream
+  In this example, we are intercepting call to write method. Note that proxiedWritable.end closes original stream, because proxy is not another instance, but the original instance itself.
+  ```jsx
+  import { createWriteStream } from "fs";
+
+  function createLoggingWritable(writable) {
+    return new Proxy(writable, {
+      get(target, method) {
+        if (method === "write") {
+          return (...args) => {
+            const [chunk] = args;
+            console.log("Writing", chunk);
+            target.write(...args);
+          };
+        }
+
+        return target[method];
+      },
+    });
+  }
+
+  const writable = createWriteStream("test.txt");
+  const proxiedWritable = createLoggingWritable(writable);
+
+  proxiedWritable.write("with log hello");
+  proxiedWritable.write("with log there");
+  writable.write("no log ok");
+  proxiedWritable.end();
+  ```
