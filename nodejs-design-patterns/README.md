@@ -3168,3 +3168,5 @@ Downside of Proxy class is that it cannot be transpiled (convert to equivalent w
   obsInvoice.subtotal = 200;
   console.log(`Final total: ${total}`);
   ```
+
+In the wild Proxy pattern is implemented in popular projects like LoopBack, Vue.JS v3, MobX and others.
