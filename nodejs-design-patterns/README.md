@@ -3208,6 +3208,7 @@ Following examples use StackCalculator we wrote earlier. Example have same cavea
 
 - Example with object augmentation
   Object augmentation can be achieved by simply attaching new method to decorator object (monkey patching). Function is a decorator.
+
   ```jsx
   function patchCalculator(calculator) {
     calculator.add = function () {
@@ -3220,4 +3221,24 @@ Following examples use StackCalculator we wrote earlier. Example have same cavea
 
     return calculator;
   }
+  ```
+
+- Example with Proxy object
+  It’s also possible to implement object decoration with Proxy object.
+  ```jsx
+  const enhancedCalculatorHandler = {
+    get(target, property) {
+      if (property === "add") {
+        return () => {
+          const addend2 = target.getValue();
+          const addend1 = target.getValue();
+          const result = addend1 + addend2;
+          target.putValue(result);
+          return result;
+        };
+      }
+
+      return target[property];
+    },
+  };
   ```
