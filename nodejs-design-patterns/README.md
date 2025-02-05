@@ -3225,6 +3225,7 @@ Following examples use StackCalculator we wrote earlier. Example have same cavea
 
 - Example with Proxy object
   It’s also possible to implement object decoration with Proxy object.
+
   ```jsx
   const enhancedCalculatorHandler = {
     get(target, property) {
@@ -3241,4 +3242,48 @@ Following examples use StackCalculator we wrote earlier. Example have same cavea
       return target[property];
     },
   };
+  ```
+
+- Example with LevelUP
+  LevelUP is a Node.js wrapper around Google's LevelDB,a key-value store originally built to implement IndexedDB in the Chrome browser. It’s minimal, extensible, and very fast, provides only minimum functionality. It now supports from in-memory DBs to NoSQL DBs like Redis and web storage engines like indexedDB and localStorage (yes, with same API). Complete DBs are also built on it, like PouchDB or LevelGraph.
+  Following example is a plugin for LevelUP, which uses Object augmentation method of decoration.
+  ```jsx
+  import { Level } from "level";
+  import { dirname, join } from "path";
+  import { fileURLToPath } from "url";
+
+  const levelSubscribe = (db) => {
+    db.subscribe = (pattern, listener) => {
+      db.on("put", (key, val) => {
+        const match = Object.keys(pattern).every((k) => {
+          return pattern[k] === val[k];
+        });
+
+        if (match) {
+          listener(key, val);
+        }
+      });
+    };
+  };
+
+  const __dirname = dirname(fileURLToPath(import.meta.url));
+  const dbPath = join(__dirname, "db");
+  const db = new Level(dbPath, { valueEncoding: "json" });
+
+  levelSubscribe(db);
+
+  db.subscribe({ doctype: "tweet", language: "en" }, (k, val) =>
+    console.log(val)
+  );
+
+  db.put("1", {
+    doctype: "tweet",
+    text: "Hi",
+    language: "en",
+  }); // logged
+
+  db.put("2", {
+    doctype: "company",
+    name: "ACME Co.",
+  }); // not logger
   ```
