@@ -3247,6 +3247,7 @@ Following examples use StackCalculator we wrote earlier. Example have same cavea
 - Example with LevelUP
   LevelUP is a Node.js wrapper around Google's LevelDB,a key-value store originally built to implement IndexedDB in the Chrome browser. It’s minimal, extensible, and very fast, provides only minimum functionality. It now supports from in-memory DBs to NoSQL DBs like Redis and web storage engines like indexedDB and localStorage (yes, with same API). Complete DBs are also built on it, like PouchDB or LevelGraph.
   Following example is a plugin for LevelUP, which uses Object augmentation method of decoration.
+
   ```jsx
   import { Level } from "level";
   import { dirname, join } from "path";
@@ -3287,3 +3288,5 @@ Following examples use StackCalculator we wrote earlier. Example have same cavea
     name: "ACME Co.",
   }); // not logger
   ```
+
+Pattern of decorator is widely used, and examples include plugins for LevelUP, Fastify web app framework, json-socket library and many others.
