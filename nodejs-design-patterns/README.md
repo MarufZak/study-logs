@@ -79,6 +79,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
     - [Object composition](#object-composition)
     - [Object augmentation, monkey patching](#object-augmentation-monkey-patching)
     - [Built in proxy object](#built-in-proxy-object)
+  - [Decorator](#decorator)
 
 ## The Node.js platform
 
@@ -3174,3 +3175,5 @@ In the wild Proxy pattern is implemented in popular projects like LoopBack, Vue.
 ### Decorator
 
 Decorator pattern consists of dynamically augmenting behavior of existing object. Only instances that are explicitly decorated has something modified, not all instances. It looks like Proxy, but instead of augmenting, it adds new functionality. Sometimes, however, it might also augment with extra behaviors.
+
+![Decorator](./assets/decorator.png)
