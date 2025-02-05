@@ -3177,3 +3177,30 @@ In the wild Proxy pattern is implemented in popular projects like LoopBack, Vue.
 Decorator pattern consists of dynamically augmenting behavior of existing object. Only instances that are explicitly decorated has something modified, not all instances. It looks like Proxy, but instead of augmenting, it adds new functionality. Sometimes, however, it might also augment with extra behaviors.
 
 ![Decorator](./assets/decorator.png)
+
+Following examples use StackCalculator we wrote earlier. Example have same caveats we discussed earlier. Lets add new add method.
+
+- Example with composition
+  In this case, decorator is EnhancedCalculator itself, and it needs to add new method.
+  ```jsx
+  class EnhancedCalculator {
+    constructor(calculator) {
+      this.calculator = calculator;
+    }
+
+    add() {
+      const addend2 = this.getValue();
+      const addend1 = this.getValue();
+      const result = addend1 + addend2;
+      this.putValue(result);
+      return result;
+    }
+
+    // delegated methods
+    putValue(value) {
+      return this.calculator.putValue(value);
+    }
+
+    // ... other delegations
+  }
+  ```
