@@ -80,6 +80,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
     - [Object augmentation, monkey patching](#object-augmentation-monkey-patching)
     - [Built in proxy object](#built-in-proxy-object)
   - [Decorator](#decorator)
+    - [Difference from Proxy](#difference-from-proxy)
 
 ## The Node.js platform
 
@@ -3290,3 +3291,7 @@ Following examples use StackCalculator we wrote earlier. Example have same cavea
   ```
 
 Pattern of decorator is widely used, and examples include plugins for LevelUP, Fastify web app framework, json-socket library and many others.
+
+#### Difference from Proxy
+
+These 2 are sometimes interchangeable tools, and even names are used interchangeably sometimes. In JavaScript, where types are dynamic, the differences might be blurry. It is more obvious in statically typed languages.
