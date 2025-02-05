@@ -3170,3 +3170,7 @@ Downside of Proxy class is that it cannot be transpiled (convert to equivalent w
   ```
 
 In the wild Proxy pattern is implemented in popular projects like LoopBack, Vue.JS v3, MobX and others.
+
+### Decorator
+
+Decorator pattern consists of dynamically augmenting behavior of existing object. Only instances that are explicitly decorated has something modified, not all instances. It looks like Proxy, but instead of augmenting, it adds new functionality. Sometimes, however, it might also augment with extra behaviors.
