@@ -3182,6 +3182,7 @@ Following examples use StackCalculator we wrote earlier. Example have same cavea
 
 - Example with composition
   In this case, decorator is EnhancedCalculator itself, and it needs to add new method.
+
   ```jsx
   class EnhancedCalculator {
     constructor(calculator) {
@@ -3202,5 +3203,21 @@ Following examples use StackCalculator we wrote earlier. Example have same cavea
     }
 
     // ... other delegations
+  }
+  ```
+
+- Example with object augmentation
+  Object augmentation can be achieved by simply attaching new method to decorator object (monkey patching). Function is a decorator.
+  ```jsx
+  function patchCalculator(calculator) {
+    calculator.add = function () {
+      const addend2 = calculator.getValue();
+      const addend1 = calculator.getValue();
+      const result = addend1 + addend2;
+      calculator.putValue(result);
+      return result;
+    };
+
+    return calculator;
   }
   ```
