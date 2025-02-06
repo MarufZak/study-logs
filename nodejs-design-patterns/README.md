@@ -81,6 +81,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
     - [Built in proxy object](#built-in-proxy-object)
   - [Decorator](#decorator)
     - [Difference from Proxy](#difference-from-proxy)
+  - [Adapter](#adepter)
 
 ## The Node.js platform
 
@@ -3303,3 +3304,5 @@ The decorator pattern is defined as a mechanism that allows us to enhance existi
 Adapter pattern allows us to access functionality of object using different interface. Simple example is device, that allows us to plug USB type A into USB type C port.
 
 The Adapter pattern is used to take the interface of an object (the **adaptee**) and make it compatible with another interface that is expected by a given client.
+
+![Adapter](./assets/adapter.png)
