@@ -83,6 +83,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
     - [Difference from Proxy](#difference-from-proxy)
   - [Adapter](#adepter)
   - [Structural design patterns conclusion](#structural-design-patterns-conclusion)
+  - [Structural design patterns exercises](#structural-design-patterns-exercises)
 
 ## The Node.js platform
 
@@ -3367,3 +3368,55 @@ The Adapter pattern is used to take the interface of an object (the **adaptee**)
 ### Structural design patterns conclusion
 
 Proxy, Decorator and Adapter are quite similar in implementation, but the difference is in the perspective of consumer. Proxy provides same interface, Decorator provides enhanced interface, and Adapter provides different interface.
+
+### Structural design patterns exercises
+
+- HTTP client cache
+  Write a proxy for your favorite HTTP client library that caches the response of a given HTTP request, so that if you make the same request again, the response is immediately returned from the local cache, rather than being fetched from the remote URL
+
+  ```jsx
+  const createCacheableFetch = () => {
+    const cache = new Map();
+
+    return new Proxy(fetch, {
+      apply: async (target, _, args) => {
+        const [url, ...rest] = args;
+
+        if (cache.has(url)) {
+          console.log("CACHE HIT");
+          return cache.get(url);
+        }
+
+        console.log("CACHE MISS");
+        const response = await target(url, rest);
+        cache.set(url, response);
+      },
+    });
+  };
+  ```
+
+  Implementation above doesn’t cover pending requests. Usage example is below:
+
+  ```jsx
+  const cacheableFetch = createCacheableFetch();
+
+  await cacheableFetch("https://jsonplaceholder.typicode.com/posts/1", {
+    method: "GET",
+  });
+
+  await cacheableFetch("https://jsonplaceholder.typicode.com/posts/1", {
+    method: "GET",
+  });
+
+  await cacheableFetch("https://jsonplaceholder.typicode.com/posts/1", {
+    method: "GET",
+  });
+
+  await cacheableFetch("https://jsonplaceholder.typicode.com/posts/1", {
+    method: "GET",
+  });
+
+  await cacheableFetch("https://jsonplaceholder.typicode.com/posts/1", {
+    method: "GET",
+  });
+  ```
