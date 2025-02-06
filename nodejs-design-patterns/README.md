@@ -82,6 +82,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Decorator](#decorator)
     - [Difference from Proxy](#difference-from-proxy)
   - [Adapter](#adepter)
+  - [Structural design patterns conclusion](#structural-design-patterns-conclusion)
 
 ## The Node.js platform
 
@@ -3309,6 +3310,7 @@ The Adapter pattern is used to take the interface of an object (the **adaptee**)
 
 - Example with LevelUP
   Let’s make an adapter for LevelUP db. It lets the client to use LevelUP db with interface of fs module (which is originally adapter).
+
   ```jsx
   import { resolve } from "path";
 
@@ -3359,4 +3361,9 @@ The Adapter pattern is used to take the interface of an object (the **adaptee**)
     };
   }
   ```
+
   This adapter is not perfect and handles well not all situations, but the concept is understandable. We create different interface for the client that uses LevelUP with another interface, interface of fs module. It might look unnecessary, but let’s not forget that LevelDB can be used in both browser (with level-js) and Node.JS thanks to adapters.
+
+### Structural design patterns conclusion
+
+Proxy, Decorator and Adapter are quite similar in implementation, but the difference is in the perspective of consumer. Proxy provides same interface, Decorator provides enhanced interface, and Adapter provides different interface.
