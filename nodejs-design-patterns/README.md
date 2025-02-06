@@ -3306,3 +3306,57 @@ Adapter pattern allows us to access functionality of object using different inte
 The Adapter pattern is used to take the interface of an object (the **adaptee**) and make it compatible with another interface that is expected by a given client.
 
 ![Adapter](./assets/adapter.png)
+
+- Example with LevelUP
+  Let’s make an adapter for LevelUP db. It lets the client to use LevelUP db with interface of fs module (which is originally adapter).
+  ```jsx
+  import { resolve } from "path";
+
+  export function createFSAdapter(db) {
+    return {
+      readFile(filename, options, callback) {
+        if (typeof options === "function") {
+          callback = options;
+          options = {};
+        } else if (typeof options === "string") {
+          options = { encoding: options };
+        }
+        db.get(
+          resolve(filename),
+          {
+            valueEncoding: options.encoding,
+          },
+          (err, value) => {
+            if (err) {
+              if (err.type === "NotFoundError") {
+                err = new Error(`ENOENT, open "${filename}"`);
+                err.code = "ENOENT";
+                err.errno = 34;
+                err.path = filename;
+              }
+              return callback && callback(err);
+            }
+            callback && callback(null, value);
+          }
+        );
+      },
+      writeFile(filename, contents, options, callback) {
+        if (typeof options === "function") {
+          callback = options;
+          options = {};
+        } else if (typeof options === "string") {
+          options = { encoding: options };
+        }
+        db.put(
+          resolve(filename),
+          contents,
+          {
+            valueEncoding: options.encoding,
+          },
+          callback
+        );
+      },
+    };
+  }
+  ```
+  This adapter is not perfect and handles well not all situations, but the concept is understandable. We create different interface for the client that uses LevelUP with another interface, interface of fs module. It might look unnecessary, but let’s not forget that LevelDB can be used in both browser (with level-js) and Node.JS thanks to adapters.
