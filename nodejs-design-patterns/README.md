@@ -3490,6 +3490,7 @@ Proxy, Decorator and Adapter are quite similar in implementation, but the differ
 
 - Virtual filesystem
   Modify our LevelDB filesystem adapter example to write the file data in memory rather than in LevelDB. You can use an object or a Map instance to store the key-value pairs of filenames and the associated data.
+
   ```jsx
   import { resolve } from "path";
 
@@ -3532,4 +3533,33 @@ Proxy, Decorator and Adapter are quite similar in implementation, but the differ
       },
     };
   }
+  ```
+
+- The lazy buffer
+  Can you implement createLazyBuffer(size), a factory function that generates a virtual proxy for a Buffer of the given size? The proxy instance should instantiate a Buffer object (effectively allocating the given amount of memory) only when write() is being invoked for the first time. If no attempt to write into the buffer is made, no Buffer instance should be created.
+  ```jsx
+  const createLazyBuffer = (size) => {
+    let buffer = null;
+
+    return new Proxy(
+      {},
+      {
+        get(_, method) {
+          if (method === "write" && !buffer) {
+            buffer = Buffer.alloc(size);
+          } else if (!buffer) {
+            throw new Error("Data should be written to buffer first");
+          }
+
+          return buffer[method].bind(buffer);
+        },
+      }
+    );
+  };
+
+  const buffer = createLazyBuffer(10);
+  buffer.write("hi", "utf-8");
+  buffer.write("ok", "utf-8");
+  buffer.write("hey", "utf-8");
+  console.log(buffer.toString());
   ```
