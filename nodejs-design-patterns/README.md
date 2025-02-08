@@ -3441,6 +3441,7 @@ Proxy, Decorator and Adapter are quite similar in implementation, but the differ
 
 - Colored console output
   Write a decorator for the console that adds the red(message), yellow(message), and green(message) methods. These methods will have to behave like console.log(message) except they will print the message in red, yellow, or green, respectively. In one of the exercises from the previous chapter, we already pointed you to some useful packages to to create colored console output.
+
   ```jsx
   // with proxy
   const createColorfulConsole = () => {
@@ -3464,6 +3465,7 @@ Proxy, Decorator and Adapter are quite similar in implementation, but the differ
   colorfulConsole.green("green");
   colorfulConsole.blue("blue");
   ```
+
   ```jsx
   // with augmenting
   const augmentConsoleToColorful = () => {
@@ -3484,4 +3486,50 @@ Proxy, Decorator and Adapter are quite similar in implementation, but the differ
   console.red("red");
   console.blue("blue");
   console.green("green");
+  ```
+
+- Virtual filesystem
+  Modify our LevelDB filesystem adapter example to write the file data in memory rather than in LevelDB. You can use an object or a Map instance to store the key-value pairs of filenames and the associated data.
+  ```jsx
+  import { resolve } from "path";
+
+  /**
+   * @param {Map} store
+   */
+  export function createMemoryAdapter(store) {
+    return {
+      readFile(filename, options, callback) {
+        if (typeof options === "function") {
+          callback = options;
+          options = {};
+        } else if (typeof options === "string") {
+          options = { encoding: options };
+        }
+
+        const key = resolve(filename);
+
+        if (!store.has(key)) {
+          const error = new Error(`ENOENT, open "${filename}"`);
+          error.code = "ENOENT";
+          error.errno = 34;
+          error.path = filename;
+
+          return callback && callback(error);
+        }
+
+        callback(null, store.get(key));
+      },
+      writeFile(filename, contents, options, callback) {
+        if (typeof options === "function") {
+          callback = options;
+          options = {};
+        } else if (typeof options === "string") {
+          options = { encoding: options };
+        }
+
+        const key = resolve(filename);
+        store.set(key, contents);
+      },
+    };
+  }
   ```
