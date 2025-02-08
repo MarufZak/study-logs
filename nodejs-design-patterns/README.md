@@ -3423,6 +3423,7 @@ Proxy, Decorator and Adapter are quite similar in implementation, but the differ
 
 - Timestamped logs
   Create a proxy for the console object that enhances every logging function (log(), error(), debug(), and info()) by prepending the current timestamp to the message you want to print in the logs. For instance, executing consoleProxy.log('hello') should print something like 2020-02-18T15:59:30.699Z hello in the console.
+
   ```jsx
   const createTimeConsole = () => {
     return new Proxy(console, {
@@ -3436,4 +3437,51 @@ Proxy, Decorator and Adapter are quite similar in implementation, but the differ
 
   const timeConsole = createTimeConsole(console);
   timeConsole.log("hello");
+  ```
+
+- Colored console output
+  Write a decorator for the console that adds the red(message), yellow(message), and green(message) methods. These methods will have to behave like console.log(message) except they will print the message in red, yellow, or green, respectively. In one of the exercises from the previous chapter, we already pointed you to some useful packages to to create colored console output.
+  ```jsx
+  // with proxy
+  const createColorfulConsole = () => {
+    return new Proxy(console, {
+      get(target, method) {
+        if (method === "red") {
+          return (message) => console.log("\x1b[31m", message);
+        } else if (method === "green") {
+          return (message) => console.log("\x1b[32m", message);
+        } else if (method === "blue") {
+          return (message) => console.log("\x1b[34m", message);
+        }
+
+        return target[method];
+      },
+    });
+  };
+
+  const colorfulConsole = createColorfulConsole();
+  colorfulConsole.red("red");
+  colorfulConsole.green("green");
+  colorfulConsole.blue("blue");
+  ```
+  ```jsx
+  // with augmenting
+  const augmentConsoleToColorful = () => {
+    console.red = (message) => {
+      console.log("\x1b[31m", message);
+    };
+
+    console.green = (message) => {
+      console.log("\x1b[32m", message);
+    };
+
+    console.blue = (message) => {
+      console.log("\x1b[34m", message);
+    };
+  };
+
+  augmentConsoleToColorful();
+  console.red("red");
+  console.blue("blue");
+  console.green("green");
   ```
