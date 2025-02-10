@@ -3583,6 +3583,7 @@ Real example is Order object, which has pay method. We can have many payment met
 
 - Another example
   Let’s say we want to have a Config object, that stores config in serialized way, and deserializes when retrieved. Config can be in various formats.
+
   ```jsx
   // strategies/json.js
 
@@ -3616,4 +3617,7 @@ Real example is Order object, which has pay method. We can have many payment met
   config.set({ hello: "hi" });
   console.log(config.get());
   ```
+
   Implementation may differ, but the concept is the same. We could also create separate family for serializers and deserializers.
+
+> Difference between adapter pattern is that, in adapter pattern, adapter doesn’t add any behavior to the adaptee, it just makes available under other interface. In strategy pattern, however, context and strategies implement different parts of the logic, and both are essential to build final algorithm when combined.
