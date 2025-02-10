@@ -3582,6 +3582,7 @@ Simple analogy is a car. We have a car, and its tires are changed based on the w
 Real example is Order object, which has pay method. We can have many payment methods, and we fill the method with if else conditions. We can delegate the logic of payment to a strategy objects that implement this logic, each strategy for each payment method. This makes context (Order object) to manage only to manage rest of stuff.
 
 - Another example
+
   Let’s say we want to have a Config object, that stores config in serialized way, and deserializes when retrieved. Config can be in various formats.
 
   ```jsx
