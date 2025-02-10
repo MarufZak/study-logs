@@ -85,6 +85,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Structural design patterns conclusion](#structural-design-patterns-conclusion)
   - [Structural design patterns exercises](#structural-design-patterns-exercises)
 - [Behavioral design patterns](#behavioral-design-patterns)
+  - [Strategy](#strategy)
 
 ## The Node.js platform
 
@@ -3569,3 +3570,7 @@ Proxy, Decorator and Adapter are quite similar in implementation, but the differ
 ## Behavioral design patterns
 
 In last chapter we learnt about patterns that help us in building complex data structures. Now we will see how to combine these complex components, defining extensible, modular and reusable structures. One member of this family is Observer pattern we learnt in chapter 3.
+
+### Strategy
+
+Strategy pattern enables object, called context, to support variations in its logic by extracting the variable parts into separate, interchangeable objects, called strategies. The context itself implements common logic of algorithms, while strategy implements mutable parts, allowing context to adapt its behavior depending on different factors. All of strategies implement same interface expected by the context.
