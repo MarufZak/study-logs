@@ -3578,3 +3578,42 @@ Strategy pattern enables object, called context, to support variations in its lo
 ![Strategy pattern](./assets/strategy-pattern.png)
 
 Simple analogy is a car. We have a car, and its tires are changed based on the weather conditions. We don’t want to change entire car to have different tires, or have one car with all tires inside for just in case.
+
+Real example is Order object, which has pay method. We can have many payment methods, and we fill the method with if else conditions. We can delegate the logic of payment to a strategy objects that implement this logic, each strategy for each payment method. This makes context (Order object) to manage only to manage rest of stuff.
+
+- Another example
+  Let’s say we want to have a Config object, that stores config in serialized way, and deserializes when retrieved. Config can be in various formats.
+  ```jsx
+  // strategies/json.js
+
+  export const jsonStrategy = {
+    serialize: JSON.stringify,
+    deserialize: JSON.parse,
+  };
+
+  // strategies/(other config formats)
+
+  // config.js
+
+  export class Config {
+    constructor(formatStrategy) {
+      this.data = {};
+      this.formatStrategy = formatStrategy;
+    }
+
+    get() {
+      return this.formatStrategy.deserialize(this.data);
+    }
+
+    set(data) {
+      this.data = this.formatStrategy.serialize(data);
+    }
+  }
+
+  // index.js
+
+  const config = new Config(jsonStrategy);
+  config.set({ hello: "hi" });
+  console.log(config.get());
+  ```
+  Implementation may differ, but the concept is the same. We could also create separate family for serializers and deserializers.
