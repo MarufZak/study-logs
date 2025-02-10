@@ -3621,3 +3621,5 @@ Real example is Order object, which has pay method. We can have many payment met
   Implementation may differ, but the concept is the same. We could also create separate family for serializers and deserializers.
 
 > Difference between adapter pattern is that, in adapter pattern, adapter doesn’t add any behavior to the adaptee, it just makes available under other interface. In strategy pattern, however, context and strategies implement different parts of the logic, and both are essential to build final algorithm when combined.
+
+In the wild this pattern is used in [passport package](http://nodejsdp.link/passportjs), which provides different authentication schemes. All these schemes are implemented as strategies.
