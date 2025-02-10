@@ -3574,3 +3574,7 @@ In last chapter we learnt about patterns that help us in building complex data s
 ### Strategy
 
 Strategy pattern enables object, called context, to support variations in its logic by extracting the variable parts into separate, interchangeable objects, called strategies. The context itself implements common logic of algorithms, while strategy implements mutable parts, allowing context to adapt its behavior depending on different factors. All of strategies implement same interface expected by the context.
+
+![Strategy pattern](./assets/strategy-pattern.png)
+
+Simple analogy is a car. We have a car, and its tires are changed based on the weather conditions. We don’t want to change entire car to have different tires, or have one car with all tires inside for just in case.
