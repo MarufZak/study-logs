@@ -84,6 +84,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Adapter](#adepter)
   - [Structural design patterns conclusion](#structural-design-patterns-conclusion)
   - [Structural design patterns exercises](#structural-design-patterns-exercises)
+- [Behavioral design patterns](#behavioral-design-patterns)
 
 ## The Node.js platform
 
@@ -3537,6 +3538,7 @@ Proxy, Decorator and Adapter are quite similar in implementation, but the differ
 
 - The lazy buffer
   Can you implement createLazyBuffer(size), a factory function that generates a virtual proxy for a Buffer of the given size? The proxy instance should instantiate a Buffer object (effectively allocating the given amount of memory) only when write() is being invoked for the first time. If no attempt to write into the buffer is made, no Buffer instance should be created.
+
   ```jsx
   const createLazyBuffer = (size) => {
     let buffer = null;
@@ -3563,3 +3565,7 @@ Proxy, Decorator and Adapter are quite similar in implementation, but the differ
   buffer.write("hey", "utf-8");
   console.log(buffer.toString());
   ```
+
+## Behavioral design patterns
+
+In last chapter we learnt about patterns that help us in building complex data structures. Now we will see how to combine these complex components, defining extensible, modular and reusable structures. One member of this family is Observer pattern we learnt in chapter 3.
