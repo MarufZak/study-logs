@@ -86,6 +86,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Structural design patterns exercises](#structural-design-patterns-exercises)
 - [Behavioral design patterns](#behavioral-design-patterns)
   - [Strategy](#strategy)
+  - [State](#state)
 
 ## The Node.js platform
 
@@ -3630,3 +3631,7 @@ In the wild this pattern is used in [passport package](http://nodejsdp.link/pass
 State pattern is strategy pattern, but in this case strategy is not “hardcoded” in the lifespan of an object. It (strategy, or state in this case) changes dynamically, based on state it’s in.
 
 ![State pattern](./assets/state-pattern.png)
+
+Simple example is Reservation class. It may be in 3 states: unconfirmed - user can confirm, delete, but not cancel. Confirmed - user can cancel only, and date-approaching - user can do nothing. This is perfect case for state pattern. Changing state to another simply requires activation of another different strategy. This state can be controlled by context object, but its better to let state object itself control it.
+
+![State pattern example](./assets/state-example.png)
