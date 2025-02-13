@@ -87,6 +87,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
 - [Behavioral design patterns](#behavioral-design-patterns)
   - [Strategy](#strategy)
   - [State](#state)
+  - [Template](#template)
 
 ## The Node.js platform
 
@@ -3754,3 +3755,7 @@ Simple example is Reservation class. It may be in 3 states: unconfirmed - user c
     failsafeSocket.send(process.memoryUsage());
   }, 1000);
   ```
+
+### Template
+
+Template pattern is like Strategy pattern. It implements skeleton (common parts), while letting other parts to be defined by the class using template, which fill the gaps for template methods (missing parts). The only difference is strategy of consumer is determined when it’s defined, it’s not dynamic like in Strategy pattern, and strategies are not baked in one component.
