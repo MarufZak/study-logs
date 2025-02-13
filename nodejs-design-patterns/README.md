@@ -3808,3 +3808,5 @@ In JavaScript we don’t have any way to define abstract classes (we do in TypeS
 
   const jsonConfig = new JsonConfig();
   ```
+
+In practice this pattern is widely used. For example, when coding with streams, we had to override \_read or \_write methods of abstract Readable or Writable classes. This fit into template pattern.
