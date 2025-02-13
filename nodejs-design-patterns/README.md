@@ -3759,3 +3759,9 @@ Simple example is Reservation class. It may be in 3 states: unconfirmed - user c
 ### Template
 
 Template pattern is like Strategy pattern. It implements skeleton (common parts), while letting other parts to be defined by the class using template, which fill the gaps for template methods (missing parts). The only difference is strategy of consumer is determined when it’s defined, it’s not dynamic like in Strategy pattern, and strategies are not baked in one component.
+
+It’s more of type OOP rather those we considered earlier, because it relies on inheritance.
+
+![Template pattern](./assets/template-pattern.png)
+
+In JavaScript we don’t have any way to define abstract classes (we do in TypeScript), so only way is to throw runtime Error if method is not redefined.
