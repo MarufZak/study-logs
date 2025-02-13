@@ -3765,3 +3765,46 @@ It’s more of type OOP rather those we considered earlier, because it relies on
 ![Template pattern](./assets/template-pattern.png)
 
 In JavaScript we don’t have any way to define abstract classes (we do in TypeScript), so only way is to throw runtime Error if method is not redefined.
+
+- Example
+
+  ```jsx
+  import { promises as fsPromises } from "fs";
+  import objectPath from "object-path";
+
+  export class ConfigTemplate {
+    async load(file) {
+      console.log(`Deserializing from ${file}`);
+      this.data = this._deserialize(await fsPromises.readFile(file, "utf-8"));
+    }
+    async save(file) {
+      console.log(`Serializing to ${file}`);
+      await fsPromises.writeFile(file, this._serialize(this.data));
+    }
+    get(path) {
+      return objectPath.get(this.data, path);
+    }
+    set(path, value) {
+      return objectPath.set(this.data, path, value);
+    }
+
+    // template methods, need to be redefined.
+    _serialize() {
+      throw new Error("_serialize() must be implemented");
+    }
+    _deserialize() {
+      throw new Error("_deserialize() must be implemented");
+    }
+  }
+
+  export class JsonConfig extends ConfigTemplate {
+    _deserialize(data) {
+      return JSON.parse(data);
+    }
+    _serialize(data) {
+      return JSON.stringify(data, null, "  ");
+    }
+  }
+
+  const jsonConfig = new JsonConfig();
+  ```
