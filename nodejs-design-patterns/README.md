@@ -3635,3 +3635,122 @@ State pattern is strategy pattern, but in this case strategy is not “hardcoded
 Simple example is Reservation class. It may be in 3 states: unconfirmed - user can confirm, delete, but not cancel. Confirmed - user can cancel only, and date-approaching - user can do nothing. This is perfect case for state pattern. Changing state to another simply requires activation of another different strategy. This state can be controlled by context object, but its better to let state object itself control it.
 
 ![State pattern example](./assets/state-example.png)
+
+- Example program
+
+  Following program is safe version of tcp, which changes its state based on the connection status to the server. We use json-over-tcp-2 to easily transmit json over tcp.
+
+  ```jsx
+  // index.js
+
+  import { OfflineState } from "./offlineState.js";
+  import { OnlineState } from "./onlineState.js";
+  export class FailsafeSocket {
+    constructor(options) {
+      this.options = options;
+      this.queue = [];
+      this.currentState = null;
+      this.socket = null;
+      this.states = {
+        offline: new OfflineState(this),
+        online: new OnlineState(this),
+      };
+      this.changeState("offline");
+    }
+    changeState(state) {
+      console.log(`Activating state: ${state}`);
+      this.currentState = this.states[state];
+      this.currentState.activate();
+    }
+    send(data) {
+      this.currentState.send(data);
+    }
+  }
+  ```
+
+  ```jsx
+  // onlineState.js
+  export class OnlineState {
+    constructor(failsafeSocket) {
+      this.failsafeSocket = failsafeSocket;
+      this.hasDisconnected = false;
+    }
+    send(data) {
+      this.failsafeSocket.queue.push(data);
+      this._safeWrite(data);
+    }
+    _safeWrite(data) {
+      this.failsafeSocket.socket.write(data, (err) => {
+        if (!this.hasDisconnected && !err) {
+          this.failsafeSocket.queue.shift();
+        }
+      });
+    }
+    activate() {
+      this.hasDisconnected = false;
+      for (const data of this.failsafeSocket.queue) {
+        this._safeWrite(data);
+      }
+      this.failsafeSocket.socket.once("error", () => {
+        this.hasDisconnected = true;
+        this.failsafeSocket.changeState("offline");
+      });
+    }
+  }
+  ```
+
+  ```jsx
+  import jsonOverTcp from "json-over-tcp-2";
+  export class OfflineState {
+    constructor(failsafeSocket) {
+      this.failsafeSocket = failsafeSocket;
+    }
+    send(data) {
+      this.failsafeSocket.queue.push(data);
+    }
+    activate() {
+      const retry = () => {
+        setTimeout(() => this.activate(), 1000);
+      };
+      console.log("Trying to connect...");
+      this.failsafeSocket.socket = jsonOverTcp.connect(
+        this.failsafeSocket.options,
+        () => {
+          console.log("Connection established");
+          this.failsafeSocket.socket.removeListener("error", retry);
+          this.failsafeSocket.changeState("online");
+        }
+      );
+      this.failsafeSocket.socket.once("error", retry);
+    }
+  }
+  ```
+
+  Then we activate both server and client codes. Server just listens and logs data received from the client, while client establishes safe socket and writes to it.
+
+  ```jsx
+  // server.js
+
+  import jsonOverTcp from "json-over-tcp-2";
+
+  const server = jsonOverTcp.createServer({ port: 5000 });
+  server.on("connection", (socket) => {
+    socket.on("data", (data) => {
+      console.log("Client data", data);
+    });
+  });
+
+  server.listen(5000, () => console.log("Server started"));
+  ```
+
+  ```jsx
+  // client.js
+
+  import { FailsafeSocket } from "./index.js";
+
+  const failsafeSocket = new FailsafeSocket({ port: 5000 });
+
+  setInterval(() => {
+    failsafeSocket.send(process.memoryUsage());
+  }, 1000);
+  ```
