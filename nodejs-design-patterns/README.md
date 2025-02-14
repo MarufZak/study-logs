@@ -3818,6 +3818,8 @@ Iterator pattern is common so that programming langs implement built-in iterator
 
 In JS, Iterator pattern is implemented through protocols, so shape of interaction between implementer and consumer of the Iterator will agreed in advance. In JS, iterator is protocol that defines interface that produces sequence of values, which basically implement a next() method. Each time this method is called, it returns two properties - `done` (optional, can be undefined) is set to true if iteration is finished, and there is nothing more to iterate, and `value` that includes the retrieved value. If `done` is true, `value` can be set to other arbitrary values, such as iteration total time and others (additional properties will be ignored by built-in APIs consuming iterator).
 
-In fact there are infinite iterators, such as returning next random number, or next number of Fibanacci series, so `done` property can be omitted here.
+In fact there are infinite iterators, such as returning next random number, or next number of Fibonacci series, so `done` property can be omitted here.
 
 Some iterators can be stateful, or stateless, depending on situation. In following example we keep state in a closure.
+
+Also iterators can specify two methods, `return([value])` and `throw(error)` . First signals iterator that consumer has stopped iteration before its completion, while second allows consumer to say that error condition occurred. These are also included in TS typings.
