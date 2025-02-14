@@ -88,6 +88,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Strategy](#strategy)
   - [State](#state)
   - [Template](#template)
+  - [Iterator](#iterator)
 
 ## The Node.js platform
 
@@ -3810,3 +3811,7 @@ In JavaScript we don’t have any way to define abstract classes (we do in TypeS
   ```
 
 In practice this pattern is widely used. For example, when coding with streams, we had to override \_read or \_write methods of abstract Readable or Writable classes. This fit into template pattern.
+
+### Iterator
+
+Iterator pattern is common so that programming langs implement built-in iterators, including javascript. Built-in iterators provide interface to iterate over containers, such as arrays. But iterator pattern provides interface to iterate over any type of a container, and thus hiding details about algorithms used inside. In JavaScript, iterators also work greatly with event emitters and streams. So accurate definition is iterator provide interface to iterate over elements retrieved in a sequence.
