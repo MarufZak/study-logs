@@ -3823,3 +3823,36 @@ In fact there are infinite iterators, such as returning next random number, or n
 Some iterators can be stateful, or stateless, depending on situation. In following example we keep state in a closure.
 
 Also iterators can specify two methods, `return([value])` and `throw(error)` . First signals iterator that consumer has stopped iteration before its completion, while second allows consumer to say that error condition occurred. These are also included in TS typings.
+
+- Example
+
+  ```jsx
+  const A_CHAR_CODE = 65;
+  const Z_CHAR_CODE = 90;
+
+  function createAlphabetIterator() {
+    let cursor = A_CHAR_CODE;
+
+    return {
+      next() {
+        if (cursor > Z_CHAR_CODE) {
+          return { done: true };
+        }
+
+        const value = String.fromCharCode(cursor);
+        cursor++;
+        return { value };
+      },
+    };
+  }
+
+  // usage
+
+  const iterator = createAlphabetIterator();
+
+  let iterationResult = iterator.next();
+  while (!iterationResult.done) {
+    console.log(iterationResult.value);
+    iterationResult = iterator.next();
+  }
+  ```
