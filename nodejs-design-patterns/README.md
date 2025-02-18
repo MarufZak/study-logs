@@ -3933,3 +3933,28 @@ There are many JS APIs that implement `@@iterable` method, including Array, Map,
     console.log(element);
   }
   ```
+
+- Example
+  ```jsx
+  function createCountIterator(limit) {
+    let count = 0;
+
+    return {
+      [Symbol.iterator]() {
+        return {
+          next() {
+            if (count >= limit) {
+              return { done: true };
+            }
+
+            count++;
+            return { value: count };
+          },
+        };
+      },
+    };
+  }
+
+  const countIterator = createCountIterator(10);
+  console.log(...countIterator);
+  ```
