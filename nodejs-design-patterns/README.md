@@ -3861,3 +3861,5 @@ Also iterators can specify two methods, `return([value])` and `throw(error)` . F
 ### Iterable protocol
 
 Iterable protocol defines a standard way for an object to return an iterator. Such objects are called iterables, usually it’s container of elements, but it can be an object representing set of elements. We can implement iterable by implementing `@@iterator` method, or in other words, a method that is accessible through `Symbol.iterator`.
+
+> `@@name` means well-known symbol according to ES spec, more [here](https://262.ecma-international.org/6.0/#sec-well-known-symbols).
