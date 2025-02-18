@@ -3902,3 +3902,34 @@ Now the cool part, the point of such interfaces is that iterables is native Java
 8. `stream.Readable.from(iterable, [options])`
 
 There are many JS APIs that implement `@@iterable` method, including Array, Map, Set, String and Buffer. Yes, that is mind-blowing, at least for me.
+
+- Example
+
+  ```jsx
+  const A_CHAR_CODE = 65;
+  const Z_CHAR_CODE = 90;
+
+  function createAlphabetIterator() {
+    let cursor = A_CHAR_CODE;
+
+    return {
+      [Symbol.iterator]: () => {
+        return {
+          next() {
+            if (cursor > Z_CHAR_CODE) {
+              return { done: true };
+            }
+
+            const value = String.fromCharCode(cursor);
+            cursor++;
+            return { value };
+          },
+        };
+      },
+    };
+  }
+
+  for (const element of createAlphabetIterator()) {
+    console.log(element);
+  }
+  ```
