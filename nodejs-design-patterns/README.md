@@ -3900,3 +3900,5 @@ Now the cool part, the point of such interfaces is that iterables is native Java
 6. `Promise.race([iterable])`
 7. `Array.from([iterable])`
 8. `stream.Readable.from(iterable, [options])`
+
+There are many JS APIs that implement `@@iterable` method, including Array, Map, Set, String and Buffer. Yes, that is mind-blowing, at least for me.
