@@ -3889,3 +3889,14 @@ function myIterable() {
   };
 }
 ```
+
+Now the cool part, the point of such interfaces is that iterables is native JavaScript interface to iterate over the elements, native APIs are accessible for us. We can use for example `for of` loop to iterate over the elements in iterator, or spread operator, or destructuring. Here are accessible APIs:
+
+1. `Map([iterable])`
+2. `WeakMap([iterable])`
+3. `Set([iterable])`
+4. `WeakSet([iterable])`
+5. `Promise.all([iterable])`
+6. `Promise.race([iterable])`
+7. `Array.from([iterable])`
+8. `stream.Readable.from(iterable, [options])`
