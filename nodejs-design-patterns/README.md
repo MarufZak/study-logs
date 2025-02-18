@@ -89,6 +89,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [State](#state)
   - [Template](#template)
   - [Iterator](#iterator)
+    - [Iterable protocol](#iterable-protocol)
 
 ## The Node.js platform
 
@@ -3856,3 +3857,7 @@ Also iterators can specify two methods, `return([value])` and `throw(error)` . F
     iterationResult = iterator.next();
   }
   ```
+
+### Iterable protocol
+
+Iterable protocol defines a standard way for an object to return an iterator. Such objects are called iterables, usually it’s container of elements, but it can be an object representing set of elements. We can implement iterable by implementing `@@iterator` method, or in other words, a method that is accessible through `Symbol.iterator`.
