@@ -3981,3 +3981,12 @@ console.log(generator.next()); // { value: '2', done: false }
 console.log(generator.next()); // { value: '3', done: false }
 console.log(generator.next()); // { value: 'end', done: true }
 ```
+
+Since generator is also iterable, we can iterator over it with `for ... of` loop. But note that return value is not logged, because it’s not yielded, but instead returned, which says that iteration is complete with “end” value.
+
+```jsx
+const generator = myGenerator();
+for (const element of generator) {
+  console.log(element);
+}
+```
