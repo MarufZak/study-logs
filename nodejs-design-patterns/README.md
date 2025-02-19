@@ -4043,3 +4043,26 @@ console.log(generator.next()); // { value: 2, done: false }
 console.log(generator.next()); // { value: 3, done: false }
 console.log(generator.next()); // { value: undefined, done: true }
 ```
+
+Because generators are also iterables (object we obtain from the generator function implements `Symbol.iterator` method), we can refactor createAlphabet Iterator function to the following:
+
+```jsx
+const A_CHAR_CODE = 65;
+const Z_CHAR_CODE = 90;
+
+function* createAlphabetIterator() {
+  let cursor = A_CHAR_CODE;
+
+  while (cursor <= Z_CHAR_CODE) {
+    const value = String.fromCharCode(cursor);
+    cursor++;
+    yield value;
+  }
+}
+
+const iterator = createAlphabetIterator();
+
+for (const element of iterator) {
+  console.log(element);
+}
+```
