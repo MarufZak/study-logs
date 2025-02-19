@@ -90,6 +90,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Template](#template)
   - [Iterator](#iterator)
     - [Iterable protocol](#iterable-protocol)
+  - [Generators](#generators)
 
 ## The Node.js platform
 
@@ -3935,6 +3936,7 @@ There are many JS APIs that implement `@@iterable` method, including Array, Map,
   ```
 
 - Example
+
   ```jsx
   function createCountIterator(limit) {
     let count = 0;
@@ -3958,3 +3960,7 @@ There are many JS APIs that implement `@@iterable` method, including Array, Map,
   const countIterator = createCountIterator(10);
   console.log(...countIterator);
   ```
+
+### Generators
+
+Generators (or semicoroutines) were introduced in ES2015 spec, and are closely related to iterators. They are generalization of standard functions, in which they can have different entry points, rather one as in functions, which is invocation of the function. Generators can be suspended and resumed later. Generator object returned by generator function is indeed both an iterator and iterable.
