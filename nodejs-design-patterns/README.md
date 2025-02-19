@@ -4066,3 +4066,32 @@ for (const element of iterator) {
   console.log(element);
 }
 ```
+
+Because generators are also iterators, they can be used to implement `@@iterator` method of an iterable, so createAlphabetIterator can also be written following. Note that `@@iterator` is now a generator.
+
+```jsx
+const A_CHAR_CODE = 65;
+const Z_CHAR_CODE = 90;
+
+function createAlphabetIterator() {
+  return {
+    *[Symbol.iterator]() {
+      // we can keep cursor here instead of using closure
+      // because in generators state of body is preserved
+      let cursor = A_CHAR_CODE;
+
+      while (cursor <= Z_CHAR_CODE) {
+        const value = String.fromCharCode(cursor);
+        cursor++;
+        yield value;
+      }
+    },
+  };
+}
+
+const iterator = createAlphabetIterator();
+
+for (const element of iterator) {
+  console.log(element);
+}
+```
