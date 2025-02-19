@@ -4029,3 +4029,17 @@ const res = generatorWithReturn.return("return value");
 // return always returns done: true
 console.log(res); //{ value: 'return value', done: true }
 ```
+
+`yield` instruction also accepts iterable, in which case it loop over element of iterable and yield each element one by one. Syntax is `yield* iterable`.
+
+```jsx
+function* myGenerator() {
+  yield* [1, 2, 3];
+}
+
+const generator = myGenerator();
+console.log(generator.next()); // { value: 1, done: false }
+console.log(generator.next()); // { value: 2, done: false }
+console.log(generator.next()); // { value: 3, done: false }
+console.log(generator.next()); // { value: undefined, done: true }
+```
