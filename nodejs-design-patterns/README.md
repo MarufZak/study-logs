@@ -4005,3 +4005,27 @@ console.log(generator.next("World"));
 ```
 
 There are two extra methods in generator object: `throw()` and `return()`. First throws passed exception as it was thrown in the place of last `yield`, and returns the iterator with `done` and `value` properties. Second forces generator to terminate and return with object like `{ done: true, value: returnArgument }`, where `returnArgument` is value passed to the method.
+
+```jsx
+function* myGenerator() {
+  try {
+    const what = yield null;
+    yield `Hello ${what}`;
+  } catch (error) {
+    // if yield, done is false
+    // if return, done is true
+    yield `Error: ${error.message}`;
+  }
+}
+
+const generatorWithError = myGenerator();
+generatorWithError.next();
+const errorResponse = generatorWithError.throw(new Error("some error"));
+console.log(errorResponse); // { value: 'Error: some error', done: true }
+
+const generatorWithReturn = myGenerator();
+generatorWithReturn.next();
+const res = generatorWithReturn.return("return value");
+// return always returns done: true
+console.log(res); //{ value: 'return value', done: true }
+```
