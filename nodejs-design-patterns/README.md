@@ -4003,3 +4003,5 @@ const generator = myGenerator();
 generator.next();
 console.log(generator.next("World"));
 ```
+
+There are two extra methods in generator object: `throw()` and `return()`. First throws passed exception as it was thrown in the place of last `yield`, and returns the iterator with `done` and `value` properties. Second forces generator to terminate and return with object like `{ done: true, value: returnArgument }`, where `returnArgument` is value passed to the method.
