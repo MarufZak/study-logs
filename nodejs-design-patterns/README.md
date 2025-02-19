@@ -3990,3 +3990,16 @@ for (const element of generator) {
   console.log(element);
 }
 ```
+
+We can also control the generator iterator (we couldn’t in iterators) by passing arguments. Such argument is passed as the return value of the `yield` instruction. When we invoke `generator.next()` for the first time, it stops in the first `yield`, and when invoked second time with argument, generator starts from where it stopped, but this time assigns argument to the variable. In the result, in second time invocation, we get “Hello world”.
+
+```jsx
+function* myGenerator() {
+  const what = yield null;
+  yield `Hello ${what}`;
+}
+
+const generator = myGenerator();
+generator.next();
+console.log(generator.next("World"));
+```
