@@ -4323,3 +4323,47 @@ Command pattern should be used only when necessary, because it adds a lot of ove
   consoleLogger.warn("Warning");
   fileLogger.debug("Testing");
   ```
+
+- Logging with template
+  Implement the same logging component we defined in the previous exercise, but this time using the Template pattern. We would then obtain a ConsoleLogger class to log to the console or FileLogger class to log to a file. Appreciate the differences between the Template and the Strategy approaches.
+
+  ```jsx
+  class Logger {
+    debug() {
+      throw new Error("debug must be implemented");
+    }
+
+    info() {
+      throw new Error("info must be implemented");
+    }
+
+    warn() {
+      throw new Error("warn must be implemented");
+    }
+
+    error() {
+      throw new Error("error must be implemented");
+    }
+  }
+
+  class ConsoleLogger extends Logger {
+    debug(message) {
+      console.debug(message);
+    }
+
+    info(message) {
+      console.info(message);
+    }
+
+    warn(message) {
+      console.warn(message);
+    }
+
+    error(message) {
+      console.error(message);
+    }
+  }
+
+  const consoleLogger = new ConsoleLogger();
+  consoleLogger.debug("Debugging");
+  ```
