@@ -4485,3 +4485,71 @@ Command pattern should be used only when necessary, because it adds a lot of ove
   warehouseItem.store("Avenue street");
   console.log(warehouseItem.describe());
   ```
+
+- Logging with middleware
+  Rewrite the logging component you implemented for exercises 9.1 and 9.2, but this time use the Middleware pattern to postprocess each log message allowing different middlewares to customize how to handle the messages and how to output them. We could, for example, add a serialize() middleware to convert the log messages to a string representation ready to be sent over the wire or saved somewhere. Then, we could add a saveToFile() middleware that saves each message to a file. This exercise should highlight the flexibility and universality of the Middleware pattern.
+
+  ```jsx
+  class Logger {
+    strategy = null;
+    middlewares = [];
+
+    constructor(strategy) {
+      this.strategy = strategy;
+    }
+
+    postprocess(message) {
+      return this.middlewares.reduceRight((acc, curr) => {
+        const returnValue = curr(acc);
+        if (!returnValue) throw new Error("Middleware must return value");
+        return returnValue;
+      }, message);
+    }
+
+    use(middleware) {
+      this.middlewares.unshift(middleware);
+    }
+
+    debug(message) {
+      this.strategy.log(`DEBUG: ${message}`);
+      this.postprocess(message);
+    }
+
+    info(message) {
+      this.strategy.log(`INFO: ${message}`);
+      this.postprocess(message);
+    }
+
+    warn(message) {
+      this.strategy.log(`WARN: ${message}`);
+      this.postprocess(message);
+    }
+
+    error(message) {
+      this.strategy.log(`ERROR: ${message}`);
+      this.postprocess(message);
+    }
+  }
+
+  const consoleStrategy = {
+    log: console.log,
+  };
+
+  const serialize = (message) => {
+    return {
+      message,
+      timestamp: new Date(),
+    };
+  };
+
+  const log = (serializedMessage) => {
+    console.dir(serializedMessage, { depth: Infinity });
+    return serializedMessage;
+  };
+
+  const consoleLogger = new Logger(consoleStrategy);
+  consoleLogger.use(serialize);
+  consoleLogger.use(log);
+
+  consoleLogger.info("ok");
+  ```
