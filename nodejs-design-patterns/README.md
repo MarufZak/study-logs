@@ -91,6 +91,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Iterator](#iterator)
     - [Iterable protocol](#iterable-protocol)
   - [Generators](#generators)
+  - [Async iterators](#async-iterators)
 
 ## The Node.js platform
 
