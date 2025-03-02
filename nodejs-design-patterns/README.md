@@ -4278,6 +4278,7 @@ Command pattern should be used only when necessary, because it adds a lot of ove
 ### Exercises for behavioral design patterns
 
 - Logging with strategy
+
   Implement a logging component having at least the following methods: `debug()`, `info()`, `warn()`, and `error()`. The logging component should also accept a strategy that defines where the log messages are sent. For example, we might have a ConsoleStrategy to send the messages to the console, or a FileStrategy to save the log messages to a file.
 
   ```jsx
@@ -4325,6 +4326,7 @@ Command pattern should be used only when necessary, because it adds a lot of ove
   ```
 
 - Logging with template
+
   Implement the same logging component we defined in the previous exercise, but this time using the Template pattern. We would then obtain a ConsoleLogger class to log to the console or FileLogger class to log to a file. Appreciate the differences between the Template and the Strategy approaches.
 
   ```jsx
@@ -4369,6 +4371,7 @@ Command pattern should be used only when necessary, because it adds a lot of ove
   ```
 
 - Warehouse item
+
   Imagine we are working on a warehouse management program. Our next task is to create a class to model a warehouse item and help track it. Such a WarehouseItem class has a constructor, which accepts an id and the initial state of the item (which can be one of arriving, stored, or delivered). It has three public methods:
   • store(locationId) moves the item into the stored state and records the locationId where it's stored.
   • deliver(address) changes the state of the item to delivered, sets the delivery address, and clears the locationId.
@@ -4487,6 +4490,7 @@ Command pattern should be used only when necessary, because it adds a lot of ove
   ```
 
 - Logging with middleware
+
   Rewrite the logging component you implemented for exercises 9.1 and 9.2, but this time use the Middleware pattern to postprocess each log message allowing different middlewares to customize how to handle the messages and how to output them. We could, for example, add a serialize() middleware to convert the log messages to a string representation ready to be sent over the wire or saved somewhere. Then, we could add a saveToFile() middleware that saves each message to a file. This exercise should highlight the flexibility and universality of the Middleware pattern.
 
   ```jsx
@@ -4555,6 +4559,7 @@ Command pattern should be used only when necessary, because it adds a lot of ove
   ```
 
 - Queues with iterators
+
   Implement an AsyncQueue class similar to one of the TaskQueue classes we defined in Chapter 5, Asynchronous Control Flow Patterns with Promises and Async/Await, but with a slightly different behavior and interface. Such an AsyncQueue class will have a method called enqueue() to append new items to the queue and then expose an `@@asyncIterable` method, which should provide the ability to process the elements of the queue asynchronously, one at a time (so, with a concurrency of 1). The async iterator returned from AsyncQueue should terminate only after the done() method of AsyncQueue is invoked and only after all items in the queue are consumed. Consider that the `@@asyncIterable` method could be invoked in more than one place, thus returning an additional async iterator, which would allow you to increase the concurrency with which the queue is consumed.
 
   ```jsx
