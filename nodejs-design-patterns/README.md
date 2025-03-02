@@ -4257,3 +4257,8 @@ Middleware manager organizes and executes middleware functions. Middleware can b
 ## Command
 
 Command is an object that encapsulates all information needed to perform an action at a later time. Instead of directly making an action, we create an object with intention to perform that action. Then another component is responsible to materialize it and perform that action. It consists of 4 components, these components can vary depending on how we want to implement them:
+
+1. Command - an object with all information needed to invoke a method or function.
+2. Client - creates command and passes it to invoker.
+3. Invoker - responsible for executing the command on the target.
+4. Target (receiver) - subject of invocation. Can be lone function or method of object.
