@@ -4204,3 +4204,7 @@ Streams are also closely related to async iterators. Node.JS streams are indeed 
 
   main();
   ```
+
+These paradigms are similar, and can interoperate seamlessly. For example, `stream.Readable.from(iterable, [options])` takes an iterable (can be both async and sync) as an argument, and returns a readable stream that wraps provided iterable, adapting its interface to a readable stream.
+
+We can also iterate EventEmitter itself. With `events.on(emitter, eventName)` we can get async iterable, whose iterator will return all the events matching specified eventName.
