@@ -97,6 +97,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
     - [In the wild](#in-the-wild)
   - [Middleware](#middleware)
   - [Command](#command)
+  - [Exercises](#exercises-for-behavioral-design-patterns)
 
 ## The Node.js platform
 
@@ -4254,7 +4255,7 @@ In general term middleware means a set of processing units, handlers, filters, i
 
 Middleware manager organizes and executes middleware functions. Middleware can be added with `use()` keyword (traditionally), usually to the end. When new data comes, next middleware accepts as input the result of prev middleware. Any middleware can choose to stop further processing, and invoke special function or propagate and error, which triggers another set of middleware to run.
 
-## Command
+### Command
 
 Command is an object that encapsulates all information needed to perform an action at a later time. Instead of directly making an action, we create an object with intention to perform that action. Then another component is responsible to materialize it and perform that action. It consists of 4 components, these components can vary depending on how we want to implement them:
 
@@ -4273,3 +4274,52 @@ Some benefits of command are:
 4. Can be grouped together and executed at once.
 
 Command pattern should be used only when necessary, because it adds a lot of overhead. An example is omitted for brevity.
+
+### Exercises for behavioral design patterns
+
+- Logging with strategy
+  Implement a logging component having at least the following methods: `debug()`, `info()`, `warn()`, and `error()`. The logging component should also accept a strategy that defines where the log messages are sent. For example, we might have a ConsoleStrategy to send the messages to the console, or a FileStrategy to save the log messages to a file.
+
+  ```jsx
+  import fs from "fs";
+
+  class Logger {
+    strategy = null;
+
+    constructor(strategy) {
+      this.strategy = strategy;
+    }
+
+    debug(message) {
+      this.strategy.log(`DEBUG: ${message}`);
+    }
+
+    info(message) {
+      this.strategy.log(`INFO: ${message}`);
+    }
+
+    warn(message) {
+      this.strategy.log(`WARN: ${message}`);
+    }
+
+    error(message) {
+      this.strategy.log(`ERROR: ${message}`);
+    }
+  }
+
+  const fileStrategy = {
+    log(message) {
+      fs.appendFileSync("./example.txt", `${message}\n`);
+    },
+  };
+
+  const consoleStrategy = {
+    log: console.log,
+  };
+
+  const consoleLogger = new Logger(consoleStrategy);
+  const fileLogger = new Logger(fileStrategy);
+
+  consoleLogger.warn("Warning");
+  fileLogger.debug("Testing");
+  ```
