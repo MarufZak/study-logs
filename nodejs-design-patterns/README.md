@@ -4144,3 +4144,5 @@ for await (const count of countIterable) {
   console.log(count);
 }
 ```
+
+> The `for await ... of` and `for ... of` loops will call the `return()` method if it’s prematurely interrupted with a break, a return, or an exception. This can be used to perform cleanup, that would usually be performed when the task competes.
