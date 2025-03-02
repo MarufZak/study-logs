@@ -4187,3 +4187,20 @@ The return value of their `next()` method is Promise that resolves to `{ done: b
 ### Async iterators and Node.JS streams
 
 Streams are also closely related to async iterators. Node.JS streams are indeed async iterators construct, as they can be used to process the data of async resource piece by piece. `stream.Readable` implements `@@asyncIterator` method, so we can iterate over the data pulled.
+
+- Example
+
+  Here split transform stream emits a new chunk when it sees a newline character.
+
+  ```jsx
+  import split from "split2";
+
+  async function main() {
+    const stream = process.stdin.pipe(split());
+    for await (const line of stream) {
+      console.log(`You wrote: ${line}`);
+    }
+  }
+
+  main();
+  ```
