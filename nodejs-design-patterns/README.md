@@ -96,6 +96,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
     - [Async iterators and Node.JS streams](#async-iterators-and-nodejs-streams)
     - [In the wild](#in-the-wild)
   - [Middleware](#middleware)
+  - [Command](#command)
 
 ## The Node.js platform
 
@@ -4252,3 +4253,7 @@ In general term middleware means a set of processing units, handlers, filters, i
 ![Middleware](./assets/middleware.png)
 
 Middleware manager organizes and executes middleware functions. Middleware can be added with `use()` keyword (traditionally), usually to the end. When new data comes, next middleware accepts as input the result of prev middleware. Any middleware can choose to stop further processing, and invoke special function or propagate and error, which triggers another set of middleware to run.
+
+## Command
+
+Command is an object that encapsulates all information needed to perform an action at a later time. Instead of directly making an action, we create an object with intention to perform that action. Then another component is responsible to materialize it and perform that action. It consists of 4 components, these components can vary depending on how we want to implement them:
