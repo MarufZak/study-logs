@@ -4110,3 +4110,37 @@ while (!iterationResult.done) {
   iterationResult = await asyncIterator.next();
 }
 ```
+
+Here is the simple example:
+
+```jsx
+const wait = (ms) => {
+  return new Promise((resolve) => {
+    resolve();
+  }, ms);
+};
+
+function createCountIterable(count) {
+  return {
+    [Symbol.asyncIterator]() {
+      let cursor = 1;
+      return {
+        async next() {
+          if (cursor > count) {
+            cursor++;
+            return { done: true };
+          }
+
+          await wait(1);
+          return { value: cursor++, done: false };
+        },
+      };
+    },
+  };
+}
+
+const countIterable = createCountIterable(5);
+for await (const count of countIterable) {
+  console.log(count);
+}
+```
