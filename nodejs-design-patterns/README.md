@@ -4553,3 +4553,53 @@ Command pattern should be used only when necessary, because it adds a lot of ove
 
   consoleLogger.info("ok");
   ```
+
+- Queues with iterators
+  Implement an AsyncQueue class similar to one of the TaskQueue classes we defined in Chapter 5, Asynchronous Control Flow Patterns with Promises and Async/Await, but with a slightly different behavior and interface. Such an AsyncQueue class will have a method called enqueue() to append new items to the queue and then expose an `@@asyncIterable` method, which should provide the ability to process the elements of the queue asynchronously, one at a time (so, with a concurrency of 1). The async iterator returned from AsyncQueue should terminate only after the done() method of AsyncQueue is invoked and only after all items in the queue are consumed. Consider that the `@@asyncIterable` method could be invoked in more than one place, thus returning an additional async iterator, which would allow you to increase the concurrency with which the queue is consumed.
+
+  ```jsx
+  class AsyncQueue {
+    queue = [];
+    isDone = false;
+
+    enqueue(element) {
+      this.queue.push(element);
+    }
+
+    done() {
+      this.isDone = true;
+    }
+
+    async *[Symbol.asyncIterator]() {
+      if (this.isDone && this.queue.length === 0) {
+        return;
+      }
+
+      yield this.queue.shift();
+    }
+  }
+
+  const queue = new AsyncQueue();
+  queue.enqueue(1);
+  queue.enqueue(2);
+  queue.enqueue(3);
+  queue.enqueue(4);
+
+  for await (const element of queue) {
+    console.log(element);
+  }
+
+  for await (const element of queue) {
+    console.log(element);
+  }
+
+  for await (const element of queue) {
+    console.log(element);
+  }
+
+  for await (const element of queue) {
+    console.log(element);
+  }
+
+  queue.done();
+  ```
