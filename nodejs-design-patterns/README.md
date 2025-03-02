@@ -4099,3 +4099,14 @@ for (const element of iterator) {
 ### Async iterators
 
 So far so cool. But imagine a situation when we need to iterate over the list of sql queries, it would be great to return a promise, or even better use `async await`. There is where async iterators come in. They are iterators returning a promise, so this means we can use async function to define `next()` method of the iterator. Async iterables should implement an `@@asyncIterator` method, or in other words, method accessible with `Symbol.asyncIterator` key, which synchronously returns an async iterator (object with async `next()` method).
+
+We can use `for await ... of` syntax to iterate over async iterables, and it’s just syntax sugar over following. In the following we are invoking `@@asyncIterator` method of iterable to get async iterator, and go over the loop ourselves. Note that `for await ... of` loop requires iterable itself, not iterator. Also note that `for await ... of` syntax can also be used with regular iterables.
+
+```jsx
+const asyncIterator = iterable[Symbol.asyncIterator]();
+let iterationResult = await asyncIterator.next();
+while (!iterationResult.done) {
+  console.log(iterationResult.value);
+  iterationResult = await asyncIterator.next();
+}
+```
