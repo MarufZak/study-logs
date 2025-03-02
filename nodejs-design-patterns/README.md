@@ -4158,3 +4158,27 @@ async function* foo() {}
 ```
 
 The return value of their `next()` method is Promise that resolves to `{ done: boolean, value: value }`. Async generators can also be used with `for await ... of` loop.
+
+- Example
+
+  ```jsx
+  const wait = (ms) => {
+    return new Promise((resolve) => {
+      resolve();
+    }, ms);
+  };
+
+  async function* createCountIterable(maxCount) {
+    let count = 0;
+
+    while (maxCount > count) {
+      await wait(1);
+      count++;
+      yield count;
+    }
+  }
+
+  for await (const element of createCountIterable(5)) {
+    console.log(element);
+  }
+  ```
