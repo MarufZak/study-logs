@@ -4271,3 +4271,5 @@ Some benefits of command are:
 2. Can be serialized and sent over network to distribute jobs across multiple machines for example.
 3. Can be cancelled if not yet executed, and also can be reverted back to state when it’s not executed.
 4. Can be grouped together and executed at once.
+
+Command pattern should be used only when necessary, because it adds a lot of overhead. An example is omitted for brevity.
