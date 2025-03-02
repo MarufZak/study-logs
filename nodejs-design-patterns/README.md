@@ -90,10 +90,10 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Template](#template)
   - [Iterator](#iterator)
     - [Iterable protocol](#iterable-protocol)
-  - [Generators](#generators)
-  - [Async iterators](#async-iterators)
-  - [Async generators](#async-generators)
-  - [Async iterators and Node.JS streams](#async-iterators-and-nodejs-streams)
+    - [Generators](#generators)
+    - [Async iterators](#async-iterators)
+    - [Async generators](#async-generators)
+    - [Async iterators and Node.JS streams](#async-iterators-and-nodejs-streams)
 
 ## The Node.js platform
 
@@ -3862,7 +3862,7 @@ Also iterators can specify two methods, `return([value])` and `throw(error)` . F
   }
   ```
 
-### Iterable protocol
+#### Iterable protocol
 
 Iterable protocol defines a standard way for an object to return an iterator. Such objects are called iterables, usually it’s container of elements, but it can be an object representing set of elements. We can implement iterable by implementing `@@iterator` method, or in other words, a method that is accessible through `Symbol.iterator`.
 
@@ -3964,7 +3964,7 @@ There are many JS APIs that implement `@@iterable` method, including Array, Map,
   console.log(...countIterator);
   ```
 
-### Generators
+#### Generators
 
 Generators (or semicoroutines) were introduced in ES2015 spec, and are closely related to iterators. They are generalization of standard functions, in which they can have different entry points, rather one as in functions, which is invocation of the function. Generators can be suspended and resumed later. Generator object returned by generator function is indeed both an iterator and iterable.
 
@@ -4099,7 +4099,7 @@ for (const element of iterator) {
 }
 ```
 
-### Async iterators
+#### Async iterators
 
 So far so cool. But imagine a situation when we need to iterate over the list of sql queries, it would be great to return a promise, or even better use `async await`. There is where async iterators come in. They are iterators returning a promise, so this means we can use async function to define `next()` method of the iterator. Async iterables should implement an `@@asyncIterator` method, or in other words, method accessible with `Symbol.asyncIterator` key, which synchronously returns an async iterator (object with async `next()` method).
 
@@ -4150,7 +4150,7 @@ for await (const count of countIterable) {
 
 > The `for await ... of` and `for ... of` loops will call the `return()` method if it’s prematurely interrupted with a break, a return, or an exception. This can be used to perform cleanup, that would usually be performed when the task competes.
 
-### Async generators
+#### Async generators
 
 As well as async iterators, generators can also be async. To define it, we prepend `async` keyword to generator function:
 
@@ -4184,7 +4184,7 @@ The return value of their `next()` method is Promise that resolves to `{ done: b
   }
   ```
 
-### Async iterators and Node.JS streams
+#### Async iterators and Node.JS streams
 
 Streams are also closely related to async iterators. Node.JS streams are indeed async iterators construct, as they can be used to process the data of async resource piece by piece. `stream.Readable` implements `@@asyncIterator` method, so we can iterate over the data pulled.
 
