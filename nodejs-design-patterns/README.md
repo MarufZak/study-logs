@@ -4367,3 +4367,121 @@ Command pattern should be used only when necessary, because it adds a lot of ove
   const consoleLogger = new ConsoleLogger();
   consoleLogger.debug("Debugging");
   ```
+
+- Warehouse item
+  Imagine we are working on a warehouse management program. Our next task is to create a class to model a warehouse item and help track it. Such a WarehouseItem class has a constructor, which accepts an id and the initial state of the item (which can be one of arriving, stored, or delivered). It has three public methods:
+  • store(locationId) moves the item into the stored state and records the locationId where it's stored.
+  • deliver(address) changes the state of the item to delivered, sets the delivery address, and clears the locationId.
+  • describe() returns a string representation of the current state of the item (for example, "Item 5821 is on its way to the warehouse," or "Item 3647 is stored in location 1ZH3," or "Item 3452 was delivered to John Smith, 1st Avenue, New York."
+  The arriving state can be set only when the object is created as it cannot be transitioned to from the other states. An item can't move back to the arriving state once it's stored or delivered, it cannot be moved back to stored once it's delivered, and it cannot be delivered if it's not stored first. Use the State pattern to implement the WarehouseItem class.
+
+  ```jsx
+  class ArrivingState {
+    warehouseItem = null;
+
+    constructor(warehouseItem) {
+      this.warehouseItem = warehouseItem;
+    }
+
+    store(locationId) {
+      this.warehouseItem.locationId = locationId;
+      this.warehouseItem.changeState("stored");
+    }
+
+    deliver() {
+      throw new Error("Cannot deliver from arriving state");
+    }
+
+    describe() {
+      return `Item ${this.warehouseItem.id} is on its way to warehouse`;
+    }
+  }
+  ```
+
+  ```jsx
+  class StoredState {
+    warehouseItem = null;
+
+    constructor(warehouseItem) {
+      this.warehouseItem = warehouseItem;
+    }
+
+    store() {
+      throw new Error("WarehouseItem is already stored");
+    }
+
+    deliver(address) {
+      this.warehouseItem.address = address;
+      this.warehouseItem.changeState("delivered");
+      this.warehouseItem.locationId = null;
+    }
+
+    describe() {
+      return `Item ${this.warehouseItem.id} is stored in location ${this.warehouseItem.locationId}`;
+    }
+  }
+  ```
+
+  ```jsx
+  class DeliveredState {
+    warehouseItem = null;
+
+    constructor(warehouseItem) {
+      this.warehouseItem = warehouseItem;
+    }
+
+    store() {
+      throw new Error("Cannot store in delivered state");
+    }
+
+    deliver() {
+      throw new Error("Already delivered");
+    }
+
+    describe() {
+      return `Item ${this.warehouseItem.id} was delivered to ${this.warehouseItem.address}`;
+    }
+  }
+  ```
+
+  ```jsx
+  class WarehouseItem {
+    id = null;
+    activeState = null;
+    locationId = null;
+    address = null;
+    states = {
+      arriving: new ArrivingState(this),
+      stored: new StoredState(this),
+      delivered: new DeliveredState(this),
+    };
+
+    constructor(id, initialState) {
+      this.id = id;
+      this.changeState(initialState);
+    }
+
+    changeState(state) {
+      this.activeState = this.states[state];
+    }
+
+    store(locationId) {
+      return this.activeState.store(locationId);
+    }
+
+    deliver(address) {
+      return this.activeState.deliver(address);
+    }
+
+    describe() {
+      return this.activeState.describe();
+    }
+  }
+  ```
+
+  ```jsx
+  // usage
+  const warehouseItem = new WarehouseItem("1", "stored");
+  warehouseItem.store("Avenue street");
+  console.log(warehouseItem.describe());
+  ```
