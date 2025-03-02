@@ -95,6 +95,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
     - [Async generators](#async-generators)
     - [Async iterators and Node.JS streams](#async-iterators-and-nodejs-streams)
     - [In the wild](#in-the-wild)
+  - [Middleware](#middleware)
 
 ## The Node.js platform
 
@@ -4233,3 +4234,13 @@ We can also iterate EventEmitter itself. With `events.on(emitter, eventName)` we
 #### In the wild
 
 In the wild async iterators are used in popular libraries like `@databases/pg`, `@databases/mysql`, `@databases/sqlite`, and `zeromq`. In fact it’s being widely adopted in Node.JS ecosystem.
+
+### Middleware
+
+Middleware, in generic term, means software layer which acts as a glue between low-level services and applications, literally software in the middle.
+
+In the context of Express.JS, middleware has following signature:
+
+```jsx
+function (req, res, next) {};
+```
