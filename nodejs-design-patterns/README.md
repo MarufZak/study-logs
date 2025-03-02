@@ -4264,3 +4264,10 @@ Command is an object that encapsulates all information needed to perform an acti
 4. Target (receiver) - subject of invocation. Can be lone function or method of object.
 
 ![Command](./assets/command.png)
+
+Some benefits of command are:
+
+1. Can be executed at a later time.
+2. Can be serialized and sent over network to distribute jobs across multiple machines for example.
+3. Can be cancelled if not yet executed, and also can be reverted back to state when it’s not executed.
+4. Can be grouped together and executed at once.
