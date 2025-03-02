@@ -4182,3 +4182,7 @@ The return value of their `next()` method is Promise that resolves to `{ done: b
     console.log(element);
   }
   ```
+
+### Async iterators and Node.JS streams
+
+Streams are also closely related to async iterators. Node.JS streams are indeed async iterators construct, as they can be used to process the data of async resource piece by piece. `stream.Readable` implements `@@asyncIterator` method, so we can iterate over the data pulled.
