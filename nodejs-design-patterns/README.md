@@ -4262,3 +4262,5 @@ Command is an object that encapsulates all information needed to perform an acti
 2. Client - creates command and passes it to invoker.
 3. Invoker - responsible for executing the command on the target.
 4. Target (receiver) - subject of invocation. Can be lone function or method of object.
+
+![Command](./assets/command.png)
