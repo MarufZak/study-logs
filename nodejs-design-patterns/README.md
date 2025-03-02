@@ -92,6 +92,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
     - [Iterable protocol](#iterable-protocol)
   - [Generators](#generators)
   - [Async iterators](#async-iterators)
+  - [Async generators](#async-generators)
 
 ## The Node.js platform
 
@@ -4147,3 +4148,13 @@ for await (const count of countIterable) {
 ```
 
 > The `for await ... of` and `for ... of` loops will call the `return()` method if it’s prematurely interrupted with a break, a return, or an exception. This can be used to perform cleanup, that would usually be performed when the task competes.
+
+### Async generators
+
+As well as async iterators, generators can also be async. To define it, we prepend `async` keyword to generator function:
+
+```jsx
+async function* foo() {}
+```
+
+The return value of their `next()` method is Promise that resolves to `{ done: boolean, value: value }`. Async generators can also be used with `for await ... of` loop.
