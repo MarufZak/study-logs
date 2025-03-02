@@ -93,6 +93,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
   - [Generators](#generators)
   - [Async iterators](#async-iterators)
   - [Async generators](#async-generators)
+  - [Async iterators and Node.JS streams](#async-iterators-and-nodejs-streams)
 
 ## The Node.js platform
 
