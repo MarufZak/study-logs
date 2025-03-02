@@ -4208,3 +4208,23 @@ Streams are also closely related to async iterators. Node.JS streams are indeed 
 These paradigms are similar, and can interoperate seamlessly. For example, `stream.Readable.from(iterable, [options])` takes an iterable (can be both async and sync) as an argument, and returns a readable stream that wraps provided iterable, adapting its interface to a readable stream.
 
 We can also iterate EventEmitter itself. With `events.on(emitter, eventName)` we can get async iterable, whose iterator will return all the events matching specified eventName.
+
+- Example
+
+  ```jsx
+  import { on, EventEmitter } from "events";
+
+  const emitter = new EventEmitter();
+
+  async function processEvents() {
+    for await (const [data] of on(emitter, "data")) {
+      console.log(data);
+    }
+  }
+
+  processEvents();
+
+  emitter.emit("data", "ok1");
+  emitter.emit("data", "ok2");
+  emitter.emit("data", "ok3");
+  ```
