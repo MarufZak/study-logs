@@ -94,6 +94,7 @@ My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro an
     - [Async iterators](#async-iterators)
     - [Async generators](#async-generators)
     - [Async iterators and Node.JS streams](#async-iterators-and-nodejs-streams)
+    - [In the wild](#in-the-wild)
 
 ## The Node.js platform
 
@@ -4228,3 +4229,7 @@ We can also iterate EventEmitter itself. With `events.on(emitter, eventName)` we
   emitter.emit("data", "ok2");
   emitter.emit("data", "ok3");
   ```
+
+#### In the wild
+
+In the wild async iterators are used in popular libraries like `@databases/pg`, `@databases/mysql`, `@databases/sqlite`, and `zeromq`. In fact it’s being widely adopted in Node.JS ecosystem.
