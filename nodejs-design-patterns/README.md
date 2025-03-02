@@ -4244,3 +4244,5 @@ In the context of Express.JS, middleware has following signature:
 ```jsx
 function (req, res, next) {};
 ```
+
+These parameters allow us to parse the body of the request, compress/decompress requests and responses, produce access logs, manage sessions and many others. Middleware allows developers to focus only on business logic with ready requests/response forms.
