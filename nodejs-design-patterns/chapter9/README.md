@@ -1,109 +1,22 @@
-# NodeJS design patterns
+# Behavioral design patterns
 
-![NodeJS design patterns book cover](./assets/book-cover.jpg)
-
-My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro and Luciano Mammino. See the [book](https://www.nodejsdesignpatterns.com/) for more details.
-
-## Table of contents
-
-- [The Node.js platform](#the-nodejs-platform)
-  - [I/O (Input / Output)](#io-input--output)
-  - [Event demultiplexing](#event-demultiplexing)
-  - [The reactor pattern](#the-reactor-pattern)
-  - [Libuv](#libuv)
-  - [Recipe of Node.js](#recipe-of-nodejs)
-  - [Native code](#native-code)
-- [Module system](#module-system)
-  - [CommonJS](#commonjs)
-    - [Homemade module system](#homemade-module-system)
-    - [Monkey patching](#monkey-patching)
-  - [ESModules](#esmodules)
-    - [default export notes](#default-export-notes)
-    - [async imports](#async-imports)
-    - [Modules loading](#modules-loading)
-    - [Read-only live binding and live binding](#read-only-live-binding-and-live-binding)
-  - [differences](#differences)
-- [Callbacks and Events](#callbacks-and-events)
-  - [CPS and direct style](#cps-and-direct-style)
-  - [guaranteeing asynchronicity with deferred execution](#guaranteeing-asynchronicity-with-deferred-execution)
-  - [Propagating errors](#propagating-errors)
-  - [Observer pattern](#observer-pattern)
-    - [EventEmitter](#eventemitter)
-    - [Memory leaks](#memory-leaks)
-    - [Antipatterns](#antipatterns)
-    - [Combining](#combining)
-    - [Exercises for Callbacks and Events](#exercises-for-callbacks-and-events)
-- [Asynchronous Control Flow Patterns with Callbacks](#asynchronous-control-flow-patterns-with-callbacks)
-  - [The Sequential Iterator pattern](#the-sequential-iterator-pattern)
-  - [Parallel execution with callbacks](#parallel-execution-with-callbacks)
-  - [Fix race conditions with concurrent tasks](#fix-race-conditions-with-concurrent-tasks)
-  - [Limited parallel execution](#limited-parallel-execution)
-  - [Exercises](#async-control-flow-patterns-with-callbacks-exercises)
-- [Asynchronous Control Flow Patterns with Promises and Async/Await](#asynchronous-control-flow-patterns-with-promises-and-asyncawait)
-  - [Promises/A+ and thennables](#promisesa-and-thennables)
-  - [The Promise API](#the-promise-api)
-  - [Sequential iteration with promises](#pattern-sequential-iteration-with-promises)
-  - [Limited parallel execution with promises](#limited-parallel-execution-with-promises)
-  - [Async/await](#asyncawait)
-  - [Error handling](#error-handling)
-  - [Trap when returning](#trap-when-returning)
-  - [Sequential execution and iteration](#sequential-execution-and-iteration)
-  - [The problem with infinite recursive promise resolution chains](#the-problem-with-infinite-recursive-promise-resolution-chains)
-  - [Exercises](#exercises)
-- [Coding with streams](#coding-with-streams)
-  - [Getting started with streams](#getting-started-with-streams)
-  - [Readable](#readable)
-  - [Implementing Readable streams](#implementing-readable-streams)
-  - [Writable](#writable)
-  - [Backpressure](#backpressure)
-  - [Implementing Writable streams](#implementing-writable-streams)
-  - [Duplex](#duplex)
-  - [Transform](#transform)
-  - [PassThrough](#passthrough)
-  - [Late piping](#late-piping)
-  - [Lazy streams](#lazy-streams)
-  - [Connecting streams using pipes](#connecting-streams-using-pipes)
-  - [Pipes and error handling](#pipes-and-error-handling)
-- [Creational design patterns](#creational-design-patterns)
-  - [Factory](#factory)
-    - [Simple profiler](#simple-profiler)
-  - [Builder pattern](#builder-pattern)
-  - [Revealing pattern](#revealing-pattern)
-    - [Immutable buffer](#immutable-buffer)
-  - [Singleton](#singleton-pattern)
-  - [Dependency Injection](#dependency-injection)
-  - [Inversion of control](#inversion-of-control)
-  - [Exercises for patterns](#exercises-for-patterns)
-- [Structural design patterns](#structural-design-patterns)
-  - [Proxy, surrogate](#proxy-surrogate)
-    - [Object composition](#object-composition)
-    - [Object augmentation, monkey patching](#object-augmentation-monkey-patching)
-    - [Built in proxy object](#built-in-proxy-object)
-  - [Decorator](#decorator)
-    - [Difference from Proxy](#difference-from-proxy)
-  - [Adapter](#adepter)
-  - [Structural design patterns conclusion](#structural-design-patterns-conclusion)
-  - [Structural design patterns exercises](#structural-design-patterns-exercises)
-- [Behavioral design patterns](#behavioral-design-patterns)
-  - [Strategy](#strategy)
-  - [State](#state)
-  - [Template](#template)
-  - [Iterator](#iterator)
-    - [Iterable protocol](#iterable-protocol)
-    - [Generators](#generators)
-    - [Async iterators](#async-iterators)
-    - [Async generators](#async-generators)
-    - [Async iterators and Node.JS streams](#async-iterators-and-nodejs-streams)
-    - [In the wild](#in-the-wild)
-  - [Middleware](#middleware)
-  - [Command](#command)
-  - [Exercises](#exercises-for-behavioral-design-patterns)
-
-## Behavioral design patterns
+- [Strategy](#strategy)
+- [State](#state)
+- [Template](#template)
+- [Iterator](#iterator)
+  - [Iterable protocol](#iterable-protocol)
+  - [Generators](#generators)
+  - [Async iterators](#async-iterators)
+  - [Async generators](#async-generators)
+  - [Async iterators and Node.JS streams](#async-iterators-and-nodejs-streams)
+  - [In the wild](#in-the-wild)
+- [Middleware](#middleware)
+- [Command](#command)
+- [Exercises](#exercises-for-behavioral-design-patterns)
 
 In last chapter we learnt about patterns that help us in building complex data structures. Now we will see how to combine these complex components, defining extensible, modular and reusable structures. One member of this family is Observer pattern we learnt in chapter 3.
 
-### Strategy
+## Strategy
 
 Strategy pattern enables object, called context, to support variations in its logic by extracting the variable parts into separate, interchangeable objects, called strategies. The context itself implements common logic of algorithms, while strategy implements mutable parts, allowing context to adapt its behavior depending on different factors. All of strategies implement same interface expected by the context.
 
@@ -157,7 +70,7 @@ Real example is Order object, which has pay method. We can have many payment met
 
 In the wild this pattern is used in [passport package](http://nodejsdp.link/passportjs), which provides different authentication schemes. All these schemes are implemented as strategies. Note that [there are 539 strategies](https://www.passportjs.org/packages/). 539 CARL!!!
 
-### State
+## State
 
 State pattern is strategy pattern, but in this case strategy is not “hardcoded” in the lifespan of an object. It (strategy, or state in this case) changes dynamically, based on state it’s in.
 
@@ -286,7 +199,7 @@ Simple example is Reservation class. It may be in 3 states: unconfirmed - user c
   }, 1000);
   ```
 
-### Template
+## Template
 
 Template pattern is like Strategy pattern. It implements skeleton (common parts), while letting other parts to be defined by the class using template, which fill the gaps for template methods (missing parts). The only difference is strategy of consumer is determined when it’s defined, it’s not dynamic like in Strategy pattern, and strategies are not baked in one component.
 
@@ -341,7 +254,7 @@ In JavaScript we don’t have any way to define abstract classes (we do in TypeS
 
 In practice this pattern is widely used. For example, when coding with streams, we had to override \_read or \_write methods of abstract Readable or Writable classes. This fit into template pattern.
 
-### Iterator
+## Iterator
 
 Iterator pattern is common so that programming langs implement built-in iterators, including javascript. Built-in iterators provide interface to iterate over containers, such as arrays. But iterator pattern provides interface to iterate over any type of a container, and thus hiding details about algorithms used inside. In JavaScript, iterators also work greatly with event emitters and streams. So accurate definition is iterator provide interface to iterate over elements retrieved in a sequence.
 
@@ -386,7 +299,7 @@ Also iterators can specify two methods, `return([value])` and `throw(error)` . F
   }
   ```
 
-#### Iterable protocol
+## Iterable protocol
 
 Iterable protocol defines a standard way for an object to return an iterator. Such objects are called iterables, usually it’s container of elements, but it can be an object representing set of elements. We can implement iterable by implementing `@@iterator` method, or in other words, a method that is accessible through `Symbol.iterator`.
 
@@ -488,7 +401,7 @@ There are many JS APIs that implement `@@iterable` method, including Array, Map,
   console.log(...countIterator);
   ```
 
-#### Generators
+## Generators
 
 Generators (or semicoroutines) were introduced in ES2015 spec, and are closely related to iterators. They are generalization of standard functions, in which they can have different entry points, rather one as in functions, which is invocation of the function. Generators can be suspended and resumed later. Generator object returned by generator function is indeed both an iterator and iterable.
 
@@ -623,7 +536,7 @@ for (const element of iterator) {
 }
 ```
 
-#### Async iterators
+## Async iterators
 
 So far so cool. But imagine a situation when we need to iterate over the list of sql queries, it would be great to return a promise, or even better use `async await`. There is where async iterators come in. They are iterators returning a promise, so this means we can use async function to define `next()` method of the iterator. Async iterables should implement an `@@asyncIterator` method, or in other words, method accessible with `Symbol.asyncIterator` key, which synchronously returns an async iterator (object with async `next()` method).
 
@@ -674,7 +587,7 @@ for await (const count of countIterable) {
 
 > The `for await ... of` and `for ... of` loops will call the `return()` method if it’s prematurely interrupted with a break, a return, or an exception. This can be used to perform cleanup, that would usually be performed when the task competes.
 
-#### Async generators
+## Async generators
 
 As well as async iterators, generators can also be async. To define it, we prepend `async` keyword to generator function:
 
@@ -708,7 +621,7 @@ The return value of their `next()` method is Promise that resolves to `{ done: b
   }
   ```
 
-#### Async iterators and Node.JS streams
+## Async iterators and Node.JS streams
 
 Streams are also closely related to async iterators. Node.JS streams are indeed async iterators construct, as they can be used to process the data of async resource piece by piece. `stream.Readable` implements `@@asyncIterator` method, so we can iterate over the data pulled.
 
@@ -753,11 +666,11 @@ We can also iterate EventEmitter itself. With `events.on(emitter, eventName)` we
   emitter.emit("data", "ok3");
   ```
 
-#### In the wild
+## In the wild
 
 In the wild async iterators are used in popular libraries like `@databases/pg`, `@databases/mysql`, `@databases/sqlite`, and `zeromq`. In fact it’s being widely adopted in Node.JS ecosystem.
 
-### Middleware
+## Middleware
 
 Middleware, in generic term, means software layer which acts as a glue between low-level services and applications, literally software in the middle.
 
@@ -775,7 +688,7 @@ In general term middleware means a set of processing units, handlers, filters, i
 
 Middleware manager organizes and executes middleware functions. Middleware can be added with `use()` keyword (traditionally), usually to the end. When new data comes, next middleware accepts as input the result of prev middleware. Any middleware can choose to stop further processing, and invoke special function or propagate and error, which triggers another set of middleware to run.
 
-### Command
+## Command
 
 Command is an object that encapsulates all information needed to perform an action at a later time. Instead of directly making an action, we create an object with intention to perform that action. Then another component is responsible to materialize it and perform that action. It consists of 4 components, these components can vary depending on how we want to implement them:
 
@@ -795,7 +708,7 @@ Some benefits of command are:
 
 Command pattern should be used only when necessary, because it adds a lot of overhead. An example is omitted for brevity.
 
-### Exercises for behavioral design patterns
+## Exercises for behavioral design patterns
 
 - Logging with strategy
 
