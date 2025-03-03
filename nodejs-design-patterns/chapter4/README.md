@@ -1,4 +1,4 @@
-Chapter 4, Asynchronous Control Flow Patterns with Callbacks
+# Chapter 4, Asynchronous Control Flow Patterns with Callbacks
 
 - [The Sequential Iterator pattern](#the-sequential-iterator-pattern)
 - [Parallel execution with callbacks](#parallel-execution-with-callbacks)
