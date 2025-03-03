@@ -16,14 +16,14 @@ Another principle in Node.js is designing small modules, which take its roots fr
 
 Another principle is having small surface area, where a common pattern is to export certain class or function, which is entry point, and not exposing the internals to the outside world.
 
-### I/O (Input / Output)
+## I/O (Input / Output)
 
 I/O is slow, accessing the RAM takes nanoseconds, whereas accessing hard disks or network may take milliseconds. There are 2 types of I/O.
 
 1. Blocking. Traditional one used in programming, where function call correspond to some I/O, which blocks the execution of the thread until request is completed. This means a webserver with blocking i/o cannot handle multiple connections in the same thread, it now has to open new threads to process new connections concurrently (note that idle times could be big in each thread, which is wasteful). Unfortunately, threads are expensive, it consumes memory, has context switches (that’s why each thread has idle times) ⇒ having long running thread for each connection is expensive.
 2. Non-blocking. Many Operating Systems support it, it returns immediately without waiting for the request to complete. You could make a polling to access the data when it’s available, if it’s not available yet it returns some constant. We can use loop, which checks for the result until it’s available, but this is not efficient, because the loop itself wastes a lot of CPU cycles and time.
 
-### Event demultiplexing
+## Event demultiplexing
 
 Most Operating Systems provide a native mechanism for handling concurrent non-blocking resources in better way, called **_synchronous event demultiplexer (event notification interface)._**
 
@@ -36,7 +36,7 @@ See difference between blocking i/o and non-blocking i/o (with event demultiplex
 ![Blocking I/O threads](./assets/blocking-io-threads.png)
 ![Non blocking I/O threads](./assets/non-blocking-io-threads.png)
 
-### The reactor pattern
+## The reactor pattern
 
 It’s specialization of algorithms that has a handler associated with each I/O operation, and represented by callback function.
 
@@ -52,13 +52,13 @@ Node.js application exits, when there are no more pending operations in event de
 
 So, the reactor pattern handles i/o by going idle until new events are available from a set of observed resources, and then reacts by dispatching each event to associated handler.
 
-### Libuv
+## Libuv
 
 Each operating system has different API interfaces for the event demultiplexer, and each i/o may behave differently even with one operating system. For example in Unix there is no way to access files in non-blocking manner. To simulate it, we need to create another thread and process it there.
 
 Libuv is low-level i/o engine of node.js, which makes node.js compatible with all major OSs, and normalizes the behavior among them. It implements the reactor pattern, providing APIs for creating event loops, managing event queue and others.
 
-### Recipe of Node.js
+## Recipe of Node.js
 
 Reactor pattern and libuv are building blocks of Node.js, but we need three more components:
 
@@ -70,6 +70,6 @@ Reactor pattern and libuv are building blocks of Node.js, but we need three more
 
 Node.js ships with very recent versions of V8, which means we can use the most new features with confidence.
 
-### Native code
+## Native code
 
 Node.js allows us to reuse components written in C/C++ native code. It can be beneficial because with native code we can access lower-level APIs, for example communicating with hardware drivers. Although V8 is very fast, it is still a bit slower than native code. For CPU-intensive apps, it makes sense to use native code.

@@ -12,11 +12,11 @@
 
 ES6 specification didn’t come with implementation of modules (ESM), so different browsers companies and node.js had to come up with their own implementation according to the spec.
 
-### CommonJS
+## CommonJS
 
 CommonJS is the original module system for Node.js that provides a way to organize and structure code by dividing it into reusable modules.
 
-#### Homemade module system
+### Homemade module system
 
 ```js
 import fs from "fs";
@@ -149,7 +149,7 @@ Explanation
    - `const a = require("./a");` now returns the **fully** exported `a`.
    - `const b = require("./b");` returns the cached export of `b`.
 
-#### Monkey patching
+### Monkey patching
 
 It’s a practice of modifying existing objects (other modules exports) at runtime to change or extend behaviour, or apply temporary fixes. Monkey patching is considered harmful.
 
@@ -159,7 +159,7 @@ require("./logger").customFunction = () => {
 };
 ```
 
-### ESModules
+## ESModules
 
 ESM were introduced as ECMAScript 2015 spec, with goal to give JS official module system across different environments. It has support for cyclic dependencies, and load modules async. ES modules are static, and cannot be imported conditionally, only at top of the file.
 
@@ -175,13 +175,13 @@ Namespace import can be imported like:
 import * as myModule from "./myModule.js";
 ```
 
-#### default export notes
+### default export notes
 
 When default exporting, the name of variable or function is ignored, so we can use any name when importing it.
 
 Default export can prevent tree shaking for some cases. For example, when module exports object with properties and methods, even if neither of them were used, most module bundlers think it’s used.
 
-#### async imports
+### async imports
 
 Suppose we want to load specific module of language based on which lang pref user has. We can use dynamic imports with `import()` operation. It returns a promise that resolves to the module object.
 
@@ -192,7 +192,7 @@ import(translationModule).then((strings) => {
 });
 ```
 
-#### Modules loading
+### Modules loading
 
 The goal of interpreter is to build dependency graph of the modules. It helps interpreter to determine the order in which modules should be loaded. Entry point is passed to interpreter as an entry point, and it recursively starts to explore and evaluate the code.
 
@@ -206,7 +206,7 @@ Difference from CJS is that in cjs the code before `require` is already executed
 
 In case of ESM, all modules will have up-to-date imports from other modules, because ESM uses live bindings, and evaluation order ensures every module imports fresh exports from other modules and that dependencies are resolved before execution. Circular deps problem with CJS is now resolved.
 
-#### Read-only live binding and live binding
+### Read-only live binding and live binding
 
 When entity is imported from other module, it is readonly (read-only live binding) and cannot be mutated directly, whereas it can be mutated in its original module (live binding). We can provide a function as an export to mutate the read-only live binding variables.
 
@@ -232,7 +232,7 @@ Object itself is read-only live binding, but its properties are not.
 
 Note that by importing `import * as fs from 'fs'` or `import { someFunc } from 'fs'` gives us read-only live binding.
 
-### differences
+## differences
 
 ESModules run in strict mode, whereas CommonJS modules do not.
 
@@ -277,6 +277,6 @@ const json = require("./j.json");
 console.log({ json });
 ```
 
-### Similarities
+## Similarities
 
 > If module is imported multiple times in different files, it is executed only once, and subsequent imports use cached version of the module.
