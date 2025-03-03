@@ -1,5 +1,19 @@
 # Chapter 6, Coding with streams
 
+- [Getting started with streams](#getting-started-with-streams)
+- [Readable](#readable)
+- [Implementing Readable streams](#implementing-readable-streams)
+- [Writable](#writable)
+- [Backpressure](#backpressure)
+- [Implementing Writable streams](#implementing-writable-streams)
+- [Duplex](#duplex)
+- [Transform](#transform)
+- [PassThrough](#passthrough)
+- [Late piping](#late-piping)
+- [Lazy streams](#lazy-streams)
+- [Connecting streams using pipes](#connecting-streams-using-pipes)
+- [Pipes and error handling](#pipes-and-error-handling)
+
 In event-based Node.js, almost all asynchronous APIs we have seen so far work using **buffer mode.** Buffering is creating a buffer (storage), and pushing there the chunks of data received from resource, and when the whole input is processed, passing it back as single blob of data to the caller.
 
 ![Buffering example](./assets/buffering.png)
