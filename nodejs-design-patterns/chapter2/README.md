@@ -206,6 +206,45 @@ Difference from CJS is that in cjs the code before `require` is already executed
 
 In case of ESM, all modules will have up-to-date imports from other modules, because ESM uses live bindings, and evaluation order ensures every module imports fresh exports from other modules and that dependencies are resolved before execution. Circular deps problem with CJS is now resolved.
 
+- Example
+  Let’s say we have 3 modules that have circular dependency.
+
+  ```jsx
+  // a.js
+  import * as bModule from "./b.js";
+  export let loaded = false;
+  export const b = bModule;
+  loaded = true;
+
+  // b.js
+  import * as aModule from "./a.js";
+  export let loaded = false;
+  export const a = aModule;
+  loaded = true;
+
+  // main.js
+  import * as a from "./a.js";
+  import * as b from "./b.js";
+  console.log("a ->", a);
+  console.log("b ->", b);
+  ```
+
+  Let’s analyze step by step what happens here.
+
+  1. Construction. Code is explored from starting phase, from entry point (index.js), and find all imports load the source code from. Every module is visited only once, and tree structure dependency tree is built. In `main.js` import leads us to `a.js`, from there we go to `b.js` to import source code from it. We see `a.js` import, but because we have already looked it up we don’t go back. Now exploration winds back, b doesn’t have other imports, so we go to a, and there are no more imports, we go back to index. At this point we have dependency graph like this, note that there is no cyclic dependency between a and b.
+
+     ![ESM 1 phase](./assets/esm-1.png)
+
+  2. Instantiation. Now, from bottom to up, interpreter starts to analyze modules for exports and build a map of exported names in memory. Interpreter starts from b, which exports `loaded` and `a`. Then it moves to a, which exports `loaded` and `b`. Finally it moves to main, which has no exports. Note that exports map keep track of exported names only, no values are initialized now. Right now exports map looks like this:
+
+     ![ESM 2 phase](./assets/esm-2.png)
+
+     After that interpreter does another pass to link the exported names to the modules importing them. So, module b will link exports from `a` referring as `aModule`. Module a will link exports from `b` referring as `bModule`. And finally `main` will link both modules as `a` and `b` respectively. Graph looks like:
+
+     ![ESM 3 phase](./assets/esm-3.png)
+
+     1. Evaluation. Again, evaluation starts from bottom to up. Starting from `b`, exported `loaded` is set to false. Then exported property `a` is evaluated to reference of the `a`'s module object, and `loaded` is set to true. Now exports evaluation for module `b` is finished and we move to `a`. We set loaded to false, exported property `b` is evaluted to reference of `b`'s module object, and `loaded` is set to true. Now all exports for `a` is also evaluated, and `main` can be executed. Because all imported modules are tracked as references, we can be sure that every module has up-to-date version of other modules, even with circular deps.
+
 ### Read-only live binding and live binding
 
 When entity is imported from other module, it is readonly (read-only live binding) and cannot be mutated directly, whereas it can be mutated in its original module (live binding). We can provide a function as an export to mutate the read-only live binding variables.
