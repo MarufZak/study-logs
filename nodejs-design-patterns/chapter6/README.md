@@ -93,8 +93,7 @@ A `Readable` stream represents a source of data, and in node.js implemented usin
 ```jsx
 // process.stdin.setEncoding("utf8");
 
-process.stdin;
-on("readable", () => {
+process.stdin.on("readable", () => {
   let chunk;
   console.log("New data is available");
   while ((chunk = process.stdin.read()) !== null) {
