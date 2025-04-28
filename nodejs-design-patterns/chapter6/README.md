@@ -73,7 +73,7 @@ In terms of composability, streams can be composed with `pipe` method, which all
 
 The order of the data chunks matters, and Node.js manages the order for us under the hood.
 
-# Chapter 6,# Getting started with streams
+## Getting started with streams
 
 Streams are everywhere in Node.js, examples include write and read functions with streaming support, http request/response objects (which are basically streams)
 
@@ -81,7 +81,7 @@ Every stream in Node.js is implementation of one of four base abstract classes a
 
 Streams support 2 operating modes: **Binary mode** (data is transferred in form of chunks such as buffers or strings), and **Object mode** (data is transferred as sequence of discrete objects, allowing us to use almost any js value).
 
-# Chapter 6,# Readable
+## Readable
 
 A `Readable` stream represents a source of data, and in node.js implemented using the Readable abstract class. We can receive a data from Readable stream with 2 approaches:
 
@@ -138,7 +138,7 @@ async function main() {
 main();
 ```
 
-# Chapter 6,# Implementing Readable streams
+## Implementing Readable streams
 
 We can implement our own custom readable stream. For this we need to inherit from `Readable` class and specify `_read` method, which is called by internals of `Readable` to start filling the internal buffer using `push` (meaning \_read method can use push method to push to the buffer). `_read` must not be called by stream consumers, and is for internal purposes only.
 
@@ -204,7 +204,7 @@ We can specify the construction of our custom readable stream by passing a `read
   });
   ```
 
-# Chapter 6,# Writable
+## Writable
 
 A `Writable` stream represents a data destination, for example file in filesystem, a database table, a socket, or standard output interface. In Node.js, all of these are implemented with `Writable` abstract class from `stream` module.
 
@@ -241,7 +241,7 @@ To signal that no more data will be written, we can invoke `writable.end([chunk]
   });
   ```
 
-# Chapter 6,# Backpressure
+## Backpressure
 
 `writable.write` will return `false` if the `highWaterMark` is reached, meaning the internal buffer is full. We can ignore this, but it’s not recommended to ignore. When the data is emptied from buffer, a `drain` event is emitted, saying it’s now safe to write. This mechanism is called **backpressure.**
 
@@ -278,7 +278,7 @@ To signal that no more data will be written, we can invoke `writable.end([chunk]
   });
   ```
 
-# Chapter 6,# Implementing Writable streams
+## Implementing Writable streams
 
 We can implement our own stream with `Writable` abstract class. We can either extend from it, or use simplified construction.
 
@@ -429,7 +429,7 @@ We can implement our own stream with `Writable` abstract class. We can either ex
   createReadStream(inputFilename).pipe(logsWritableStream);
   ```
 
-# Chapter 6,# Duplex
+## Duplex
 
 A `Duplex` stream is both `Readable` and `Writable`, used to describe an entity that is both data source and destination. To create custom Duplex, we have to specify both `_write` and `_read` methods, which are internally forwarded to `Writable` and `Readable` constructors. Options are same, except `allowHalfOpen` (default true), which, if false, closes the second part if one part closes.
 
@@ -478,7 +478,7 @@ uppercaseStream
   });
 ```
 
-# Chapter 6,# Transform
+## Transform
 
 `Transform` stream is special kind of `Duplex` stream, where the data read has relationship with data written, and is designed to handle data transformations. It applies transformations to each chunk they receive from `Writable` part, and send it to `Readable` part.
 
@@ -623,7 +623,7 @@ createReadStream("./input.txt", { highWaterMark: 1 })
   .pipe(createWriteStream("./output.txt"));
 ```
 
-# Chapter 6,# PassThrough
+## PassThrough
 
 There is another type of streams called PassThrough. It receives the chunks and pushes it next in the pipeline without any modification or delay. This behaviour can be achieved with transform stream, but in this case we would need to implement write method ourselves. This is what PassThrough stream does for us.
 
@@ -647,7 +647,7 @@ There is another type of streams called PassThrough. It receives the chunks and 
   passThrough.end();
   ```
 
-# Chapter 6,# Late piping
+## Late piping
 
 Let’s suppose we have a function that accepts a Readable stream, and uploads the content to S3:
 
@@ -688,7 +688,7 @@ In this example we are delaying uploading until the chunk is compressed, and Pas
 
 Use a PassThrough stream when you need to provide a placeholder for data that will be read or written in the future.
 
-# Chapter 6,# Lazy streams
+## Lazy streams
 
 Sometimes we want to create a large number of streams to consume later. For example to use [archiver](https://www.npmjs.com/package/archiver) package. The problem is that if we try to open many files with `createReadStream` we would get `EMFILE`, too many open files error. Even though we haven’t used the stream yet, the function triggers opening of file descriptor.
 
@@ -703,7 +703,7 @@ const lazyURandom = new lazystream.Readable(function (options) {
 
 It also uses PassThrough stream, and when `_read` method is invoked for the first time, creates proxied instance by invoking factory function, and then pipes generated stream into the PassThrough stream.
 
-# Chapter 6,# Connecting streams using pipes
+## Connecting streams using pipes
 
 Piping concept is taken from Unix, where `echo hello | pbcopy` copies hello to the clipboard (in mac). The output of first command is forwarded to second as an input.
 
@@ -719,7 +719,7 @@ Writable stream is ended automatically when Readable stream emits an `end` event
 process.stdin.pipe(process.stdout);
 ```
 
-# Chapter 6,# Pipes and error handling
+## Pipes and error handling
 
 In the pipelines of streams, errors are not propagated through the pipeline. Instead, error is caught where the listener is attached to. To make things worse, failing stream is only unpiped from the stream, meaning we need to explicitly destroy stream ourselves to cleanup resources properly, with `destroy` method.
 

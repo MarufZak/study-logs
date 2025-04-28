@@ -20,15 +20,15 @@ Personal notes and key takeaways from the excellent "Node.js Design Patterns" bo
 <details open>
 <summary>Chapters</summary>
 
-- [Chapter 1: Getting Started](./chapter1/README.md)
-- [Chapter 2: The Module System](./chapter2/README.md)
+- [Chapter 1: The Node.js platform](./chapter1/README.md)
+- [Chapter 2: The Module system](./chapter2/README.md)
 - [Chapter 3: Callbacks and Events](./chapter3/README.md)
-- [Chapter 4: Asynchronous Control Flow Patterns](./chapter4/README.md)
-- [Chapter 5: Streams](./chapter5/README.md)
-- [Chapter 6: Design Patterns](./chapter6/README.md)
-- [Chapter 7: Creational Design Patterns](./chapter7/README.md)
-- [Chapter 8: Structural Design Patterns](./chapter8/README.md)
-- [Chapter 9: Behavioral Design Patterns](./chapter9/README.md)
+- [Chapter 4: Asynchronous Control Flow Patterns with Callbacks](./chapter4/README.md)
+- [Chapter 5: Asynchronous Control Flow Patterns with Promises and Async/Await](./chapter5/README.md)
+- [Chapter 6: Coding with streams](./chapter6/README.md)
+- [Chapter 7: Creational design patterns](./chapter7/README.md)
+- [Chapter 8: Structural design patterns](./chapter8/README.md)
+- [Chapter 9: Behavioral design patterns](./chapter9/README.md)
 
 </details>
 
