@@ -181,7 +181,7 @@ We can implement our own custom readable stream. For this we need to inherit fro
 
   Fun fact: in the `options`, consumer can pass an option of highWaterMark to limit the size of buffer, but stream can ignore it. Default highWaterMark is 16KB. We can check if buffer is full when `push` method of stream returns `false`.
 
-We can specify the construction of our custom readable stream by passing a `read` method as an option. The behaviour is the same as in our previous approach.
+We can specify the construction of our custom readable stream by passing a `read` method as an option. The behavior is the same as in our previous approach.
 
 - Example
 
@@ -202,6 +202,8 @@ We can specify the construction of our custom readable stream by passing a `read
     },
   });
   ```
+
+Internal read method is not called if data pull is not requested with `read` method or `readable` and `data` event listeners. If we call `read`, internal read is called until buffer is full.
 
 ## Writable
 
