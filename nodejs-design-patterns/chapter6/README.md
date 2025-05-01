@@ -122,6 +122,8 @@ process.stdin
 
 Because default operating mode for stream is non-flowing, we can switch to flowing by attaching listener to `data` event, or explicitly invoking `resume` method. To temporality stop the stream from emitting data events, we can invoke `pause` method, causing incoming data be cached in internal buffer. So, calling `pause` method switches the stream back to non-flowing mode.
 
+When working with strings, when pushing data into internal buffer with `push` method, we can specify encoding using which the string is converted into buffer. When client decodes with `read` it needs to convert to string using same encoding type.
+
 Readable streams are also async iterators.
 
 - Example
@@ -216,6 +218,8 @@ Note that the `write` method of writable is not asynchronous unless async API is
 To signal that no more data will be written, we can invoke `writable.end([chunk], [encoding], [callback])` , where chunk is final chunk to stream, and callback is equivalent to registering listener to `finish` event, which is fired when all data in stream has been flushed into underlying resource.
 
 In Writable, if multiple `write` methods were called, they are queued, and until previous calls complete (their callbacks execute), next ones don't run.
+
+When writing with `write` method, we can pass encoding. In implementation of `write` method we can use this encoding to convert our data into string if it's a buffer. If not, it is usually ignored.
 
 - Example
 
