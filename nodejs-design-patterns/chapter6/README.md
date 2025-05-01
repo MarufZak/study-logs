@@ -215,6 +215,8 @@ Note that the `write` method of writable is not asynchronous unless async API is
 
 To signal that no more data will be written, we can invoke `writable.end([chunk], [encoding], [callback])` , where chunk is final chunk to stream, and callback is equivalent to registering listener to `finish` event, which is fired when all data in stream has been flushed into underlying resource.
 
+In Writable, if multiple `write` methods were called, they are queued, and until previous calls complete (their callbacks execute), next ones don't run.
+
 - Example
 
   Note that the response is an object, instance of `http.ServerResponse`, and also a `Writable` stream.
