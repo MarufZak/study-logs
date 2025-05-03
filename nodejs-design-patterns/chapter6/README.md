@@ -124,6 +124,13 @@ Because default operating mode for stream is non-flowing, we can switch to flowi
 
 When working with strings, when pushing data into internal buffer with `push` method, we can specify encoding using which the string is converted into buffer. When client decodes with `read` it needs to convert to string using same encoding type.
 
+Readable's `_read` method is called when first request for the data is done. Request for data can be done in two ways:
+
+- **readable.read()** In this case, nodejs calls `_read` and fills the buffer until its max size is reached.
+- **readable.on("data")** In this case, nodejs indefinitely calls `_read` until stream implementation pushes `null`.
+
+In both cases `_read` method is called after the previous `_read` has pushed some data to the buffer.
+
 Readable streams are also async iterators.
 
 - Example
