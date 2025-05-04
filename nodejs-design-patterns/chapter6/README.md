@@ -124,7 +124,7 @@ Because default operating mode for stream is non-flowing, we can switch to flowi
 
 When working with strings, when pushing data into internal buffer with `push` method, we can specify encoding using which the string is converted into buffer. When client decodes with `read` it needs to convert to string using same encoding type.
 
-It's possible to overwrite `_destroy` method of the readable stream, and possible error is provided as a first, and callback as a second argument. If callback is invoked with error, internally `error` event is also emitted.
+It's possible to overwrite `_destroy` method of the readable stream, and possible error is provided as a first, and callback as a second argument. If callback is invoked with error, internally `error` event is also emitted. Readable stream is destroyed if `null` is pushed to the buffer, and the buffer is emptied.
 
 Readable's `_read` method is called when first request for the data is done. Request for data can be done in two ways:
 
