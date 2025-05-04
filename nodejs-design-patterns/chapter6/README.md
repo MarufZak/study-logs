@@ -124,6 +124,8 @@ Because default operating mode for stream is non-flowing, we can switch to flowi
 
 When working with strings, when pushing data into internal buffer with `push` method, we can specify encoding using which the string is converted into buffer. When client decodes with `read` it needs to convert to string using same encoding type.
 
+It's possible to overwrite `_destroy` method of the readable stream, and possible error is provided as a first, and callback as a second argument. If callback is invoked with error, internally `error` event is also emitted.
+
 Readable's `_read` method is called when first request for the data is done. Request for data can be done in two ways:
 
 - **readable.read()** or **readable.on("readable")** In this case, nodejs calls `_read` and if buffer is not continuously emptied, fills the buffer until its max size is reached.
@@ -709,7 +711,7 @@ Use a PassThrough stream when you need to provide a placeholder for data that wi
 
 Sometimes we want to create a large number of streams to consume later. For example to use [archiver](https://www.npmjs.com/package/archiver) package. The problem is that if we try to open many files with `createReadStream` we would get `EMFILE`, too many open files error. Even though we haven’t used the stream yet, the function triggers opening of file descriptor.
 
-Solution is to use lazy streams, which are created only when they are used. We can use [lazystream](https://www.npmjs.com/package/lazystream) for this. Under the hood it uses proxies for actual stream instances, and proxies instance is not created until it’s used:
+Solution is to use lazy streams, which are created only when they are used. We can use [lazystream](https://www.npmjs.com/package/lazystream) for this. Under the hood it uses proxies for actual stream instances, and proxied instance is not created until it’s used:
 
 ```jsx
 import lazystream from "lazystream";
@@ -730,7 +732,7 @@ Piping two streams creates `suction`, which allows data to flow automatically fr
 
 `pipe` method returns Writable given as an argument. We can chain pipes if this argument is also Readable (such as Transform or Duplex streams).
 
-Writable stream is ended automatically when Readable stream emits an `end` event.
+Writable stream is ended automatically when Readable stream emits an `end` event (unless `end: false` is specified in the options).
 
 ```jsx
 process.stdin.pipe(process.stdout);
