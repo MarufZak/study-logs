@@ -126,7 +126,7 @@ When working with strings, when pushing data into internal buffer with `push` me
 
 Readable's `_read` method is called when first request for the data is done. Request for data can be done in two ways:
 
-- **readable.read()** In this case, nodejs calls `_read` and fills the buffer until its max size is reached.
+- **readable.read()** or **readable.on("readable")** In this case, nodejs calls `_read` and if buffer is not continuously emptied, fills the buffer until its max size is reached.
 - **readable.on("data")** In this case, nodejs indefinitely calls `_read` until stream implementation pushes `null`.
 
 In both cases `_read` method is called after the previous `_read` has pushed some data to the buffer.
@@ -164,7 +164,8 @@ We can implement our own custom readable stream. For this we need to inherit fro
     }
     _read(size) {
       const chunk = chance.string({ length: size });
-      // because we are pushing string, we need to specify encoding
+      // because we are pushing string, we need to specify encoding,
+      // using which it'll be encoded in the stream and decoded in the client.
       this.push(chunk, "utf8");
       this.emittedBytes += chunk.length;
       if (chance.bool({ likelihood: 5 })) {
@@ -178,9 +179,7 @@ We can implement our own custom readable stream. For this we need to inherit fro
   const randomStream = new RandomStream();
   randomStream
     .on("data", (chunk) => {
-      console.log(
-        `Chunk received (${chunk.length} bytes): ${chunk.toString()}`
-      );
+      console.log(`Chunk received (${chunk.length} bytes): ${chunk}`);
     })
     .on("end", () => {
       console.log(`Produced ${randomStream.emittedBytes} bytes of random
