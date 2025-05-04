@@ -187,7 +187,7 @@ We can implement our own custom readable stream. For this we need to inherit fro
     });
   ```
 
-  Fun fact: in the `options`, consumer can pass an option of highWaterMark to limit the size of buffer, but stream can ignore it. Default highWaterMark is 16KB. We can check if buffer is full when `push` method of stream returns `false`.
+  Fun fact: in the `options`, consumer can pass an option of highWaterMark to limit the size of buffer, but stream implementation can ignore it (though internal stream behavior such as buffer filling respects it). Default highWaterMark is 16KB. We can check if buffer is full when `push` method of stream returns `false`.
 
 We can specify the construction of our custom readable stream by passing a `read` method as an option. The behavior is the same as in our previous approach.
 
@@ -501,7 +501,7 @@ To implement transform streams, we need to pass `_transform` and `_flush` method
 
 `_transform` method has practically the same signature as `_write` of writable, but instead of writing it to an underlying resource, it writes it to the internal buffer with `this.push`, from where it’s then read.
 
-`_flush` method is invoked when stream is ready to be closed. It has callback argument, which should be invoked by us (in stream implementation) when all operations are complete. It terminates the stream.
+`_flush` method is invoked when stream is ready to be closed. It's usually implemented when some cleanup is needed, or push final chunks into the buffer. It has callback argument, which should be invoked by us (in stream implementation) when all operations are complete. It terminates the stream.
 
 - Example with class
 
@@ -565,6 +565,7 @@ To implement transform streams, we need to pass `_transform` and `_flush` method
   ```
 
 - Example with data filtering and aggregation
+
   Transform streams are also common when doing data filtering and aggregation. We can implement pipelines to do such operations. In the following example, csvParser is transform stream that reads the csv and transforms it to the rows array.
   `FilterByCountry` stream takes the rows, and iterates, if country is as specified in arg, it pushed it to internal buffer for the next stream to read, if it’s not, it does nothing, and in both those cases it invokes callback that says chunk has been operated.
   `SumProfit` takes all the filtered rows, and sums the profit, and when there is no more data to process, it internally invokes (automatically invoked before the stream is closed) `_flush` that we use to push sum to the internal buffer of that stream.
@@ -638,38 +639,41 @@ createReadStream("./input.txt", { highWaterMark: 1 })
 
 ## PassThrough
 
-There is another type of streams called PassThrough. It receives the chunks and pushes it next in the pipeline without any modification or delay. This behavior can be achieved with transform stream, but in this case we would need to implement write method ourselves. This is what PassThrough stream does for us.
+There is another type of streams called PassThrough, which is technically Transform stream. It receives the chunks and pushes it next in the pipeline without any modification or delay. This behavior can be achieved with transform stream, but in this case we would need to implement `_transform` method ourselves, which would just push the data with specified encoding. This is what PassThrough stream does for us internally.
 
 - Example
 
-  ```jsx
-  import { PassThrough } from "stream";
+This is monitor stream, that can be piped in stream pipeline to monitor how much data is flowed through it.
 
-  let bytesWritten = 0;
+```jsx
+import { PassThrough } from "stream";
 
-  const passThrough = new PassThrough();
-  passThrough.on("data", (chunk) => {
-    bytesWritten += chunk.length;
-  });
-  passThrough.on("finish", () => {
-    console.log(`${bytesWritten} bytes written`);
-  });
+let bytesWritten = 0;
 
-  passThrough.write("hello");
-  passThrough.write("there");
-  passThrough.end();
-  ```
+const passThrough = new PassThrough();
+passThrough.on("data", (chunk) => {
+  bytesWritten += chunk.length;
+});
+passThrough.on("finish", () => {
+  console.log(`${bytesWritten} bytes written`);
+});
+
+passThrough.write("hello");
+passThrough.write("there");
+passThrough.end();
+```
 
 ## Late piping
 
 Let’s suppose we have a function that accepts a Readable stream, and uploads the content to S3:
 
 ```jsx
+import { createReadStream } from "fs";
+
 function upload(filename, contentStream) {
   // ...
 }
 
-import { createReadStream } from "fs";
 upload("a-picture.jpg", createReadStream("path/image.jpg"));
 ```
 
