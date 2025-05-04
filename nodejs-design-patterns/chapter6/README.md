@@ -639,7 +639,7 @@ createReadStream("./input.txt", { highWaterMark: 1 })
 
 ## PassThrough
 
-There is another type of streams called PassThrough. It receives the chunks and pushes it next in the pipeline without any modification or delay. This behaviour can be achieved with transform stream, but in this case we would need to implement write method ourselves. This is what PassThrough stream does for us.
+There is another type of streams called PassThrough. It receives the chunks and pushes it next in the pipeline without any modification or delay. This behavior can be achieved with transform stream, but in this case we would need to implement write method ourselves. This is what PassThrough stream does for us.
 
 - Example
 
@@ -674,7 +674,7 @@ import { createReadStream } from "fs";
 upload("a-picture.jpg", createReadStream("path/image.jpg"));
 ```
 
-But what if we want to make a transformation, for instance, compressing, before pushing to the server? We can do this with placeholder stream, which is done with PassThrough stream. It holds until data arrives, and is not closed until source stream closes.
+But what if we want to make a transformation, for instance, compressing, before pushing to the server and after upload function is called (lazily upload the file, upload whenever we want)? We can do this with placeholder stream, which is done with PassThrough stream. It holds until data arrives, and is not closed until source stream closes.
 
 ```jsx
 import { createReadStream } from "fs";
