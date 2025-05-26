@@ -795,3 +795,44 @@ pipeline(process.stdin, uppercaseStream, process.stdout, (err) => {
   }
 });
 ```
+
+## Sequential execution
+
+Streams can be used not only for I/O, but as an elegant way of programming.
+
+In streams, for example in Transform stream, `_transform` method with next chunk of data is not called until previous is completed (callback is called). This is useful for sequential execution, because we know it's executed in sequence. Consider following example. In this example promise is resolved only when operation completes.
+
+```ts
+import { createReadStream, createWriteStream } from "node:fs";
+import { Readable, Transform } from "node:stream";
+
+export const copy = async (destFilename: string, files: string[]) => {
+  return new Promise((resolve, reject) => {
+    const writeStream = createWriteStream(destFilename);
+
+    const readable = Readable.from(files);
+    const stream = readable.pipe(
+      new Transform({
+        transform(chunk, _, callback) {
+          const src = createReadStream(chunk);
+
+          src.pipe(writeStream, { end: false });
+
+          src.on("end", callback);
+          src.on("error", callback);
+        },
+      })
+    );
+
+    stream.on("error", reject);
+    stream.on("finish", () => {
+      resolve(null);
+      writeStream.end();
+    });
+  });
+};
+
+await copy("destExample.txt", ["example1.txt", "example2.txt"]);
+```
+
+- So the pattern is - use streams, or combination of streams, to iterate over asynchronous set of tasks in sequence.
