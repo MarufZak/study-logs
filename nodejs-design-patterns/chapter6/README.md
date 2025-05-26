@@ -836,3 +836,51 @@ await copy("destExample.txt", ["example1.txt", "example2.txt"]);
 ```
 
 - So the pattern is - use streams, or combination of streams, to iterate over asynchronous set of tasks in sequence.
+
+## Unordered parallel stream
+
+Sometimes sequential execution might not be the best idea, as we are not leveraging concurrency of Node.js. For such cases, we can use unordered parallel execution, but it can be used only when the order of data is not important. We can leverage following class that emits tasks to be executed in parallel.
+
+```js
+import { Transform } from "node:stream";
+
+class ParallelTransform extends Transform {
+  userTransform = null;
+  tasks = 0;
+  terminateFn = null;
+
+  constructor(transform, ...opts) {
+    super({ objectMode: true, ...opts });
+    this.userTransform = transform;
+  }
+
+  _transform(chunk, encoding, callback) {
+    this.tasks++;
+    this.userTransform(
+      chunk,
+      encoding,
+      this.push.bind(this),
+      this._onComplete.bind(this)
+    );
+    callback();
+  }
+
+  _flush(callback) {
+    if (this.tasks > 0) {
+      this.terminateFn = callback;
+    } else {
+      callback();
+    }
+  }
+
+  _onComplete(err) {
+    this.tasks--;
+    if (err) {
+      this.emit("error", err);
+    }
+    if (this.tasks === 0 && this.terminateFn) {
+      this.terminateFn();
+    }
+  }
+}
+```
