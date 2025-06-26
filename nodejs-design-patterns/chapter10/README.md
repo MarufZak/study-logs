@@ -17,3 +17,7 @@ So, bundler takes a file as an entry file and its dependencies, and produces on 
 When entry point file is given to the bundler, it starts to scan it, and build dependency graph. When it sees import, it recursively goes inside and wires up the dependencies. In below images, numbers are steps. The same happens with cyclic dependencies.
 
 ![Dependency resolution](./assets/deps-resolution.png)
+
+Bundler may also perform tree shaking, where unused modules don’t appear in dependency graph, and will not be included in the final bundle. More advanced bundlers may also track exported and imported entities, to exclude single entities that are not imported.
+
+Bundler builds a data structure called “modules map” during dependency resolution. It includes unique module identifiers (file path for example) as keys, and representation of source code as values.
