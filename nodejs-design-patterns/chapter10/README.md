@@ -5,6 +5,7 @@
 - [Runtime code branching](#runtime-code-branching)
 - [Build time code branching](#build-time-code-branching)
 - [Module swapping](#module-swapping)
+- [Design patterns for cross-platform development](#design-patterns-for-cross-platform-development)
 
 These days JS can be used in many applications, starting from the web, servers and ending with drones. These days it’s being very important to share the code between browser and server, making JS universal. You might think that sharing JS engine between browser and server is enough, but it’s not, because different browser users may use older versions of browser with older engines, while it’s ok for server, because we exactly know which Node is running on the server.
 
@@ -158,3 +159,12 @@ plugins: [
   ),
 ];
 ```
+
+## Design patterns for cross-platform development
+
+These design patterns are those we already know about.
+
+1. Strategy and Template. This might be the most important set of design patterns, because it lets us define strategies for platform-specific parts, and having same code for platform-agnostic parts. Strategies can be determined at build time with runtime, build-time code branching, or module swapping.
+2. Adapter. This is useful when swapping entire component. For example when code which works with SQLite works in browser, we might provide an adapter to use browser storages instead.
+3. Proxy. When code intended to be run on server is run on browser, we might want to share functionality in browser too. In this case, for example if we want to access filesystem on the server, we might setup remote proxy (with ajax or websockets) as a way of exchanging commands and return values.
+4. Service Locator and dependency injection. It can be useful when replacing implementation of module at the moment of injection. Packing process in bundling is also about service locator. Require function is service locator, modulesMap is central registry. When we ask for specific module it locates it and executes, we don’t inject any dependencies, we pull them by name.
