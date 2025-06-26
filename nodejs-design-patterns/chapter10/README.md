@@ -3,6 +3,7 @@
 - [Dependency resolution](#dependency-resolution)
 - [Packing](#packing)
 - [Runtime code branching](#runtime-code-branching)
+- [Build time code branching](#build-time-code-branching)
 
 These days JS can be used in many applications, starting from the web, servers and ending with drones. These days it’s being very important to share the code between browser and server, making JS universal. You might think that sharing JS engine between browser and server is enough, but it’s not, because different browser users may use older versions of browser with older engines, while it’s ok for server, because we exactly know which Node is running on the server.
 
@@ -110,3 +111,36 @@ function getControllerModule(controllerName) {
   return import(`./controller/${controllerName}`);
 }
 ```
+
+## Build time code branching
+
+Build time code branching is about replacing some variable with a value. For example, in our sayHello example, this variable can be `__BROWSER__`.
+
+```jsx
+export function sayHello(name) {
+  if (__BROWSER__) {
+    return nunjucks.renderString(template, { name });
+  }
+
+  return `Hello ${name}`;
+}
+```
+
+We can replace it with `DefinePlugin` from webpack, which replaces it at build time. After that, by using terser plugin for webpack, we can perform `dead code elimimition`, which is simply removing unreachable statements. If `__BROWSER__` becomes true, webpack is smart enough to understand that below of that statement is unreachable, so it simply removes it from final bundle. Here is webpack config for this. Production mode enables optimizations, which triggers minimization with terser plugin, which eliminates dead code.
+
+```jsx
+const TerserPlugin = require('terser-webpack-plugin')
+module.exports = {
+	mode: 'production', // ...
+	plugins: [
+	    new webpack.DefinePlugin({
+	      __BROWSER__: true
+		],
+	  optimization: {
+	    minimize: true,
+	    minimizer: [new TerserPlugin()]
+	  }
+}
+```
+
+However it’s still not ideal, because our codebase can become mass of if statements.
