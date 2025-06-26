@@ -21,3 +21,31 @@ When entry point file is given to the bundler, it starts to scan it, and build d
 Bundler may also perform tree shaking, where unused modules don’t appear in dependency graph, and will not be included in the final bundle. More advanced bundlers may also track exported and imported entities, to exclude single entities that are not imported.
 
 Bundler builds a data structure called “modules map” during dependency resolution. It includes unique module identifiers (file path for example) as keys, and representation of source code as values.
+
+```jsx
+{
+	'app.js': (module, require) => {/* ... */},
+	'calculator.js': (module, require) => {/* ... */},
+	'display.js': (module, require) => {/* ... */},
+	'parser.js': (module, require) => {/* ... */},
+	'resolver.js': (module, require) => {/* ... */}
+}
+
+// where calculator.js
+import { parser } from "parser.js"
+import { resolver } from "resolver.js"
+export function calculator(expr){
+	return resolver(parser(expr))
+}
+
+// is turned into
+(module, require) => {
+  const { parser } = require('parser.js')
+  const { resolver } = require('resolver.js')
+  module.exports.calculator = function (expr) {
+    return resolver(parser(expr))
+  }
+}
+```
+
+Note that ESM syntax is converted to something reminding CJS, in real world scenario, every bundler uses its own unique identifiers (for example webpack uses `_webpack_require_` and `_webpack_exports_`)
