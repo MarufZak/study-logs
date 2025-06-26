@@ -30,6 +30,7 @@ Personal notes and key takeaways from the excellent "Node.js Design Patterns" bo
 - [Chapter 8: Structural design patterns](./chapter8/README.md)
 - [Chapter 9: Behavioral design patterns](./chapter9/README.md)
 - [Chapter 10: Universal JavaScript for Web Applications](./chapter10/README.md)
+- [Chapter 11: Advanced recipes](./chapter11/README.md)
 
 </details>
 
