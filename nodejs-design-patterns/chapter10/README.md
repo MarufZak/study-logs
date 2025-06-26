@@ -2,6 +2,7 @@
 
 - [Dependency resolution](#dependency-resolution)
 - [Packing](#packing)
+- [Runtime code branching](#runtime-code-branching)
 
 These days JS can be used in many applications, starting from the web, servers and ending with drones. These days it’s being very important to share the code between browser and server, making JS universal. You might think that sharing JS engine between browser and server is enough, but it’s not, because different browser users may use older versions of browser with older engines, while it’s ok for server, because we exactly know which Node is running on the server.
 
@@ -73,3 +74,39 @@ We already have a modules map, and now what we need to do is convert it to the e
 ```
 
 We declare custom require function, which accepts name of module in the modulesMap, and executes it with newly declared module variable. If the executing module also requires other modules, they will be recursively loaded. After that module exports is returned. Finally we require the entry point for the application so our application is loaded recursively.
+
+## Runtime code branching
+
+Let’s think of library that works in the browser and the server. How we manage this code? Code branching is the way, and one of its technique is runtime code branching. Example:
+
+```jsx
+import nunjucks from "nunjucks";
+const template = "<h1>Hello <i>{{ name }}</i></h1>";
+export function sayHello(name) {
+  if (typeof window !== "undefined" && window.document) {
+    // client-side code
+    return nunjucks.renderString(template, { name });
+  }
+
+  // Node.js code
+  return `Hello ${name}`;
+}
+```
+
+This is intuitive, but has negatives: same code is served to both client and server, so unreachable code is included in the bundle. Server code might have api keys or other things that are not meant to be sent to client. Business logic is mixed with branching logic.
+
+Bundlers have no way of guessing these variables, so dynamic imports using variables are not included in the final bundle:
+
+```jsx
+moduleList.forEach(function (module) {
+  import(module);
+});
+```
+
+However there are some cases where bundlers can guess and include modules in the bundle, like in the following case (webpack):
+
+```jsx
+function getControllerModule(controllerName) {
+  return import(`./controller/${controllerName}`);
+}
+```
