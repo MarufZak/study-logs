@@ -6,6 +6,7 @@
 - [Build time code branching](#build-time-code-branching)
 - [Module swapping](#module-swapping)
 - [Design patterns for cross-platform development](#design-patterns-for-cross-platform-development)
+- [Universal JS application with React](#universal-js-application-with-react)
 
 These days JS can be used in many applications, starting from the web, servers and ending with drones. These days it’s being very important to share the code between browser and server, making JS universal. You might think that sharing JS engine between browser and server is enough, but it’s not, because different browser users may use older versions of browser with older engines, while it’s ok for server, because we exactly know which Node is running on the server.
 
@@ -168,3 +169,9 @@ These design patterns are those we already know about.
 2. Adapter. This is useful when swapping entire component. For example when code which works with SQLite works in browser, we might provide an adapter to use browser storages instead.
 3. Proxy. When code intended to be run on server is run on browser, we might want to share functionality in browser too. In this case, for example if we want to access filesystem on the server, we might setup remote proxy (with ajax or websockets) as a way of exchanging commands and return values.
 4. Service Locator and dependency injection. It can be useful when replacing implementation of module at the moment of injection. Packing process in bundling is also about service locator. Require function is service locator, modulesMap is central registry. When we ask for specific module it locates it and executes, we don’t inject any dependencies, we pull them by name.
+
+## Universal JS application with React
+
+React is introduced, and explained how it works with class components. Then, with webpack as a bundler on the frontend, fastify was introduced for backend APIs. When request is made to a particular page, `StaticRouter` and react’s `renderToString` (the result of which is placed inside html template’s #root element) method are used to server-side render our application. `StaticRouter` accepts context prop, which is then manipulated inside the rendering component itself to get the status of the response (404 for example) and give appropriate http status code. Location prop is also provided to StaticRouter so it takes appropriate component to render. This is how we can server-side our application.
+
+After that some strategies were shown how to retrieve data in our server and render with it. If we have loading spinner logic in our app, server-side rendered app has loading spinner when client receives it. To avoid it `two-pass rendering` technique is introduced, in which for the first render promises with data retrieval are attached router static context, and server waits for them, again makes render with `renderToString` and this time server-side rendered app has all the data it needs in static context, which is used to render app with data. Sometimes inner components might also have to pre-load data, so multiple rendering passes might be needed, which is called `multi-pass rendering`. Big disadvantage is that this technique comes with its cost, and the whole process of server-side rendering might be very slow.
