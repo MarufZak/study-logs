@@ -1,6 +1,7 @@
 # Advanced recipes
 
 - [Asynchronously initialized components](#asynchronously-initialized-components)
+- [Asynchronous request batching and caching](#asynchronous-request-batching-and-caching)
 
 ## Asynchronously initialized components
 
@@ -195,3 +196,9 @@ export const db = new DB();
   ```
 
 The approach of pre-initialization queue is used in [Mongoose](https://github.com/Automattic/mongoose/blob/321995d769ff085aa0a4553b2befb012eb2c11c8/lib/drivers/node-mongodb-native/collection.js#L141) and [Pg](https://github.com/brianc/node-postgres/blob/2013d77b28be5a0d563addb1852eb97e9693e452/packages/pg/lib/client.js#L549) packages.
+
+## Asynchronous request batching and caching
+
+Caching is involved in many applications. Consider a case when a request is made to the server, async operation happen. When multiple identical requests are made, async operation executes multiple times.
+
+![Screenshot 2025-06-25 at 06.43.46.png](attachment:185af50a-46d1-4fc2-9ede-c29f4b3cc3fe:Screenshot_2025-06-25_at_06.43.46.png)
