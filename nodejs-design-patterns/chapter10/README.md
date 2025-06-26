@@ -1,6 +1,7 @@
 # Universal JavaScript for Web Applications
 
 - [Dependency resolution](#dependency-resolution)
+- [Packing](#packing)
 
 These days JS can be used in many applications, starting from the web, servers and ending with drones. These days it’s being very important to share the code between browser and server, making JS universal. You might think that sharing JS engine between browser and server is enough, but it’s not, because different browser users may use older versions of browser with older engines, while it’s ok for server, because we exactly know which Node is running on the server.
 
@@ -49,3 +50,26 @@ export function calculator(expr){
 ```
 
 Note that ESM syntax is converted to something reminding CJS, in real world scenario, every bundler uses its own unique identifiers (for example webpack uses `_webpack_require_` and `_webpack_exports_`)
+
+## Packing
+
+We already have a modules map, and now what we need to do is convert it to the executable browser can run. This can be done with wrapper function for modules map:
+
+```jsx
+((modulesMap) => {
+  const require = (name) => {
+    const module = { exports: {} };
+    modulesMap[name](module, require);
+    return module.exports;
+  };
+  require("app.js");
+})({
+  "app.js": (module, require) => {},
+  "calculator.js": (module, require) => {},
+  "display.js": (module, require) => {},
+  "parser.js": (module, require) => {},
+  "resolver.js": (module, require) => {},
+});
+```
+
+We declare custom require function, which accepts name of module in the modulesMap, and executes it with newly declared module variable. If the executing module also requires other modules, they will be recursively loaded. After that module exports is returned. Finally we require the entry point for the application so our application is loaded recursively.
