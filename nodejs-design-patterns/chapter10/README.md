@@ -4,6 +4,7 @@
 - [Packing](#packing)
 - [Runtime code branching](#runtime-code-branching)
 - [Build time code branching](#build-time-code-branching)
+- [Module swapping](#module-swapping)
 
 These days JS can be used in many applications, starting from the web, servers and ending with drones. These days it’s being very important to share the code between browser and server, making JS universal. You might think that sharing JS engine between browser and server is enough, but it’s not, because different browser users may use older versions of browser with older engines, while it’s ok for server, because we exactly know which Node is running on the server.
 
@@ -144,3 +145,16 @@ module.exports = {
 ```
 
 However it’s still not ideal, because our codebase can become mass of if statements.
+
+## Module swapping
+
+Another way to separate the code we write into platforms is module swapping. It’s about replacing imported modules at build time. Assuming we have a script that imports `src/say-hello.js`, and files `say-hello-server.js` and `say-hello-browser.js`, we can match it with regex and replace with second argument given to `webpack.NormalModuleReplacementPlugin`.
+
+```jsx
+plugins: [
+  new webpack.NormalModuleReplacementPlugin(
+    /src\/say-hello\.js$/,
+    path.resolve(__dirname, "src", "say-hello-browser.js")
+  ),
+];
+```
