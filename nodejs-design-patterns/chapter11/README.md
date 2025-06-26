@@ -206,3 +206,14 @@ Caching is involved in many applications. Consider a case when a request is made
 Request batching refers to appending identical request to clients queue, executing async operation only once, and notify all the clients with the result.
 
 ![Request batching](./assets/request-batching.png)
+
+Assuming content doesn’t change so often, request batching might not be effective if async operation is fast, or when clients send request in a long time distance from each other. In such cases, caching comes into scene.
+
+Request batching is effective in high-load applications with slow APIs.
+
+There are many types of caching, but the idea is same. We cache a result, and return it. If multiple identical requests are made, cache is set multiple times. The idea is to batch requests until the cache is set up, set the cache only once, and serve cached result when it’s done. Note to asynchronously return cached result to prevent Zalgo, even if the operation is synchronous.
+
+![Request batching caching](./assets/request-batching-caching.png)
+
+- The source code with example program utilizing request batching and caching, with load testing and db population scripts
+  [ts.zip](./assets/ts.zip)
