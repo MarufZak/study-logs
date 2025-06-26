@@ -201,4 +201,8 @@ The approach of pre-initialization queue is used in [Mongoose](https://github.co
 
 Caching is involved in many applications. Consider a case when a request is made to the server, async operation happen. When multiple identical requests are made, async operation executes multiple times.
 
-![Screenshot 2025-06-25 at 06.43.46.png](attachment:185af50a-46d1-4fc2-9ede-c29f4b3cc3fe:Screenshot_2025-06-25_at_06.43.46.png)
+![Request flow](./assets/simple-request-flow.png)
+
+Request batching refers to appending identical request to clients queue, executing async operation only once, and notify all the clients with the result.
+
+![Request batching](./assets/request-batching.png)
