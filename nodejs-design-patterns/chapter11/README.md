@@ -2,6 +2,7 @@
 
 - [Asynchronously initialized components](#asynchronously-initialized-components)
 - [Asynchronous request batching and caching](#asynchronous-request-batching-and-caching)
+- [Cancelling asynchronous operations](#cancelling-asynchronous-operations)
 
 ## Asynchronously initialized components
 
@@ -217,3 +218,7 @@ There are many types of caching, but the idea is same. We cache a result, and re
 
 - The source code with example program utilizing request batching and caching, with load testing and db population scripts
   [ts.zip](./assets/ts.zip)
+
+## Cancelling asynchronous operations
+
+Note that this is not about cancelling promises, it’s about cancelling underlying asynchronous operation. In fact, Promise/A+ spec doesn’t define any way to cancel a promise.
