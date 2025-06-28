@@ -240,3 +240,43 @@ Note that this is not about cancelling promises, it’s about cancelling underly
     await wait(1000);
   }
   ```
+
+- Another slightly better approach is to user cancellable wrapper
+  Note that we return a promise in order to prevent Zalgo problem.
+
+  ```jsx
+  function createCancellableWrapper() {
+    let isCancelled = false;
+
+    const cancel = () => {
+      isCancelled = true;
+    };
+
+    const cancelableWrapper = (func, ...args) => {
+      if (isCancelled) {
+        return Promise.reject(new CancelError());
+      }
+
+      return func(...args);
+    };
+
+    return { cancelableWrapper, cancel };
+  }
+
+  async function cancellable(cancellableWrapper) {
+    await cancellableWrapper(wait, 1000);
+    await cancellableWrapper(wait, 1000);
+  }
+
+  const { cancelableWrapper, cancel } = createCancellableWrapper();
+
+  cancellable(cancelableWrapper).catch((err) => {
+    if (err instanceof CancelError) {
+      console.log("Operation cancelled");
+    }
+  });
+
+  setTimeout(() => {
+    cancel();
+  }, 1000);
+  ```
