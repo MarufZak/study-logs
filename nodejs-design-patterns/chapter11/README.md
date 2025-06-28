@@ -222,3 +222,21 @@ There are many types of caching, but the idea is same. We cache a result, and re
 ## Cancelling asynchronous operations
 
 Note that this is not about cancelling promises, it’s about cancelling underlying asynchronous operation. In fact, Promise/A+ spec doesn’t define any way to cancel a promise.
+
+- Basic recipe is to check whether a specific value is set to true, and then throw an error
+
+  ```jsx
+  async function cancellable(params) {
+    if (params.isCancelled) {
+      throw new CancelError();
+    }
+
+    await wait(1000);
+
+    if (params.isCancelled) {
+      throw new CancelError();
+    }
+
+    await wait(1000);
+  }
+  ```
