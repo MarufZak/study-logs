@@ -280,3 +280,64 @@ Note that this is not about cancelling promises, it’s about cancelling underly
     cancel();
   }, 1000);
   ```
+
+- The most complicated but rewarding approach is with using generators
+  We can see that `await` is replaced with `yield`, and there is no cancellation logic in the body of the function. It’s also interesting that cancellable returns a promise, which can be used to inspect the result of asynchronous operation.
+  The function that is passed to factory function is called supervised function.
+
+  ```jsx
+  function createCancellable(generatorFn) {
+    return (...args) => {
+      const generator = generatorFn(...args);
+      let isCancelRequested = false;
+
+      const cancel = () => {
+        isCancelRequested = true;
+      };
+
+      const promise = new Promise((resolve, reject) => {
+        const nextStep = async (prevValue) => {
+          if (isCancelRequested) {
+            throw new CancelError();
+          }
+
+          if (prevValue.done) {
+            return resolve(prevValue.value);
+          }
+
+          try {
+            nextStep(generator.next(await prevValue.value));
+          } catch (error) {
+            try {
+              nextStep(generator.throw(error));
+            } catch (err) {
+              reject(err);
+            }
+          }
+        };
+
+        nextStep({});
+      });
+
+      return { promise, cancel };
+    };
+  }
+
+  const cancellable = createCancellable(function* () {
+    yield wait(1000);
+    yield wait(1000);
+    yield wait(1000);
+  });
+
+  const { promise, cancel } = cancellable();
+
+  promise.catch((err) => {
+    if (err instanceof CancelError) {
+      console.log("Operation cancelled");
+    }
+  });
+
+  setTimeout(() => {
+    cancel();
+  }, 1000);
+  ```
