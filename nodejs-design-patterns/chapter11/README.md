@@ -361,7 +361,7 @@ If microtask queue callbacks re-fills itself (for example `process.nextTick()` s
 
 Just reminder, event loop queues are checked only when callstack is empty.
 
-### CPU bound tasks
+### CPU bound task
 
 Image a program that takes a set of numbers, and desired sum. It combines all possibles combinations of elements, and if the sum of them is equal to given sum, it outputs it. This program would have O(2^N) time complexity. This task would be synchronous, and it would be heavy on CPU utilization rather than processing I/O.
 
@@ -431,3 +431,60 @@ Image a program that takes a set of numbers, and desired sum. It combines all po
   ```
 
 If we start the server, give it a set of 30 elements, it takes a while to process. Meanwhile, if we send another request to another pathname, it doesn’t reply, our server hangs, because it is synchronously processing the first request.
+
+### Interleaving approach
+
+Well, optimization needed. We can to yield (give control) to the main thread. Every synchronous task consists of steps. We can yield to the main thread after each step in order to let it process pending I/O. This can be done with `setImmediate` (though it’s highly discouraged from MDN).
+
+- Program code
+  The code has changed, we now store the number of running operations of processing subsets, because the processing is asynchronous now. Combination of subset is now defined as a step, and we schedule this callback with `setImmediate`, which would run after any I/O in event loop phases.
+
+  ```jsx
+  // subsetSumDefer.js
+
+  import { EventEmitter } from "events";
+
+  export class SubsetSum extends EventEmitter {
+    constructor(sum, set) {
+      super();
+      this.sum = sum;
+      this.set = set;
+      this.totalSubsets = 0;
+    }
+
+    _combineInterleaved(set, subset) {
+      this.runningCombine++;
+      setImmediate(() => {
+        this._combine(set, subset);
+        if (--this.runningCombine === 0) {
+          this.emit("end");
+        }
+      });
+    }
+
+    _combine(set, subset) {
+      for (let i = 0; i < set.length; i++) {
+        const newSubset = subset.concat(set[i]);
+        this._combineInterleaved(set.slice(i + 1), newSubset);
+        this._processSubset(newSubset);
+      }
+    }
+
+    _processSubset(subset) {
+      console.log("Subset", ++this.totalSubsets, subset);
+      const res = subset.reduce((prev, item) => prev + item, 0);
+      if (res === this.sum) {
+        this.emit("match", subset);
+      }
+    }
+
+    start() {
+      this.runningCombine = 0;
+      this._combineInterleaved(this.set, []);
+    }
+  }
+  ```
+
+Now, when we request another pathname while server is processing subsets, we get a response. This approach is not ideal, because delaying execution of step, multiplied to the number of steps, might cause huge delays in processing time. Also, if the step takes too long to process, this approach is inefficient.
+
+Also note that scheduling the next step with `process.nextTick()` would cause the pending I/O to starve, because its callback is added to the microtask queue as prioritized task. This queue is drained before and after each phase, including poll phase.
