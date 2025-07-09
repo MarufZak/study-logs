@@ -5,6 +5,9 @@
 - [Cancelling asynchronous operations](#cancelling-asynchronous-operations)
 - [Event loop in NodeJS](#event-loop-in-nodejs)
 - [CPU bound tasks](#cpu-bound-tasks)
+  - [Interleaving approach](#interleaving-approach)
+  - [Multi-process approach](#multi-process-approach)
+  - [Worker threads approach](#working-threads-approach)
 
 ## Asynchronously initialized components
 
@@ -625,4 +628,124 @@ When we run our server and make requests to it with large subset, and when compu
       worker.on("message", handleMessage);
     }
   }
+  ```
+
+### Working threads approach
+
+There is also another way to execute synchronous tasks, in separate thread, instead of separate process. Thread is lightweight alternative of a process. Threads in javascript cannot be deeply synchronized, because javascript with full-capacity threads wouldn’t be javascript. Nevertheless, data transfer capabilities and communication channels are still available between main thread and worker tread. Worker thread run their own V8 instance, independent NodeJS runtime and event loop.
+
+Worker threads have some identical APIs as to child process, so the changes to our code would be minimal.
+
+- Program
+
+  ```jsx
+  // threadPool.js
+  import { Worker } from "node:worker_threads";
+
+  export class ThreadPool {
+    active = [];
+    waiting = [];
+    pool = [];
+    file = "";
+    maxPool = 0;
+
+    constructor(file, maxPool) {
+      this.file = file;
+      this.maxPool = maxPool;
+    }
+
+    acquire() {
+      return new Promise((resolve, reject) => {
+        if (this.pool.length > 0) {
+          const worker = this.pool.pop();
+          this.active.push(worker);
+          resolve(worker);
+          return;
+        }
+
+        if (this.active.length >= this.maxPool) {
+          this.waiting.push({ resolve, reject });
+          return;
+        }
+
+        const worker = new Worker(this.file, {
+          stdout: false,
+        });
+
+        worker.once("online", () => {
+          this.active.push(worker);
+          resolve(worker);
+        });
+
+        worker.once("exit", (code) => {
+          console.log("Thread exited with code", code);
+          this.active = this.active.filter((w) => w !== worker);
+          this.pool = this.pool.filter((w) => w !== worker);
+        });
+      });
+    }
+
+    release(worker) {
+      if (this.waiting.length > 0) {
+        const { resolve } = this.waiting.pop();
+        resolve(worker);
+        return;
+      }
+
+      this.active = this.active.filter((w) => w !== worker);
+      this.pool = this.pool.filter((w) => w !== worker);
+    }
+  }
+
+  // subsetSumThread.js
+  import EventEmitter from "node:events";
+  import { ThreadPool } from "./threadPool.js";
+
+  const threadPool = new ThreadPool("./threads/thread.js", 2);
+
+  export class SubsetSumThread extends EventEmitter {
+    sum = 0;
+    set = [];
+
+    constructor(sum, set) {
+      super();
+      this.sum = sum;
+      this.set = set;
+    }
+
+    async start() {
+      const worker = await threadPool.acquire();
+      worker.postMessage({ sum: this.sum, set: this.set });
+
+      const handleMessage = (message) => {
+        if (message.event === "end") {
+          threadPool.release(worker);
+          worker.removeListener("message", handleMessage);
+        }
+
+        this.emit(message.event, message.data);
+      };
+
+      worker.on("message", handleMessage);
+    }
+  }
+
+  // threads/thread.js
+  import { parentPort } from "node:worker_threads";
+  import { SubsetSum } from "../subsetSum.js";
+
+  parentPort.on("message", (message) => {
+    const { sum, set } = message;
+    const subset = new SubsetSum(sum, set);
+
+    subset.on("match", (matchedSubset) => {
+      parentPort.postMessage({ event: "match", data: matchedSubset });
+    });
+
+    subset.on("end", () => {
+      parentPort.postMessage({ event: "end" });
+    });
+
+    subset.start();
+  });
   ```
