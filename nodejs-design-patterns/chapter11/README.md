@@ -3,6 +3,7 @@
 - [Asynchronously initialized components](#asynchronously-initialized-components)
 - [Asynchronous request batching and caching](#asynchronous-request-batching-and-caching)
 - [Cancelling asynchronous operations](#cancelling-asynchronous-operations)
+- [Event loop in NodeJS](#event-loop-in-nodejs)
 
 ## Asynchronously initialized components
 
@@ -341,3 +342,20 @@ Note that this is not about cancelling promises, it’s about cancelling underly
     cancel();
   }, 1000);
   ```
+
+## Event loop in NodeJS
+
+Not from book. Just observed that event loop works differently in NodeJS. While in browser event loop checks for microtask and macrotask queues, in NodeJS there are many other queues to be checked. They include (in order of execution):
+
+1. Timers (setTimeout or setInterval)
+2. Pending callbacks. I/O callbacks that were deferred to the next loop iteration, mostly low-level callbacks from C++ layer or libuv, such as TCP socket errors.
+3. Idle, Prepare. Internal phase for NodeJS, isn’t interacted directly.
+4. Poll. Main phase for I/O. Here I/O callbacks are executed. The queue is not fully emptied if there is callback ready to be fired in the next phase.
+5. Check. Executes setImmediate function callback.
+6. Close. Callbacks of resources to be closed, like socket.destroy(), process.exit(), socket.end().
+
+Now, there is also microtask queue, it’s not separate phase. This queue includes callbacks from `process.nextTick()` and promise callbacks. This queue is emptied before and after each phase. Callback scheduled with `process.nextTick()` take priority over other microtask callbacks.
+
+If microtask queue callbacks re-fills itself (for example `process.nextTick()` scheduling another `process.nextTick()` callback), it causes I/O starvation.
+
+Just reminder, event loop queues are checked only when callstack is empty.
