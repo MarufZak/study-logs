@@ -4,6 +4,7 @@
 - [Asynchronous request batching and caching](#asynchronous-request-batching-and-caching)
 - [Cancelling asynchronous operations](#cancelling-asynchronous-operations)
 - [Event loop in NodeJS](#event-loop-in-nodejs)
+- [CPU bound tasks](#cpu-bound-tasks)
 
 ## Asynchronously initialized components
 
@@ -359,3 +360,74 @@ Now, there is also microtask queue, it’s not separate phase. This queue includ
 If microtask queue callbacks re-fills itself (for example `process.nextTick()` scheduling another `process.nextTick()` callback), it causes I/O starvation.
 
 Just reminder, event loop queues are checked only when callstack is empty.
+
+### CPU bound tasks
+
+Image a program that takes a set of numbers, and desired sum. It combines all possibles combinations of elements, and if the sum of them is equal to given sum, it outputs it. This program would have O(2^N) time complexity. This task would be synchronous, and it would be heavy on CPU utilization rather than processing I/O.
+
+- Program code
+  Here we create a server that takes the search params as input. If the pathname is not “/subsetSum”, it immediately replies. This is needed to check if server can process requests asynchronously.
+  If not, it starts processing subsets, and write to socket when there is a match.
+
+  ```jsx
+  // server.js
+  import { createServer } from "http";
+  import { SubsetSum } from "./subsetSum.js";
+
+  createServer((req, res) => {
+    const url = new URL(req.url, "http://localhost");
+    if (url.pathname !== "/subsetSum") {
+      res.writeHead(200);
+      return res.end("I'm alive!\n");
+    }
+
+    const data = JSON.parse(url.searchParams.get("data"));
+    const sum = JSON.parse(url.searchParams.get("sum"));
+    res.writeHead(200);
+    const subsetSum = new SubsetSum(sum, data);
+    subsetSum.on("match", (match) => {
+      res.write(`Match: ${JSON.stringify(match)}\n`);
+    });
+    subsetSum.on("end", () => res.end("ended"));
+    subsetSum.start();
+  }).listen(8000, () => console.log("Server started"));
+  ```
+
+  Here we process all possible subsets, and emit match event on match, and end event when completed processing.
+
+  ```jsx
+  // subsetSum.js
+  import { EventEmitter } from "events";
+
+  export class SubsetSum extends EventEmitter {
+    constructor(sum, set) {
+      super();
+      this.sum = sum;
+      this.set = set;
+      this.totalSubsets = 0;
+    }
+
+    _combine(set, subset) {
+      for (let i = 0; i < set.length; i++) {
+        const newSubset = subset.concat(set[i]);
+        this._combine(set.slice(i + 1), newSubset);
+        this._processSubset(newSubset);
+      }
+    }
+
+    _processSubset(subset) {
+      console.log("Subset", ++this.totalSubsets, subset);
+      const res = subset.reduce((prev, item) => prev + item, 0);
+      if (res === this.sum) {
+        this.emit("match", subset);
+      }
+    }
+
+    start() {
+      this._combine(this.set, []);
+      this.emit("end");
+    }
+  }
+  ```
+
+If we start the server, give it a set of 30 elements, it takes a while to process. Meanwhile, if we send another request to another pathname, it doesn’t reply, our server hangs, because it is synchronously processing the first request.
