@@ -488,3 +488,141 @@ Well, optimization needed. We can to yield (give control) to the main thread. Ev
 Now, when we request another pathname while server is processing subsets, we get a response. This approach is not ideal, because delaying execution of step, multiplied to the number of steps, might cause huge delays in processing time. Also, if the step takes too long to process, this approach is inefficient.
 
 Also note that scheduling the next step with `process.nextTick()` would cause the pending I/O to starve, because its callback is added to the microtask queue as prioritized task. This queue is drained before and after each phase, including poll phase.
+
+### Multi-process approach
+
+- NodeJS child processes
+  Child processes are created with `spawn` function from `child_process` module. It behaves like `popen` (uses fork internally) in standard C library, but with more abilities. It pipes readable streams to stdout and stderr, and writable stream to stdin.
+  As we know, pipes use buffers internally, which is written into and read from. This buffer size depends on OS, but when it fills up, process writing to the buffer blocks, until reader reads and free ups the space. We can pass option of `stdio` to `spawn`, and specify it as `ignore`, which causes all output to be written to `/dev/null`
+  There are other alternatives to `spawn` for different behavior, built on top of `spawn`.
+
+Another way to optimize our program is to use another processes. NodeJS is the best when dealing with I/O, and it’s asynchronous nature makes it great for such tasks. But synchronous operations can block I/O, so we can leave sync work to another processes. This lets the program to run at its full capacity, and we don’t need refactoring as in interleaving approach.
+
+This approach also has no performance penalty, compared to interleaving approach. We can also take advantage of multi-core architectures in our machines.
+
+First of all we implement process pool. It creates given max number of processes when requested, and keep them alive. When requested to release the process, it is queued to the waiting list, until next time it’s requested. We communicate through built-in interface provided by `fork` function. If we have our child processes made with other languages and compiled, we can create our own interface for communication.
+
+Next we implement a worker, that synchronously executes subset sum and sends the result to the parent process when matched, and sends `end` event when completed.
+
+After that we implement SubsetSumFork class, that utilizes the process pool and worker. It has the same interface as our old SubsetSum class.
+
+When we run our server and make requests to it with large subset, and when computing make another request to another route, we can see that the route is alive.
+
+- Program
+
+  ```jsx
+  // processPool.js
+  import { fork } from "node:child_process";
+
+  export class ProcessPool {
+    active = [];
+    waiting = [];
+    pool = [];
+    file = "";
+    maxPool = 0;
+
+    constructor(file, maxPool) {
+      this.file = file;
+      this.maxPool = maxPool;
+    }
+
+    acquire() {
+      return new Promise((resolve, reject) => {
+        if (this.pool.length > 0) {
+          const worker = this.pool.pop();
+          this.active.push(worker);
+          resolve(worker);
+          return;
+        }
+
+        if (this.active.length >= this.maxPool) {
+          this.waiting.push({ resolve, reject });
+          return;
+        }
+
+        const worker = fork(this.file);
+
+        worker.once("message", (message) => {
+          if (message === "ready") {
+            this.active.push(worker);
+            resolve(worker);
+            return;
+          }
+
+          worker.kill();
+          reject(new Error("Worker unexpectedly exited"));
+        });
+
+        worker.once("exit", (code) => {
+          console.log("Process exited with code", code);
+          this.active = this.active.filter((w) => w !== worker);
+          this.pool = this.pool.filter((w) => w !== worker);
+        });
+      });
+    }
+
+    release(worker) {
+      if (this.waiting.length > 0) {
+        const { resolve } = this.waiting.pop();
+        resolve(worker);
+        return;
+      }
+
+      this.active = this.active.filter((w) => w !== worker);
+      this.pool = this.pool.filter((w) => w !== worker);
+    }
+  }
+
+  // workers/worker.js
+  import { SubsetSum } from "../subsetSum.js";
+
+  process.on("message", (message) => {
+    const { sum, set } = message;
+    const subset = new SubsetSum(sum, set);
+
+    subset.on("match", (matchedSubset) => {
+      process.send({ event: "match", data: matchedSubset });
+    });
+
+    subset.on("end", () => {
+      process.send({ event: "end" });
+    });
+
+    subset.start();
+  });
+
+  process.send("ready");
+
+  // subsetSumFork.js
+  import EventEmitter from "node:events";
+  import { ProcessPool } from "./processPool.js";
+
+  const processPool = new ProcessPool("./workers/worker.js", 2);
+
+  export class SubsetSumFork extends EventEmitter {
+    sum = 0;
+    set = [];
+
+    constructor(sum, set) {
+      super();
+      this.sum = sum;
+      this.set = set;
+    }
+
+    async start() {
+      const worker = await processPool.acquire();
+      worker.send({ sum: this.sum, set: this.set });
+
+      const handleMessage = (message) => {
+        if (message.event === "end") {
+          processPool.release(worker);
+          worker.removeListener("message", handleMessage);
+        }
+
+        this.emit(message.event, message.data);
+      };
+
+      worker.on("message", handleMessage);
+    }
+  }
+  ```
