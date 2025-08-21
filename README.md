@@ -13,6 +13,7 @@ The repository is organized into different folders, each representing a specific
 - **`total-typescript`** — My notes and takeaways from the TotalTypeScript workshops series by Matt Pocock.
 - **`nodejs-design-patterns`** — My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro and Luciano Mammino.
 - **`understanding-linux-kernel`** — My notes and takeaways from the Understanding Linux Kernel book by Daniel P. Bovet and Marco Cesati.
+- **`data-structures-algorithms`** — My notes and takeaways about data structures and algorithms, including some implementations in typescript.
 
 > **Note**: This list will grow as I continue my learning journey. Feel free to explore the folders to see detailed notes on each subject. If anything is unclear or you have questions, feel free to open an issue or reach out to me directly.
 
