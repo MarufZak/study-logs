@@ -4,7 +4,7 @@
 - [Asynchronous request batching and caching](#asynchronous-request-batching-and-caching)
 - [Cancelling asynchronous operations](#cancelling-asynchronous-operations)
 - [Event loop in NodeJS](#event-loop-in-nodejs)
-- [CPU bound tasks](#cpu-bound-tasks)
+- [CPU bound tasks](#cpu-bound-task)
   - [Interleaving approach](#interleaving-approach)
   - [Multi-process approach](#multi-process-approach)
   - [Worker threads approach](#working-threads-approach)
