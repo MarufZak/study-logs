@@ -112,3 +112,41 @@ Scalability is also about high-availability. The property of keeping certain lev
     // ...
   }
   ```
+
+Sometimes we want to update our application and deploy to server. In this case, there is still small window gap when our service is not available.
+
+- We can use `cluster` module to make `zero-downtime` restarts.
+  In this case, we restart the workers one by one. We first disconnect and wait for exit event, spawn another worker and wait when it starts to listen, and after that start processing next worker.
+  With 200 concurrent requests for 10 seconds, the availability of the application was 99.7%
+
+  ```jsx
+  import cluster from "cluster";
+  import { cpus } from "os";
+  import http from "http";
+  import { once } from "events";
+
+  const { pid } = process;
+
+  if (cluster.isPrimary) {
+    process.on("SIGUSR2", async () => {
+      const workers = Object.values(cluster.workers);
+
+      for (let i = 0; i < workers.length; i++) {
+        const worker = workers[i];
+        console.log(`Stopping worker with pid ${worker.process.pid}`);
+
+        worker.disconnect();
+        await once(worker, "exit");
+
+        if (!worker.exitedAfterDisconnect) continue;
+
+        const newWorker = cluster.fork();
+        await once(newWorker, "listening");
+      }
+    });
+
+    // ...
+  } else {
+    // ...
+  }
+  ```
