@@ -29,3 +29,50 @@ When we use `cluster` module, `server.listen` from worker process is delegated t
 1. When using specific file descriptor to listen (`server.listen({fd: 14})`). In this case, because file descriptors table differ for each process. When we listen with file descriptor in worker process, the master process doesn’t have same FD number (which is basically index in FD table) mapped to the same file. To overcome this, we can create file descriptor in master and pass to worker. This way worker uses FD which is known for master. (Side note: it’s possible that in worker process, the FD table entry is created, but underlying kernel object is same, though index might differ).
 2. `server.listen(handle)` prevents the worker from delegating this to parent.
 3. `server.listen(0)` causes server to listen on random port every time. The difference when using master process is first port is random, but next ones are incremented.
+
+- We can create simple http server and make a load balancing with `autocannon` package.
+  200 concurrent connections for 10 seconds resulted in average of 350ms.
+
+  ```jsx
+  const server = http.createServer((req, res) => {
+    for (let i = 0; i < 1e7; i++) {}
+
+    res.end(`Hello from worker: ${pid}`);
+  });
+
+  server.listen(8000, () => {
+    console.log("Started server with pid", pid);
+  });
+  ```
+
+- And with `cluster` module.
+  200 concurrent connections for 10 seconds resulted in average of 50ms of response time. Mac M3 Pro, 12 cores.
+  In this code, when we `cluster.fork`, the same module is re-run as a separate process, but in worker mode, with `cluster.isWorker` set to `true`. Note that separate process has its own event loop, memory, and modules loaded. `cluster.fork` uses `child_process.fork()` under the hood, so it’s possible to communicate with worker process via communication channel.
+
+  ```jsx
+  import cluster from "cluster";
+  import { cpus } from "os";
+  import http from "http";
+
+  const { pid } = process;
+
+  if (cluster.isPrimary) {
+    const cpusNumber = cpus().length;
+
+    console.log("Clustering to CPUs:", cpusNumber);
+
+    for (let i = 0; i < cpusNumber; i++) {
+      cluster.fork();
+    }
+  } else {
+    const server = http.createServer((req, res) => {
+      for (let i = 0; i < 1e7; i++) {}
+
+      res.end(`Hello from worker: ${pid}`);
+    });
+
+    server.listen(8000, () => {
+      console.log("Started server with pid", pid);
+    });
+  }
+  ```
