@@ -23,3 +23,9 @@ In NodeJS, applications are scaled sooner compared to others, NodeJS is single-t
 Simple pattern in NodeJS for scaling the application is `cluster` native module. It lets us define the master process, and spawn worker processes. Master process distributes the load into the worker processes with Round-Robin algorithm, but a little smarter. It’s default scheduling algorithm in all OSs except Windows. In Windows it should be assigned explicitly.
 
 ![Cluster module](./assets/cluster.png)
+
+When we use `cluster` module, `server.listen` from worker process is delegated to the master process. This delegation is simple, but sometimes it might not behave how we might expect:
+
+1. When using specific file descriptor to listen (`server.listen({fd: 14})`). In this case, because file descriptors table differ for each process. When we listen with file descriptor in worker process, the master process doesn’t have same FD number (which is basically index in FD table) mapped to the same file. To overcome this, we can create file descriptor in master and pass to worker. This way worker uses FD which is known for master. (Side note: it’s possible that in worker process, the FD table entry is created, but underlying kernel object is same, though index might differ).
+2. `server.listen(handle)` prevents the worker from delegating this to parent.
+3. `server.listen(0)` causes server to listen on random port every time. The difference when using master process is first port is random, but next ones are incremented.
