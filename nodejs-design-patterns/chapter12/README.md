@@ -1,5 +1,7 @@
 # Chapter 12: Scalability and Architectural Patterns
 
+- [Cluster](#cluster)
+
 When JavaScript was created, it was perfect for distributed systems because of its non-blocking behavior. Ranging from a few nodes to thousands, communicating with each other over the network.
 
 NodeJS is single-threaded, so it might not utilize all the capacity of multi-core machine, but this is one side of coin. In reality, scalability doesn’t only refer to increasing capacity of machine and handling more requests faster, but also high availability, and fault-tolerance. Breaking the code in multiple components can also be considered as scalability strategy in terms of development.
@@ -15,3 +17,9 @@ When talking about scalability, the first principle is about three dimensions sc
    Z-scaling is very complex, so should be considered only after X and Y axes are fully exploited.
 
 In NodeJS, applications are scaled sooner compared to others, NodeJS is single-threaded. But it’s not disadvantage, because scaling is not only about resources and computing power, but also about fault-tolerance and high availability. Also, this makes NodeJS developers to consider scalability in early stages of development, for example not using process memory, and share common information among the processes (let’s say user session) in database.
+
+## Cluster
+
+Simple pattern in NodeJS for scaling the application is `cluster` native module. It lets us define the master process, and spawn worker processes. Master process distributes the load into the worker processes with Round-Robin algorithm, but a little smarter. It’s default scheduling algorithm in all OSs except Windows. In Windows it should be assigned explicitly.
+
+![Cluster module](./assets/cluster.png)
