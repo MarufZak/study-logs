@@ -5,3 +5,11 @@ When JavaScript was created, it was perfect for distributed systems because of i
 NodeJS is single-threaded, so it might not utilize all the capacity of multi-core machine, but this is one side of coin. In reality, scalability doesn’t only refer to increasing capacity of machine and handling more requests faster, but also high availability, and fault-tolerance. Breaking the code in multiple components can also be considered as scalability strategy in terms of development.
 
 Because NodeJS is single-threaded, the only way to scale it is to distribute it over multiple instances and machines. But with this, we also get higher availability and fault tolerance of the application.
+
+When talking about scalability, the first principle is about three dimensions scaling.
+
+1. X dimension - cloning the application. It’s the easiest one. It’s about cloning the application into N processes and machines, and letting each instance handle 1/Nth of the workload.
+2. Y dimension - decomposing by functionality, breaking it into multiple components based on functionality. These components are standalone application codebases, possibly with their own databases, functionality, and even UI. For example, having a monolith application, this means breaking it into microservices, each with its set of functionalities. For example, making separate server for auth operations, or making internal product management vs product management for clients.
+3. Z dimension - splitting by data partition. This is mostly about databases, also known as horizontal/vertical partitioning. When there is too much data, such database might be limited (disk/memory limit, high I/O), so data partitioning can be used, which would for example separate users database into users with common starting letter of name (range partitioning), or hash of the user (hash partitioning), or country of the user (list partitioning). Each instance of application uses specific database partition.
+   Application partitioning can also be done, but there are few use cases for these. For example when using databases that don’t support data partitioning, or making applications at Google scale.
+   Z-scaling is very complex, so should be considered only after X and Y axes are fully exploited.
