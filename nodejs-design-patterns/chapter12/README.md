@@ -76,3 +76,39 @@ When we use `cluster` module, `server.listen` from worker process is delegated t
     });
   }
   ```
+
+Consider a case when our application crashes for whatever reason. In this case, if we have just one process serving requests, and some tools like `pm2` to monitor our process and restart in the case of crash, we still have some window gap, where application is not available.
+
+Scalability is also about high-availability. The property of keeping certain level of service even after crashes is known as **resiliency**. It contributes to high-availability.
+
+- We can achieve it with `cluster` module.
+  In this case, in the master process we listen for `exit` event from `cluster` module, which is fired when worker exits. By checking certain properties, we can ensure that it exited because of the error. When so, we fork another worker process.
+  When making 200 concurrent requests for 10s, there was 34k requests, and only 1k failed. This is 97% availability.
+
+  ```jsx
+  import cluster from "cluster";
+  import { cpus } from "os";
+  import http from "http";
+
+  const { pid } = process;
+
+  if (cluster.isPrimary) {
+    cluster.on("exit", (worker, code) => {
+      if (code !== 0 && !worker.exitedAfterDisconnect) {
+        console.log(
+          `Worker with pid ${worker.process.pid} crashed,
+           starting a new worker`
+        );
+        cluster.fork();
+      }
+    });
+
+    // ...
+  } else {
+    setTimeout(() => {
+      throw new Error("crash");
+    }, Math.ceil(Math.random() * 3) * 1000);
+
+    // ...
+  }
+  ```
