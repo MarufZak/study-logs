@@ -150,3 +150,11 @@ Sometimes we want to update our application and deploy to server. In this case, 
     // ...
   }
   ```
+
+## Stateful communications
+
+Consider a case where an application instance stores some information in memory. In this case, there is a state stored in memory. When the request, where a state matters, is made, it can be handled differently depending on which instance of the application handles it, because different instances might have different states.
+
+![Stateful communications](./assets/stateful-communications.png)
+
+Sharing a state between instances can be done with a database, or in-memory stores like Redis or Memcached. But this might require significant changes in our application, because we now might rewrite the logic of storing locally with storing in a shared place.
