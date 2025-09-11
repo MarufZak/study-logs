@@ -4,7 +4,7 @@
 
 My notes and takeaways from the Grokking Web Application Security book by Malcolm McDonald.
 
-Table of contents
+## Table of contents
 
 - [Know your enemy](#know-your-enemy)
 - [Browser security](#browser-security)
@@ -41,11 +41,11 @@ How to protect? There are zero-day vulnerabilities published on websites, or dis
 
 Web applications operate on server-client model. Server sends HTTP response, while client triggers HTTP request. Browser’s job is to take HTML/CSS/JS, and render it on the screen. This is called _rendering pipeline,_ and code that executes it is called _rendering engine_.
 
-![Screenshot 2025-09-11 at 07.05.44.png](attachment:b3b2a47e-c0bb-48ac-857b-df20372639f5:Screenshot_2025-09-11_at_07.05.44.png)
+![Rendering pipeline](./assets/rendering-pipeline.png)
 
 Engine that executes JavaScript is called _JavaScript engine._ When loading these scripts from internet, scripts can do anything, so engine is careful about what the scripts can do.
 
-![Screenshot 2025-09-11 at 07.09.55.png](attachment:e23986f7-f78e-4b31-8ab2-534cd44befe7:Screenshot_2025-09-11_at_07.09.55.png)
+![Javascript engine](./assets/javascript-engine.png)
 
 For security concerns, browsers implement _sandboxing,_ where each web page is given a separate process, and limitations exist on it. For example, no interprocess communication, no disk access, no memory reads.
 
@@ -53,16 +53,16 @@ Before executing javascript, browser asks 3 questions: What javascript am i allo
 
 - What javascript am i allowed to execute?
   We can answer this question with Content Security Policies (CSP). These are directives that restrict browser to execute javascript loaded from URLs not specified. It can be set in HTTP response of the HTML document, or hardcoded in meta tag of HTML document.
-  ![Screenshot 2025-09-11 at 08.09.18.png](attachment:0f532a67-a377-4919-b2ab-14f080f84189:Screenshot_2025-09-11_at_08.09.18.png)
+  ![Browser csp](./assets/browser-csp.png)
 
 - What tasks should javascript be allowed to perform?
   CSPs enables locking down resources by domain. Browser also uses domain for other security protections. This is about same-origin policy. Origin is a combination of protocol, domain, and port. If origin is the same across windows, browsers let them communicate via JavaScript.
-  ![Screenshot 2025-09-11 at 08.17.46.png](attachment:61fcd755-2e87-458b-8175-748e0067be05:Screenshot_2025-09-11_at_08.17.46.png)
+  ![Browser window channel](./assets/browser-window-channel.png)
   Origin also dictates how communication with the server is done. Web page communicates with the origin server where it came from to load images, or scripts.
   In browser, cross-origin writes (clicking to a link that leads to another website) is allowed, cross-origin embeds (for example loading images from external origins, as long as CSP allows) is allowed, but cross-origin reads is not allowed.
   In javascript, we can load resources with XMLHttpRequest, or fetch. By default, these are allowed to request data from the same origin. But sometimes we want to load form external sources. The web server from which we are trying to read from, should set up _cross-origin resource sharing (CORS),_ this is setting HTTP headers starting with _Access-Control._ For example, setting \_Access-Control-Allowed-Origin: `https://trusted.com` makes sure only requests from specified origin are allowed.
   Limitation should be minimum. Consider a case where bank server allows requests from all origins. User is logged in, and malicious website sends request to the bank to get the credentials of the user.
-  ![Screenshot 2025-09-11 at 08.41.10.png](attachment:f36be5a0-8b22-4e98-913e-3aee78897460:Screenshot_2025-09-11_at_08.41.10.png)
+  ![Browser cors](./assets/browser-cors.png)
 - How can i be sure that i am executing correct javascript code?
   We load javascript files, and these files might not be what author intended. For example, when using CDN, or any server, hackers might replace these files with malicious ones, or use MITM (monster in the middle) attack that intercepts the requests and replace files in response. In this case, there is _subresource integrity check_ that can be done to protect. Script tag has also `integrity` attribute. This contains output produced by SHA-384 hashing algorithm. When provided this value, whenever browser loads this script tag from specified URL, it can recalculate the output and compare. If the script is even slightly different, the code is not executed.
-  ![Screenshot 2025-09-11 at 08.51.28.png](attachment:d8ca12aa-2b7a-446d-a127-990830db4e97:Screenshot_2025-09-11_at_08.51.28.png)
+  ![Browser integrity](./assets/browser-integrity.png)
