@@ -8,6 +8,7 @@
 - [Dynamic horizontal scaling](#dynamic-horizontal-scaling)
 - [Peer-to-peer load balancing](#peer-to-peer-load-balancing)
 - [Scaling with containers](#scaling-with-containers)
+- [Container orchestration](#container-orchestration)
 
 When JavaScript was created, it was perfect for distributed systems because of its non-blocking behavior. Ranging from a few nodes to thousands, communicating with each other over the network.
 
@@ -458,3 +459,15 @@ In order to dockerize our application, we need an image. Image is an actual pack
     console.log(`Server listening on 3000`);
   });
   ```
+
+## Container orchestration
+
+When we have multiple services that are deployed to servers, they need to be managed. Container orchestration tool has following features:
+
+1. It lets us group multiple cloud servers (node) into logical clusters. Nodes are added/removed dynamically, without depending on the availability of the services running in the nodes.
+2. Zero-downtime rollbacks and rollouts.
+3. If container doesn’t reply to health checks or stops, it restarts the container. If it fails, it migrates the workload in that container to another node.
+4. Provides functionalities to implement load balancing and service discovery, and provides consistent storage between nodes.
+5. Secret storage for data-sensitive configurations and data.
+
+Kubernetes is a container orchestration tool developed by Google. It lets us define a declarative config, and it makes the rest of the job to ensure expected behavior.
