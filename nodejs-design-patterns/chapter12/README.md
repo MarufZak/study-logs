@@ -184,3 +184,43 @@ Sticky load balancing is not natively supported by `cluster` module can be done 
 3. Most reverse proxies support sticky load balancing out of the box.
 4. We can use more complex load balancing algorithms.
 5. Many reverse proxies offer additional features, such as URL rewrites, caching, web server (for example serving static files), security features, and others.
+
+Here are reverse proxy options that can be used for load balancing:
+
+1. Nginx. Web server, load balancer, reverse proxy, using non-blocking I/O model..
+2. HAProxy. L4 load balancer, for TCP/UDP load balancing.
+3. NodeJS. It’s also possible to implement load balancing in NodeJS, though there are pros and cons.
+4. Cloud-based proxies. Utilizing load-balancer as a service, with auto-scaling, and dynamic configs support.
+
+- Here is an example with nginx
+  After starting the server at some ports with supervisor monitoring (for example node.js based - `forever`, or OS level - `systemd`, or container based - `Docker swarm` or `k8s`), we can start using nginx as a reverse proxy and a load balancer.
+
+  ```jsx
+  // nginx.conf
+
+  daemon off;
+
+  error_log /dev/stderr info;
+
+  events {
+      worker_connections 2048;
+  }
+
+  http {
+      upstream nodejs-instance {
+          server 127.0.0.1:8081;
+          server 127.0.0.1:8082;
+          server 127.0.0.1:8083;
+          server 127.0.0.1:8084;
+      }
+
+      server {
+          listen 8080;
+          access_log /dev/stdout;
+
+          location / {
+              proxy_pass http://nodejs-instance;
+          }
+      }
+  }
+  ```
