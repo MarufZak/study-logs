@@ -46,3 +46,11 @@ Web applications operate on server-client model. Server sends HTTP response, whi
 Engine that executes JavaScript is called _JavaScript engine._ When loading these scripts from internet, scripts can do anything, so engine is careful about what the scripts can do.
 
 ![Screenshot 2025-09-11 at 07.09.55.png](attachment:e23986f7-f78e-4b31-8ab2-534cd44befe7:Screenshot_2025-09-11_at_07.09.55.png)
+
+For security concerns, browsers implement _sandboxing,_ where each web page is given a separate process, and limitations exist on it. For example, no interprocess communication, no disk access, no memory reads.
+
+Before executing javascript, browser asks 3 questions: What javascript am i allowed to execute? What tasks should javascript be allowed to perform? How can i be sure that i am executing correct javascript code?
+
+- What javascript am i allowed to execute?
+  We can answer this question with Content Security Policies (CSP). These are directives that restrict browser to execute javascript loaded from URLs not specified. It can be set in HTTP response of the HTML document, or hardcoded in meta tag of HTML document.
+  ![Screenshot 2025-09-11 at 08.09.18.png](attachment:0f532a67-a377-4919-b2ab-14f080f84189:Screenshot_2025-09-11_at_08.09.18.png)
