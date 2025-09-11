@@ -426,3 +426,35 @@ Container, specifically Linux container, as standardized by OCI, is a unit of so
 We can use containers to run simple node.js application, and delegate availability, load-balancing, elastic scaling (adjusting computer resources based on the traffic) to the container orchestration platforms such as Kubernetes.
 
 There are many tools and ways to create OCI compliant container, the most popular is Docker.
+
+In order to dockerize our application, we need an image. Image is an actual package that confronts to OCI, that defines the code, dependencies, and how the application should be executed. We can create image with `Dockerfile`, which is basically build script for the docker image.
+
+- Example `Dockerfile`
+
+  ```docker
+  FROM node:22-alpine
+
+  COPY index.js package.json /app/
+
+  WORKDIR /app/
+
+  EXPOSE 3000
+
+  CMD [ "npm", "start" ]
+  ```
+
+  ```jsx
+  // index.js
+
+  import http from "http";
+  import { hostname } from "os";
+
+  const version = 1;
+  const server = http.createServer((req, res) => {
+    res.end(`Hello from ${hostname()} of version ${version}`);
+  });
+
+  server.listen(3000, () => {
+    console.log(`Server listening on 3000`);
+  });
+  ```
