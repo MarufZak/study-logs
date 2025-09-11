@@ -9,6 +9,7 @@
 - [Peer-to-peer load balancing](#peer-to-peer-load-balancing)
 - [Scaling with containers](#scaling-with-containers)
 - [Container orchestration](#container-orchestration)
+- [Decomposing complex applications](#decomposing-complex-applications)
 
 When JavaScript was created, it was perfect for distributed systems because of its non-blocking behavior. Ranging from a few nodes to thousands, communicating with each other over the network.
 
@@ -477,3 +478,11 @@ An object is a basic unit in kubernetes, which defines an element in cloud deplo
 Pod - a set of containers that run within the same node. It might be services that are coupled between each other.
 
 It’s possible to scale our application by making replicas, and configuring load balancer as a service.
+
+## Decomposing complex applications
+
+So far we have scaled our application in X-axis, which is about creating multiple instances of it and distributing the load, also improving its availability. Now about Y-axis, which is about decomposing complex application into small applications, microservices.
+
+The term microservices and monolithic architecture comes from the past, kernels. The philosophy in Unix systems is that there are many microkernels, basically meaning some and most important services operate under kernel privilege, and others operate under user privilege, usually each with own process. This makes so when kernel service fails, it doesn’t affect the availability of the whole system.
+
+By comparison, monolithic kernel is about having having hundreds and thousands of modules running in kernel mode. If one module fails, it affects the whole system. Linux has monolithic kernel architecture, as opposing to Unix philosophy.
