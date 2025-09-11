@@ -385,3 +385,35 @@ We have learnt so far that service A connects to the service B servers through l
 This would include exposing the load balancing algorithm, and other complexity (keeping servers up to date for example) to client (service A in this case) itself.
 
 Advantages include that network infrastructure would be simpler (minus 1 node), faster communications, scales better because it’s not limited to the limits of load balancer.
+
+- Here is example with `consul` as a registry
+  Registering services with `server.js` script from earlier, and running simple `http` client with the use of this function makes peer-to-peer load balancing.
+
+  ```jsx
+  // balancedRequest
+  import { request } from "http";
+  import getStream from "get-stream";
+  import Consul from "consul";
+
+  const consulClient = new Consul();
+
+  let i = 0;
+
+  export const balancedRequest = async (options) => {
+    // assuming we have servers belonging to single server
+    const servers = await consulClient.agent.service.list();
+    const serversList = Object.values(servers);
+    const server = serversList[++i % serversList.length];
+
+    console.log({ serversList, server });
+
+    options.hostname = server.Address;
+    options.port = server.Port;
+
+    return new Promise((resolve, reject) => {
+      request(options, (response) => {
+        resolve(getStream(response));
+      }).end();
+    });
+  };
+  ```
