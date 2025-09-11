@@ -7,6 +7,7 @@
 - [Reverse proxy](#reverse-proxy)
 - [Dynamic horizontal scaling](#dynamic-horizontal-scaling)
 - [Peer-to-peer load balancing](#peer-to-peer-load-balancing)
+- [Scaling with containers](#scaling-with-containers)
 
 When JavaScript was created, it was perfect for distributed systems because of its non-blocking behavior. Ranging from a few nodes to thousands, communicating with each other over the network.
 
@@ -417,3 +418,11 @@ Advantages include that network infrastructure would be simpler (minus 1 node), 
     });
   };
   ```
+
+## Scaling with containers
+
+Container, specifically Linux container, as standardized by OCI, is a unit of software that packages the code and all its dependencies so it runs quickly and reliably from one computing environment to another. It’s extremely portable, and can execute the program mostly as executed natively on operating system.
+
+We can use containers to run simple node.js application, and delegate availability, load-balancing, elastic scaling (adjusting computer resources based on the traffic) to the container orchestration platforms such as Kubernetes.
+
+There are many tools and ways to create OCI compliant container, the most popular is Docker.
