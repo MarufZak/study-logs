@@ -471,3 +471,9 @@ When we have multiple services that are deployed to servers, they need to be man
 5. Secret storage for data-sensitive configurations and data.
 
 Kubernetes is a container orchestration tool developed by Google. It lets us define a declarative config, and it makes the rest of the job to ensure expected behavior.
+
+An object is a basic unit in kubernetes, which defines an element in cloud deployment, which can be added/removed/have its configuration changed. Examples are containerized applications, machine resources (CPU, GPU, network), and policies for application behavior (restart policy). We create an object for the cluster, and Kubernetes monitors it to make specified changes.
+
+Pod - a set of containers that run within the same node. It might be services that are coupled between each other.
+
+It’s possible to scale our application by making replicas, and configuring load balancer as a service.
