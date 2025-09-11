@@ -7,6 +7,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
 Table of contents
 
 - [Know your enemy](#know-your-enemy)
+- [Browser security](#browser-security)
 
 ## Know your enemy
 
@@ -35,3 +36,13 @@ Once hackers have access point to the server, they try to escalate the privilege
 When hackers get access to the database, it’s called **data breach\***.\*
 
 How to protect? There are zero-day vulnerabilities published on websites, or discussed social media. Keep track of. Know the code you are deploying, its dependencies. Log and monitor the activity of the web server. Educate the team about security, and make cross-reviews.
+
+## Browser security
+
+Web applications operate on server-client model. Server sends HTTP response, while client triggers HTTP request. Browser’s job is to take HTML/CSS/JS, and render it on the screen. This is called _rendering pipeline,_ and code that executes it is called _rendering engine_.
+
+![Screenshot 2025-09-11 at 07.05.44.png](attachment:b3b2a47e-c0bb-48ac-857b-df20372639f5:Screenshot_2025-09-11_at_07.05.44.png)
+
+Engine that executes JavaScript is called _JavaScript engine._ When loading these scripts from internet, scripts can do anything, so engine is careful about what the scripts can do.
+
+![Screenshot 2025-09-11 at 07.09.55.png](attachment:e23986f7-f78e-4b31-8ab2-534cd44befe7:Screenshot_2025-09-11_at_07.09.55.png)
