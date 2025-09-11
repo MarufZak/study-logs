@@ -231,3 +231,148 @@ Here are reverse proxy options that can be used for load balancing:
 Consider a case when we have 5 servers with application instances running. Traffic might not be so much, so probably only 2 servers are enough. Sometimes traffic is too high, so 10 servers are required. Sometimes we might want to scale the application baed on a schedule, for example increasing servers number before peak hours. In this case, load balancer should be aware of the services and its instances, dynamically.
 
 **Service registry** is a central repository, which provides the services and its instances currently available. For this to work, service instance should register itself when available, and unregister itself when not.
+
+In the following example, there are API (with 2 application instances) and WebApp service (with 1 application instance). Load balancer checks the prefix of the request, and routes the request to the corresponding service instance. If more than 1, it load balances between them
+
+![Dynamic load balancing](./assets/dynamic-load-balancing.png)
+
+- Dynamic load balancing can be achieved with `consul` as a service registry, and `forever` as a supervisor.
+  Note that in following implementation we are requesting services list on each request. It’s better to cache it and periodically request it. Also `cluster` module can be used to spin up multiple load balancers.
+  Consul agent is started with `consul agent -dev`, load balancer is started with command `forever start load-balancer.js`, and server instances are started with command `forever start --killSignal=SIGINT server.js [serviceName]`. Note that we are using `SIGINT`, because default is `SIGKILL`, which is not catchable, which causes the service not to be removed from the registry.
+  With `consul` it’s also possible to setup health checks. If service doesn’t respond to health check, it’s automatically removed from the registry.
+
+  ```jsx
+  // server.js
+  import http from "http";
+  import { nanoid } from "nanoid";
+  import portfinder from "portfinder";
+  import Consul from "consul";
+
+  const serviceName = process.argv[2];
+  const { pid } = process;
+
+  async function main() {
+    const id = nanoid();
+    const port = await portfinder.getPortPromise();
+    const consulClient = new Consul();
+    const address = process.env.ADDRESS || "127.0.0.1";
+
+    const registerService = async () => {
+      try {
+        await consulClient.agent.service.register({
+          id,
+          address,
+          port,
+          name: serviceName,
+          tags: [serviceName],
+        });
+
+        console.log(`Registered ${serviceName} service successfully`);
+      } catch (error) {
+        console.log(`Registering ${serviceName} service failed`);
+      }
+    };
+
+    const unregisterService = async (err) => {
+      if (err) console.log(err);
+
+      try {
+        await consulClient.agent.service.deregister({
+          id,
+        });
+
+        console.log(`Deregistered service ${serviceName} successfully`);
+      } catch (error) {
+        console.log(`Deregistering service ${serviceName} failed`);
+      }
+    };
+
+    process.on("SIGINT", unregisterService);
+    process.on("uncaughtException", unregisterService);
+    process.on("exit", unregisterService);
+
+    const server = http.createServer((req, res) => {
+      let i = 1e7;
+      while (i > 0) i--;
+      res.end(`Reply from ${serviceName} with pid ${pid}`);
+    });
+
+    server.listen(port, async () => {
+      await registerService();
+      console.log(
+        `${serviceName} started listening on port ${port} with pid ${pid}`
+      );
+    });
+  }
+
+  main().catch((err) => {
+    if (err) console.error(err);
+  });
+  ```
+
+  ```jsx
+  // load-balancer.js
+  import Consul from "consul";
+  import http from "http";
+  import httpProxy from "http-proxy";
+
+  const PORT = process.argv[2] || 3000;
+  const proxy = httpProxy.createProxyServer();
+  const { pid } = process;
+  const consulClient = new Consul();
+
+  const routing = [
+    {
+      service: "api-server",
+      path: "/api",
+      index: 0,
+    },
+    {
+      service: "web-app",
+      path: "/",
+      index: 0,
+    },
+  ];
+
+  const server = http.createServer(async (req, res) => {
+    const route = routing.find((route) => {
+      return req.url.startsWith(route.path);
+    });
+
+    if (!route) {
+      res.writeHead(404, "Not Found");
+      return res.end();
+    }
+
+    try {
+      const services = await consulClient.agent.service.list();
+
+      const servers = Object.values(services).filter((server) =>
+        server.Tags.includes(route.service)
+      );
+
+      console.log({ route, services, servers });
+
+      if (!servers.length) {
+        res.writeHead(502, "Bad gateway");
+        return res.end();
+      }
+
+      route.index += 1;
+      const serverIndex = route.index % servers.length;
+      const server = servers[serverIndex];
+
+      proxy.web(req, res, {
+        target: `http://${server.Address}:${server.Port}`,
+      });
+    } catch (error) {
+      console.error(`Error obtaining services`, error);
+      res.writeHead(500, "Some error occurred");
+      res.end();
+    }
+  });
+
+  server.listen(PORT, () => {
+    console.log(`Server started on port ${PORT} with PID ${pid}`);
+  });
+  ```
