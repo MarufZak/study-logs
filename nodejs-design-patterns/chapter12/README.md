@@ -6,6 +6,7 @@
 - [Stateful communications](#stateful-communications)
 - [Reverse proxy](#reverse-proxy)
 - [Dynamic horizontal scaling](#dynamic-horizontal-scaling)
+- [Peer-to-peer load balancing](#peer-to-peer-load-balancing)
 
 When JavaScript was created, it was perfect for distributed systems because of its non-blocking behavior. Ranging from a few nodes to thousands, communicating with each other over the network.
 
@@ -376,3 +377,11 @@ In the following example, there are API (with 2 application instances) and WebAp
     console.log(`Server started on port ${PORT} with PID ${pid}`);
   });
   ```
+
+## Peer-to-peer load balancing
+
+We have learnt so far that service A connects to the service B servers through load balancer, which distributes the load across the servers. However, there is an alternative. We can remove load balancer from the picture, and make the service A send requests directly to servers of service B. This requires that service A knows about the servers of service B.
+
+This would include exposing the load balancing algorithm, and other complexity (keeping servers up to date for example) to client (service A in this case) itself.
+
+Advantages include that network infrastructure would be simpler (minus 1 node), faster communications, scales better because it’s not limited to the limits of load balancer.
