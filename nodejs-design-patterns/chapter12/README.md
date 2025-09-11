@@ -5,6 +5,7 @@
 - [Cluster](#cluster)
 - [Stateful communications](#stateful-communications)
 - [Reverse proxy](#reverse-proxy)
+- [Dynamic horizontal scaling](#dynamic-horizontal-scaling)
 
 When JavaScript was created, it was perfect for distributed systems because of its non-blocking behavior. Ranging from a few nodes to thousands, communicating with each other over the network.
 
@@ -224,3 +225,9 @@ Here are reverse proxy options that can be used for load balancing:
       }
   }
   ```
+
+## Dynamic horizontal scaling
+
+Consider a case when we have 5 servers with application instances running. Traffic might not be so much, so probably only 2 servers are enough. Sometimes traffic is too high, so 10 servers are required. Sometimes we might want to scale the application baed on a schedule, for example increasing servers number before peak hours. In this case, load balancer should be aware of the services and its instances, dynamically.
+
+**Service registry** is a central repository, which provides the services and its instances currently available. For this to work, service instance should register itself when available, and unregister itself when not.
