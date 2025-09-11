@@ -1,6 +1,10 @@
 # Chapter 12: Scalability and Architectural Patterns
 
+## Table of contents
+
 - [Cluster](#cluster)
+- [Stateful communications](#stateful-communications)
+- [Reverse proxy](#reverse-proxy)
 
 When JavaScript was created, it was perfect for distributed systems because of its non-blocking behavior. Ranging from a few nodes to thousands, communicating with each other over the network.
 
@@ -170,3 +174,13 @@ Sticky load balancing nullifies the redundancy of the application, where any ins
 Sticky load balancing is not natively supported by `cluster` module can be done with `sticky-session` package.
 
 ![Sticky load balancing](./assets/sticky-load-balancing.png)
+
+## Reverse proxy
+
+`cluster` module is not an only technique we can use to scale our application. Another option is to use multiple instances of the application running on the same, or different machines, and then use a reverse proxy. Reverse proxy is service or device that forwards the request to the application instances, and return the result as it were a request destination itself. In this case, reverse proxy also acts as a load balancer. The reasons to use this technique:
+
+1. Load balancing can be managed not only with application instances in the same machine, but in multiple machines.
+2. The request is forwarded even if the server is written in another language.
+3. Most reverse proxies support sticky load balancing out of the box.
+4. We can use more complex load balancing algorithms.
+5. Many reverse proxies offer additional features, such as URL rewrites, caching, web server (for example serving static files), security features, and others.
