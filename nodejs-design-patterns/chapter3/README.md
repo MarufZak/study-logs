@@ -45,9 +45,10 @@ function readAsync(filename, callback) {
   if (cache.has(filename)) {
     callback(cache.get(filename));
   } else {
-    const data = fs.readFileSync(filename);
-    cache.set(filename, data);
-    callback(data);
+    readFile(filename, "utf8", (err, data) => {
+      cache.set(filename, data);
+      callback(data);
+    });
   }
 }
 ```
@@ -63,9 +64,10 @@ function readAsync(filename, callback) {
     return;
   }
 
-  const data = fs.readFileSync(filename);
-  cache.set(filename, data);
-  callback(data);
+  readFile(filename, "utf8", (err, data) => {
+    cache.set(filename, data);
+    callback(data);
+  });
 }
 ```
 
