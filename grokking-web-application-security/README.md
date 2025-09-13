@@ -10,6 +10,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
 - [Browser security](#browser-security)
 - [Encryption](#encryption)
   - [Encryption in transit](#encryption-in-transit)
+  - [Encryption at rest](#encryption-at-rest)
 
 ## Know your enemy
 
@@ -101,3 +102,13 @@ HTTPS is HTTP traffic passed over TLS connection, so attacker cannot intercept a
 ![TLS cipher suite](./assets/tls-cipher-suite.png)
 
 Encryption is encouraged via web servers such as NGINX, by redirecting to HTTPS. It can also be done in application servers, using HTTP Strict Transport Security (HSTS), by specifying `Strict-Transport-Security: max-age=123` in HTTP response.
+
+### Encryption at rest
+
+It means encrypting the data being stored in the disk. It’s helpful when sensitive information is stored in the disk, such as configuration stores, databases, backups, and others.
+
+Passwords inside databases should be hashed. Hashing can be done hashing the input with a secret, that is stored in secure location. It can also be done with _salting,_ random string fed into hashing algorithm, that is the same for all passwords or different for each (and stored alongside the password). Actually we can combine these approaches, and use _peppering,_ using (input + random value (pepper)) for each input, and hashing it with salt:
+
+```jsx
+bcrypt.hash(myPlaintextPassword + pepper, salt);
+```
