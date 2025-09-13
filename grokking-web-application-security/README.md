@@ -71,3 +71,13 @@ Before executing javascript, browser asks 3 questions: What javascript am i allo
 ## Encryption
 
 Encryption is the process of disguising the input that is not accessible to unauthorized parties. Cryptography is the study of encryption and decryption. Fortunately we don’t need to understand the principles and cores of it to use it. Encryption includes the keys that are used to encrypt and decrypt the data.
+
+If we use the same key for encryption and decryption, we are using _symmetric encryption algorithm,_ that is, separating the data into fixed size blocks, and encrypting each of them.
+
+Encryption key is numbers, but to make it easier to read, they are represented as strings. If size of key is not enough, it’s possible to decrypt it by trying out many keys.
+
+If we use different keys for encryption and decryption, we are using asymmetric encryption algorithm. In this case, anyone with encryption key (public key) can encrypt the message, but the only party that has decryption key (private key) can decrypt it. This setup is known as _public key cryptography_.
+
+![Encryption and decryption](./assets/encryption-decryption.png)
+
+_Hashing algorithm_ is encryption type, whose output cannot be decrypted. Also there is near-zero chance, that two different inputs product the same output (hash collision). Output of such algorithm is called hash, and there is only one way to know which data it used to be - brute force. Useful for knowing the change in the data, without storing the data itself.
