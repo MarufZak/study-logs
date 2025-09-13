@@ -79,7 +79,7 @@ In synchronous direct style functions, errors are propagated with `throw` keywor
 
 Sometimes we may have CPS async function, and inside callback the error might be thrown. In this case, even if we surround the entire function with `try catch` block, it will not catch our error, because the stack in which the block operates is different from the one in which our callback is invoked. So, the error will go straight to the event loop, where it is caught and thrown to the console.
 
-```tsx
+```js
 // example on how error is not caught inside catch block and propagated
 // to the event loop, crashing the whole app.
 try {
@@ -109,7 +109,7 @@ Observer pattern is built-in feature in Node.js, and is available with `EventEmi
 
 Following code demonstrates usage example:
 
-```tsx
+```js
 import { EventEmitter } from "events";
 import { readFile } from "fs";
 
@@ -253,7 +253,7 @@ For example in `glob` package in nodejs, we can pass a callback, which will have
 
 - Modify the function created in exercise 3.2 so that it emits a tick event immediately after the function is invoked.
 
-  ```tsx
+  ```js
   // add this code after new EventEmitter();
   process.nextTick(() => {
     eventEmitter.emit("tick");
@@ -266,7 +266,7 @@ For example in `glob` package in nodejs, we can pass a callback, which will have
 
 - Modify the function created in exercise 3.3 so that it produces an error if the timestamp at the moment of a tick (including the initial one that we added as part of exercise 3.3) is divisible by 5. Propagate the error using both the callback and the event emitter. Hint: use Date.now() to get the timestamp and the remainder (%) operator to check whether the timestamp is divisible by 5.
 
-  ```tsx
+  ```js
   import EventEmitter from "events";
 
   const exercise = (max, cb) => {
@@ -280,7 +280,9 @@ For example in `glob` package in nodejs, we can pass a callback, which will have
       }
     });
 
-    eventEmitter.emit("tick");
+    process.nextTick(() => {
+      eventEmitter.emit("tick");
+    });
 
     let msPassed = 0;
     const intervalId = setInterval(() => {
