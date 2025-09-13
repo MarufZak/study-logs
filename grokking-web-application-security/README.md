@@ -93,3 +93,11 @@ TLS uses a combination of cryptographic algorithms, called _cipher suit,_ that i
 2. Bulk encryption algorithm - used to encrypt the messages, requires secure key.
 3. Authentication algorithm - used to ensure the data goes to the right party.
 4. Message authentication code algorithm - used to ensure the received data is the same with the one that was sent.
+
+TLS requires digital certificate, that includes public key, used to establish a connection to the IP address. Certificates are given by certificates authority, but we can sign them ourselves (self-signed certificates). Browser has a list of trusted certificates, and shows warning if our certificate is not trusted.
+
+HTTPS is HTTP traffic passed over TLS connection, so attacker cannot intercept and read the traffic, cannot manipulate the traffic, and cannot spoof the traffic.
+
+![TLS cipher suite](./assets/tls-cipher-suite.png)
+
+Encryption is encouraged via web servers such as NGINX, by redirecting to HTTPS. It can also be done in application servers, using HTTP Strict Transport Security (HSTS), by specifying `Strict-Transport-Security: max-age=123` in HTTP response.
