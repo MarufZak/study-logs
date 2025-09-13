@@ -9,6 +9,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
 - [Know your enemy](#know-your-enemy)
 - [Browser security](#browser-security)
 - [Encryption](#encryption)
+  - [Encryption in transit](#encryption-in-transit)
 
 ## Know your enemy
 
@@ -81,3 +82,14 @@ If we use different keys for encryption and decryption, we are using asymmetric 
 ![Encryption and decryption](./assets/encryption-decryption.png)
 
 _Hashing algorithm_ is encryption type, whose output cannot be decrypted. Also there is near-zero chance, that two different inputs product the same output (hash collision). Output of such algorithm is called hash, and there is only one way to know which data it used to be - brute force. Useful for knowing the change in the data, without storing the data itself.
+
+### Encryption in transit
+
+Encryption in transit means the usage of encryption algorithms as the data is passed to the network. Protocols such as TLS (Transport Layer Security) and SSL (Secure SL, older and less safer version of TLS) use it.
+
+TLS uses a combination of cryptographic algorithms, called _cipher suit,_ that is exchanged between client and the server at handshake time, and \*\*which contains four algorithms:
+
+1. Key exchange algorithm - used to encrypt the public key, which is required by bulk encryption algorithm.
+2. Bulk encryption algorithm - used to encrypt the messages, requires secure key.
+3. Authentication algorithm - used to ensure the data goes to the right party.
+4. Message authentication code algorithm - used to ensure the received data is the same with the one that was sent.
