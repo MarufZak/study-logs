@@ -8,6 +8,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
 
 - [Know your enemy](#know-your-enemy)
 - [Browser security](#browser-security)
+- [Encryption](#encryption)
 
 ## Know your enemy
 
@@ -66,3 +67,7 @@ Before executing javascript, browser asks 3 questions: What javascript am i allo
 - How can i be sure that i am executing correct javascript code?
   We load javascript files, and these files might not be what author intended. For example, when using CDN, or any server, hackers might replace these files with malicious ones, or use MITM (monster in the middle) attack that intercepts the requests and replace files in response. In this case, there is _subresource integrity check_ that can be done to protect. Script tag has also `integrity` attribute. This contains output produced by SHA-384 hashing algorithm. When provided this value, whenever browser loads this script tag from specified URL, it can recalculate the output and compare. If the script is even slightly different, the code is not executed.
   ![Browser integrity](./assets/browser-integrity.png)
+
+## Encryption
+
+Encryption is the process of disguising the input that is not accessible to unauthorized parties. Cryptography is the study of encryption and decryption. Fortunately we don’t need to understand the principles and cores of it to use it. Encryption includes the keys that are used to encrypt and decrypt the data.
