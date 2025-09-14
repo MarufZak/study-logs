@@ -12,6 +12,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [Encryption in transit](#encryption-in-transit)
   - [Encryption at rest](#encryption-at-rest)
   - [Integrity checking](#integrity-checking)
+- [Web server security](#web-server-security)
 
 ## Know your enemy
 
@@ -117,3 +118,9 @@ bcrypt.hash(myPlaintextPassword + pepper, salt);
 ### Integrity checking
 
 Integrity checking is about checking the data is not altered, and is the same as was sent. This can be done by hashing the data, and sending it alongside the data itself and hashing algorithm. This way the receiver can recalculate the hash to check integrity. For additional security, in cases where attacker can manipulate the data, and recalculate the hash for it, the hash and data + hashing algorithm are passed in different channels. Or they can be passed in the same channel, but having secure keys exchanged beforehand.
+
+## Web server security
+
+Hackers can attack the websites in the browser only indirectly, they might inject some javascript with XSS. But the web servers are accessible directly to anyone, and they can cause trouble.
+
+The first thing to do is validating the input. Hackers usually use bots to attack a web server, and first layer of protection is having allow list, a list of valid inputs. For example currency can be of 2 types, this can serve as an allow list for this field. Allow lists, however, are not suitable for all cases, and it might be easier to implement block list, rather specifying all valid possible inputs. Block list can includes some harmful inputs. Another way is to use pattern matching, against regex. Example is email or date validation with regex, or last digit of credit card is calculated according to Luhn algorithm. In case the request is invalid, it gets rejected immediately.
