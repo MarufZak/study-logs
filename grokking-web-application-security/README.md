@@ -11,6 +11,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
 - [Encryption](#encryption)
   - [Encryption in transit](#encryption-in-transit)
   - [Encryption at rest](#encryption-at-rest)
+  - [Integrity checking](#integrity-checking)
 
 ## Know your enemy
 
@@ -112,3 +113,7 @@ Passwords inside databases should be hashed. Hashing can be done hashing the inp
 ```jsx
 bcrypt.hash(myPlaintextPassword + pepper, salt);
 ```
+
+### Integrity checking
+
+Integrity checking is about checking the data is not altered, and is the same as was sent. This can be done by hashing the data, and sending it alongside the data itself and hashing algorithm. This way the receiver can recalculate the hash to check integrity. For additional security, in cases where attacker can manipulate the data, and recalculate the hash for it, the hash and data + hashing algorithm are passed in different channels. Or they can be passed in the same channel, but having secure keys exchanged beforehand.
