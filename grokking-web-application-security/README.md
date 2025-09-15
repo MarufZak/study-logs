@@ -13,6 +13,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [Encryption at rest](#encryption-at-rest)
   - [Integrity checking](#integrity-checking)
 - [Web server security](#web-server-security)
+  - [Handling resources](#handling-resources)
 
 ## Know your enemy
 
@@ -136,3 +137,13 @@ Escaping is also essential against injection attacks, such as sql or command inj
 Same can happen with command injections, where user input is expected to build a command, like `nslookup {address}`.
 
 Generally, it’s recommended to use higher level APIs, because they come with built in escaping of special-meaning characters.
+
+### Handling resources
+
+As our application grows, it needs precise structure. HTTP specification includes special methods, that must be included in HTTP request. These includes GET, POST, PUT, DELETE. We are free to use whichever method we want for whichever action we want to perform, but there are some bad practices. For example using GET to delete an account is CSRF vulnerability.
+
+There is a philosophy, though, called _Representational state transfer_ (REST), which makes the architecture more organizable. It includes:
+
+1. Each resource should be represented by a single path, `/books` to retrieve the list, and `/books/123` to retrieve the details.
+2. Each location should be free of implementation details. For example some locations look like `login.php`.
+3. Actions should be performed by appropriate HTTP method.
