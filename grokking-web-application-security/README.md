@@ -128,3 +128,11 @@ The first thing to do is validating the input. Hackers usually use bots to attac
 Files are another input that can be sent to web server, usually formatted as a binary. Files are stored in the disk, so they might be harmful. Simple protection is checking file type in the headers or the name, but it can be misleading, because they can be easily changed, so it’s better to use file type detection libraries. Another protection is validating in the client, but note that hackers usually use bots. It’s best to store them in CMS, or cloud services like S3, away from the web server.
 
 Same as with input, we should also keep the output strict when sending it to downstream systems like database. We should use escaping, replacing special meaning meta-characters with alternatives, that say like “there was <, but don’t treat it as a start of HTML tag”. Most XSS is done in dynamic content places, where the user input is expected and shown. Hackers can simply use `<script><script>` that redirects the user to evil website with cookies attached. To prevent it, we can use escaping, replacing `<>` characters with `&lt; &gt` alternatives. HTML parses them are needed, but doesn’t treat them as tags.
+
+Escaping is also essential against injection attacks, such as sql or command injections. In SQL, `;` can be used to chain the commands. Following command is vulnerable to SQL injections, because hacker can input `'; DROP TABLE users`
+
+`"SELECT * FROM users WHERE email = '" + email + "'"`
+
+Same can happen with command injections, where user input is expected to build a command, like `nslookup {address}`.
+
+Generally, it’s recommended to use higher level APIs, because they come with built in escaping of special-meaning characters.
