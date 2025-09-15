@@ -147,3 +147,7 @@ There is a philosophy, though, called _Representational state transfer_ (REST), 
 1. Each resource should be represented by a single path, `/books` to retrieve the list, and `/books/123` to retrieve the details.
 2. Each location should be free of implementation details. For example some locations look like `login.php`.
 3. Actions should be performed by appropriate HTTP method.
+
+When talking about defense, we should make several layers of defense. This ensures that if one layer fails, there are additional layers that still protect the application. This is called _defense-in-depth._ To defend against injections, here are the layers: escape special meaning characters in the input, connect to the database as a limited user, run the process as a limited user, validate the input with allow list, pattern matching, or block list, validate the response, implement logging of database operations.
+
+Everyone in the system should have the minimum privileges to do the task. This principle is called _least privilege principle._ This might look like: connect to the database with limited user privileges, run the process as a limited user, use CSP to limit javascript execution in the browser.
