@@ -158,3 +158,7 @@ Everyone in the system should have the minimum privileges to do the task. This p
 Changes to critical systems might be done by individuals, but there must be reviews, where another pair of eyes see the changes, and accept or decline if it’s secure or not to deploy such changes. This is done for security, as second person might catch what first didn’t. This is called _four-eyes principle,_ and most companies do it. It’s better to let senior engineers or security team do reviews.
 
 Another layer of security is limited privileges. Each role should have the role it needs to accomplish the tasks, to prevent the employee from publishing the secrets (for example), or when hacker gets in the employee’s account, do destructive changes.
+
+Humans make errors, and machines are more reliable about repetitive tasks. If something takes multiple steps to complete, it should be automated. Not only this, but also processes such as build process, automated testing, deploying, adding servers, should be done by a single command.
+
+As engineers, we make our solutions for particular problems, but there are some problems that have already been solved for us, and it’s not worth reinventing the wheels, including databases, web servers. It’s better to focus on the application logic rather than them. Reinventing the wheels also might make our application vulnerable, because the invented technologies come with safety proofs. It includes reinventing encryption algorithm, or session management.
