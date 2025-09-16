@@ -14,6 +14,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [Integrity checking](#integrity-checking)
 - [Web server security](#web-server-security)
   - [Handling resources](#handling-resources)
+- [Security as process](#security-as-process)
 
 ## Know your enemy
 
@@ -151,3 +152,9 @@ There is a philosophy, though, called _Representational state transfer_ (REST), 
 When talking about defense, we should make several layers of defense. This ensures that if one layer fails, there are additional layers that still protect the application. This is called _defense-in-depth._ To defend against injections, here are the layers: escape special meaning characters in the input, connect to the database as a limited user, run the process as a limited user, validate the input with allow list, pattern matching, or block list, validate the response, implement logging of database operations.
 
 Everyone in the system should have the minimum privileges to do the task. This principle is called _least privilege principle._ This might look like: connect to the database with limited user privileges, run the process as a limited user, use CSP to limit javascript execution in the browser.
+
+## Security as process
+
+Changes to critical systems might be done by individuals, but there must be reviews, where another pair of eyes see the changes, and accept or decline if it’s secure or not to deploy such changes. This is done for security, as second person might catch what first didn’t. This is called _four-eyes principle,_ and most companies do it. It’s better to let senior engineers or security team do reviews.
+
+Another layer of security is limited privileges. Each role should have the role it needs to accomplish the tasks, to prevent the employee from publishing the secrets (for example), or when hacker gets in the employee’s account, do destructive changes.
