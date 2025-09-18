@@ -166,3 +166,12 @@ As engineers, we make our solutions for particular problems, but there are some 
 Keeping critical activity logged is also important. When it comes to user activity, log sign ups, sign ins, or content edits, etc, to help support team. When it comes to databases, or such systems, record the migrations, by whom and when it’s done. Use http logs like `access.log` in NGINX, to keep logging the detailed info about the connection to your web server. Same with code changes, they should be stored in source control, to keep the history of changes by whom. Same with administrative log ins and others.
 
 There are 2 approaches when the changes are deployed to production. First is creating separate branch for the feature, and merge it when it passes review. Second (Trunk-based development - TBD) is merging the feature that is backed by feature flags, which should be approved. This approach is mostly done for blue/green deployments, where two versions of app is on prod, and traffic moves from blue (old) to green (new) version.
+
+We can use automated tools to detect the vulnerabilities in our application:
+
+1. Static analysis - tools like Veracode, and Checkmarx perform static analysis of the codebase, and report vulnerabilities, where, for example, the input from request is not treated as it should be.
+2. Dependency analysis - some versions of dependencies come with vulnerabilities. To check against them, tools like Dependabot can help, and require to upgrade the dependency. Package managers can also detect vulnerable packages, by checking them against the database of detected vulnerabilities.
+3. Penetration testing - services like Invicti and Detectify, as a white hackers, try to find vulnerabilities before malicious hacker can. They request the web pages, edit request headers, modify HTTP params, and others.
+4. Firewalls - firewall is a piece of software that can stop malicious network traffic. They can block the traffic before it reaches the service, and can be deployed as a separate node in the network. Web Application Firewalls can parse HTTP traffic, and block depending on some factors.
+5. Intrusion detection system - software which checks for unexpected changes in sensible files, unusual network activity, or processes.
+6. Antivirus software - software that checks the file system, to find vulnerabilities. Often done when user is able to upload the files.
