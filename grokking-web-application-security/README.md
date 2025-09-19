@@ -15,6 +15,8 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
 - [Web server security](#web-server-security)
   - [Handling resources](#handling-resources)
 - [Security as process](#security-as-process)
+- [Browser vulnerabilities](#browser-vulnerabilities)
+  - [Cross-site scripting](#cross-site-scripting)
 
 ## Know your enemy
 
@@ -175,3 +177,17 @@ We can use automated tools to detect the vulnerabilities in our application:
 4. Firewalls - firewall is a piece of software that can stop malicious network traffic. They can block the traffic before it reaches the service, and can be deployed as a separate node in the network. Web Application Firewalls can parse HTTP traffic, and block depending on some factors.
 5. Intrusion detection system - software which checks for unexpected changes in sensible files, unusual network activity, or processes.
 6. Antivirus software - software that checks the file system, to find vulnerabilities. Often done when user is able to upload the files.
+
+## Browser vulnerabilities
+
+There are several attack vectors in browsers, and the most popular are XSS, CSRF, clickjacking.
+
+### Cross-site scripting
+
+There are several attack vectors in browsers, and the most popular is XSS (cross-site scripting). It has several types:
+
+1. Stored XSS - the value entered by user is stored in database, and retrieved later. If it’s being written in HTML, it’s a vector of attack. Hacker can write malicious script. For example a comments section in blog post. Everyone who opens the web page executes the malicious javascript as a comment.
+2. Reflected XSS - instead of the malicious script being stored in database, it’s retrieved from the URI. Let’s say the blog page inserts the blog post id, retrieved from URI, in the web page. Attacker can use a script instead of the value, and trick the user into visiting the website. Also, instead of script, attacker can provide src for loading the script.
+3. DOM-based XSS - instead of the using path in URI for attack, hacker could also use URI fragments. In fact URI fragments are browser only, and are not sent to the server in the request. If the fragment is being written in HTML, it’s another vector of attack.
+
+Protection against such attacks includes escaping (replacing HTML sensitive strings with safe alternatives), CSP (limiting javascript execution). Modern frameworks, such as React, escapes these by default, and you need to use special attributes to disable it.
