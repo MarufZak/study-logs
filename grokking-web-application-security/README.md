@@ -17,6 +17,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
 - [Security as process](#security-as-process)
 - [Browser vulnerabilities](#browser-vulnerabilities)
   - [Cross-site scripting](#cross-site-scripting)
+  - [Cross-site request forgery](#cross-site-request-forgery)
 
 ## Know your enemy
 
@@ -191,3 +192,13 @@ There are several attack vectors in browsers, and the most popular is XSS (cross
 3. DOM-based XSS - instead of the using path in URI for attack, hacker could also use URI fragments. In fact URI fragments are browser only, and are not sent to the server in the request. If the fragment is being written in HTML, it’s another vector of attack.
 
 Protection against such attacks includes escaping (replacing HTML sensitive strings with safe alternatives), CSP (limiting javascript execution). Modern frameworks, such as React, escapes these by default, and you need to use special attributes to disable it.
+
+### Cross-site request forgery
+
+CSRF is also common attack done by attackers. Suppose you have a blog post, where commenting form exists. This form makes get request to some endpoint with query param of comment:
+
+```jsx
+<form action="/comments/new" method="get">
+  <textarea name="comment" placeholder="Your comment..." />
+</form>
+```
