@@ -210,3 +210,9 @@ Cross-site request forgery tricks the user to perform the action they don’t ex
 Attackers, though, can still make CSRF attack, for example by crafting malicious website and tricking the user to submit a form, which, in turn, makes cross-origin request. CORS can’t help here, because preflight request is sent only for fetching in javascript, not forms.
 
 ![CSRF with post](./assets/csrf-post.png)
+
+The solution is to use CSRF tokens. Each form has a hidden field with CSRF token. The CSRF token is also stored in cookies, when the request for the page is done, with Set-Cookie HTTP header. When request for creating comment is done, the value inside the header and body of the request are checked, if not equal, request is rejected. The attacker cannot know the token, and cannot submit it in body of the request.
+
+Same can be applied for other requests with fetch. Any request missing CSRF token in body is rejected.
+
+Also ensure that the cookies have proper SameSite attribute. When Lax, cookies for cross-site GET requests are not stripped out. Theoretically, choosing proper SameSite eliminates the need for CSRF tokens, but it would serve as an additional level of protection.
