@@ -202,3 +202,11 @@ CSRF is also common attack done by attackers. Suppose you have a blog post, wher
   <textarea name="comment" placeholder="Your comment..." />
 </form>
 ```
+
+Cross-site request forgery tricks the user to perform the action they don’t expect. In this case, attacker can make URL shortener (or without it), and redirect the user to this GET endpoint URL. This type of self-replicating comment is called worm. It’s not most dangerous, though. Suppose actions like money transfer, user flow, or other actions are vulnerable. They way to go is make POST endpoint, instead of GET, as state in REST principles.
+
+![CSRF with get](./assets/csrf-get.png)
+
+Attackers, though, can still make CSRF attack, for example by crafting malicious website and tricking the user to submit a form, which, in turn, makes cross-origin request. CORS can’t help here, because preflight request is sent only for fetching in javascript, not forms.
+
+![CSRF with post](./assets/csrf-post.png)
