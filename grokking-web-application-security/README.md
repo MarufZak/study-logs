@@ -19,6 +19,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [Cross-site scripting](#cross-site-scripting)
   - [Cross-site request forgery](#cross-site-request-forgery)
   - [Clickjacking](#clickjacking)
+  - [Cross-site scripting inclusion](#cross-site-scripting-inclusion)
 
 ## Know your enemy
 
@@ -227,3 +228,9 @@ Clickjacking means stealing some actions by the user, and perform other actions 
 ![Clickjacking](./assets/clickjacking.png)
 
 What we want is prevent the websites to embed our website as an iframe. We can use `frame-ancestors <websites>` CSP directive for this. In older browsers protection can be achieved with `X-Frame-Options` response header.
+
+### Cross-site scripting inclusion
+
+Scripts, unlike HTML or JSON, are not protected by same-origin policy. They can be loaded with `script` tag, and executed. Suppose the server responds with javascript with some data file based on user cookies. Hacker can use `script` tag and load the javascript whenever someone enters the evil website, and steal sensitive data.
+
+I also observed that if javascript file response includes CORS policy, when loaded with plain `script` tag, the code loads executes, but with `type=module` it doesn’t, and fails because of CORS.
