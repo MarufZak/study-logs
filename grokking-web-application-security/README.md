@@ -18,6 +18,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
 - [Browser vulnerabilities](#browser-vulnerabilities)
   - [Cross-site scripting](#cross-site-scripting)
   - [Cross-site request forgery](#cross-site-request-forgery)
+  - [Clickjacking](#clickjacking)
 
 ## Know your enemy
 
@@ -216,3 +217,9 @@ The solution is to use CSRF tokens. Each form has a hidden field with CSRF token
 Same can be applied for other requests with fetch. Any request missing CSRF token in body is rejected.
 
 Also ensure that the cookies have proper SameSite attribute. When Lax, cookies for cross-site GET requests are not stripped out. Theoretically, choosing proper SameSite eliminates the need for CSRF tokens, but it would serve as an additional level of protection.
+
+### Clickjacking
+
+Browsers have feature called “features gated by user activation”. These are some APIs that can be executed only when user triggers it by some action, for example a click. You can’t simply execute them, for example you can’t simply open pages with `window.open()`.
+
+Clickjacking means stealing some actions by the user, and perform other actions user doesn’t exist. For example a website has some button. User clicks it, but it turns out he liked some post in Facebook. Behind the button there is iframe with hidden with opacity and managed z-index div. User thinks he clicks a button to receive something, but in fact he does another action.
