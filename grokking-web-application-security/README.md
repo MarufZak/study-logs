@@ -234,3 +234,7 @@ What we want is prevent the websites to embed our website as an iframe. We can u
 Scripts, unlike HTML or JSON, are not protected by same-origin policy. They can be loaded with `script` tag, and executed. Suppose the server responds with javascript with some data file based on user cookies. Hacker can use `script` tag and load the javascript whenever someone enters the evil website, and steal sensitive data.
 
 I also observed that if javascript file response includes CORS policy, when loaded with plain `script` tag, the code loads executes, but with `type=module` it doesn’t, and fails because of CORS.
+
+One way of protection is using fetch call inside javascript file, to receive sensitive data in json. When script is run on the loading side, the origin is the loading side, evil website in this case. JSON is protected by cross-origin policy, so javascript is not able to read the response. Or include it in HTML response, as a value of meta tag, and retrieve with javascript.
+
+Also it’s possible to protect against such attack with `Cross-Origin-Resource-Policy` HTTP header, telling browsers not to leak the body of the response, so the body is stripped, and so response is not executed.
