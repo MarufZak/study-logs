@@ -223,3 +223,7 @@ Also ensure that the cookies have proper SameSite attribute. When Lax, cookies f
 Browsers have feature called “features gated by user activation”. These are some APIs that can be executed only when user triggers it by some action, for example a click. You can’t simply execute them, for example you can’t simply open pages with `window.open()`.
 
 Clickjacking means stealing some actions by the user, and perform other actions user doesn’t exist. For example a website has some button. User clicks it, but it turns out he liked some post in Facebook. Behind the button there is iframe with hidden with opacity and managed z-index div. User thinks he clicks a button to receive something, but in fact he does another action.
+
+![Clickjacking](./assets/clickjacking.png)
+
+What we want is prevent the websites to embed our website as an iframe. We can use `frame-ancestors <websites>` CSP directive for this. In older browsers protection can be achieved with `X-Frame-Options` response header.
