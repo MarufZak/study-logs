@@ -248,3 +248,9 @@ There is a client, and there is a server. Between those 2 there is network, thro
 ### Man in the middle
 
 When devices communicate in local network, they do so by using ARP (Address Resolution Protocol). It’s simple protocol that translates the IP addresses into MAC addresses, because MAC addresses are needed to deliver the messages across LAN. Each device has MAC address. If A wants to communicate to B, it broadcasts ARP request, asking who this IP address belongs to. Device B responds, and sender caches the relationship of IP and MAC in its ARP table.
+
+Devices tend to believe whatever they receive, so what if someone responded to all requests “Yes, it’s me”? They could act as gateway, and route the traffic where needed, but also read all unencrypted data. This is called _ARP spoofing attack_. The solution is to use encrypted connections, with HTTPS. This way, hackers cannot read the traffic unless they have private key.
+
+Hackers found a way to prevent secured connections in the first place. Back in days websites didn’t fully use HTTPS, and they would upgrade only when necessary, for example in login actions, when providing credentials. What if, when user enters login form over HTTP, and the traffic is intercepted by hacker, and hacker replaces the incoming page with his own, for example changing the URLs in login form to use HTTP. In subsequent requests, the man in the middle could see the traffic, and forward the data over HTTPS to original server.
+
+![MITM with SSL stripping](./assets/mitm-ssl-stripping.png)
