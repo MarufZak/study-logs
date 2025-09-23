@@ -254,3 +254,7 @@ Devices tend to believe whatever they receive, so what if someone responded to a
 Hackers found a way to prevent secured connections in the first place. Back in days websites didn’t fully use HTTPS, and they would upgrade only when necessary, for example in login actions, when providing credentials. What if, when user enters login form over HTTP, and the traffic is intercepted by hacker, and hacker replaces the incoming page with his own, for example changing the URLs in login form to use HTTP. In subsequent requests, the man in the middle could see the traffic, and forward the data over HTTPS to original server.
 
 ![MITM with SSL stripping](./assets/mitm-ssl-stripping.png)
+
+To prevent such attacks, we should upgrade to HTTPS to all connections, and use HTTP Strict Transport Security (HSTS) header to allow browsers to connect only with secure connections.
+
+Also MITM attacks happens not only on local networks, but also in global.
