@@ -20,6 +20,8 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [Cross-site request forgery](#cross-site-request-forgery)
   - [Clickjacking](#clickjacking)
   - [Cross-site scripting inclusion](#cross-site-scripting-inclusion)
+- [Network vulnerabilities](#network-vulnerabilities)
+  - [Man in the middle](#man-in-the-middle)
 
 ## Know your enemy
 
@@ -238,3 +240,11 @@ I also observed that if javascript file response includes CORS policy, when load
 One way of protection is using fetch call inside javascript file, to receive sensitive data in json. When script is run on the loading side, the origin is the loading side, evil website in this case. JSON is protected by cross-origin policy, so javascript is not able to read the response. Or include it in HTML response, as a value of meta tag, and retrieve with javascript.
 
 Also it’s possible to protect against such attack with `Cross-Origin-Resource-Policy` HTTP header, telling browsers not to leak the body of the response, so the body is stripped, and so response is not executed.
+
+## Network vulnerabilities
+
+There is a client, and there is a server. Between those 2 there is network, through which all the data goes. This creates channels for attacks.
+
+### Man in the middle
+
+When devices communicate in local network, they do so by using ARP (Address Resolution Protocol). It’s simple protocol that translates the IP addresses into MAC addresses, because MAC addresses are needed to deliver the messages across LAN. Each device has MAC address. If A wants to communicate to B, it broadcasts ARP request, asking who this IP address belongs to. Device B responds, and sender caches the relationship of IP and MAC in its ARP table.
