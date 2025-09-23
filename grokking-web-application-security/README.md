@@ -258,3 +258,9 @@ Hackers found a way to prevent secured connections in the first place. Back in d
 To prevent such attacks, we should upgrade to HTTPS to all connections, and use HTTP Strict Transport Security (HSTS) header to allow browsers to connect only with secure connections.
 
 Also MITM attacks happens not only on local networks, but also in global.
+
+TLS is ongoing technology, and it upgrades every year. In TLS handshake, both parties agree on algorithms to use for encryption and keys exchange. Old such algorithms tend to be less secure, as computing power increases every year, and there are exploits to decode encrypted data faster. Knowing this, attacker can place himself in the middle of TLS handshake, and persuade both parties to fallback to less secure encryption algorithms. This is called _downgrade attack_.
+
+![MITM with TLS downgrading](./assets/mitm-tls-downgrading.png)
+
+This can be prevented by using minimum TLS algorithm in web server, in NGINX this can be done with `ssl_protocols TLSvX.X;`. Modern browsers often support latest encryption algorithms, but if web servers is targeted for embedded systems, these updates are rare, and there is a need to support older encryption standards.
