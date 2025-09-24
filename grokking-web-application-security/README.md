@@ -22,6 +22,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [Cross-site scripting inclusion](#cross-site-scripting-inclusion)
 - [Network vulnerabilities](#network-vulnerabilities)
   - [Man in the middle](#man-in-the-middle)
+- [Misdirection vulnerabilities](#misdirection-vulnerabilities)
 
 ## Know your enemy
 
@@ -264,3 +265,7 @@ TLS is ongoing technology, and it upgrades every year. In TLS handshake, both pa
 ![MITM with TLS downgrading](./assets/mitm-tls-downgrading.png)
 
 This can be prevented by using minimum TLS algorithm in web server, in NGINX this can be done with `ssl_protocols TLSvX.X;`. Modern browsers often support latest encryption algorithms, but if web servers is targeted for embedded systems, these updates are rare, and there is a need to support older encryption standards.
+
+## Misdirection vulnerabilities
+
+It’s also possible for hackers to make fake websites that look like yours. For example, they might use similar domain, like [ammazon.com](http://ammazon.com) (this domain is called _doppelganger domain_), or using non-ascii characters in domain name, as opposed against international domain name standard (_homograph attack_). For example using latin characters with their cyrillic counterparts. Actually browsers like chrome protect against such attacks, but using Punycode, unicode rendered with ASCII characters where it is similar with ASCII (like ‘a’ character), and converted to special ASCII sequence for the rest.
