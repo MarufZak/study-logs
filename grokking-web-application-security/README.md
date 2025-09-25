@@ -23,6 +23,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
 - [Network vulnerabilities](#network-vulnerabilities)
   - [Man in the middle](#man-in-the-middle)
 - [Misdirection vulnerabilities](#misdirection-vulnerabilities)
+  - [DNS poisoning](#dns-poisoning)
 
 ## Know your enemy
 
@@ -269,3 +270,9 @@ This can be prevented by using minimum TLS algorithm in web server, in NGINX thi
 ## Misdirection vulnerabilities
 
 It’s also possible for hackers to make fake websites that look like yours. For example, they might use similar domain, like [ammazon.com](http://ammazon.com) (this domain is called _doppelganger domain_), or using non-ascii characters in domain name, as opposed against international domain name standard (_homograph attack_). For example using latin characters with their cyrillic counterparts. Actually browsers like chrome protect against such attacks, but using Punycode, unicode rendered with ASCII characters where it is similar with ASCII (like ‘a’ character), and converted to special ASCII sequence for the rest.
+
+### DNS poisoning
+
+DNS resolution happens as follows: the client requests the IP of [example.com](http://example.com) domain from public DNS resolvers, such as 8.8.8.8. Public resolver asks for root DNS resolvers (13 in the world) for .com DNS resolvers. From .com DNS resolvers it finds the IP for example.com resolver. Each layer has a cache, for example browser, or OS has its own cache. ISP can also have its own DNS resolver, so it doesn’t take it from root resolvers.
+
+DNS resolvers are naive, they believe in whatever response they get from DNS servers, though the response is checked with some ID, which is only 2 bytes ⇒ 64K strings are enough to find the correct ID, this can be done in barely 10 seconds. What if attacker poisons the response, and makes so DNS server responds with IP of malicious website? This is called DNS poisoning.
