@@ -285,3 +285,7 @@ DNS is being upgraded these days. DNSSEC is new standard for DNS that enables si
 ### Subdomain squatting
 
 Consider a case when you have a website hosted on particular domain. This domain has a subdomain, for example [`assets.example.com`](http://assets.example.com), which has CNAME pointing to `my-company.amazon-s3.com`. If one day you delete your account or delete the s3 bucket, your domain of `assets.example.com` becomes dangling, pointing to nothing. Attacker can make use of that, and register its bucket under same name, `my-company.amazon-s3.com` and host any arbitrary files. Your domain, which is trusted by your users, now points to malicious storage. This also enables cookie re-usage, because cookies from your websites are also sent to malicious website, unless you don’t specify the domain when setting the cookies, which locks down the cookie to the exact same domain.
+
+![Subdomain squatting](./assets/subdomain-squatting.png)
+
+First of all, we need to delete the subdomain entry once we delete the resource. If you have many subdomains, scan them periodically with tools like `Amass` or `Sublist3r`. Certificates can also be shared across subdomains - avoid it, and enumerate specific domains you want your certificate to work with.
