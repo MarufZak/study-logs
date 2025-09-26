@@ -24,6 +24,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [Man in the middle](#man-in-the-middle)
 - [Misdirection vulnerabilities](#misdirection-vulnerabilities)
   - [DNS poisoning](#dns-poisoning)
+  - [Subdomain squatting](#subdomain-squatting)
 
 ## Know your enemy
 
@@ -280,3 +281,7 @@ DNS resolvers are naive, they believe in whatever response they get from DNS ser
 DNS poisoning is not dangerous on its own, with HTTPS. If this happens, the destination website should provide valid certificate for connection. If it provides original website certificate, it cannot decrypt the messages, assuming they haven’t stolen encryption keys. Or if it provides invalid certificate, browser warns its invalid.
 
 DNS is being upgraded these days. DNSSEC is new standard for DNS that enables signed responses from resolvers, which can be verified. All DNSSEC validation happens on DNS resolvers, and clients like browser gets raw IP address. But browser might bypass the OS resolver, and use DoH (DNS over HTTP) when configured. Now it can choose which resolvers to choose, and if DNSSEC is configured in browser, it chooses resolvers that support DNS.
+
+### Subdomain squatting
+
+Consider a case when you have a website hosted on particular domain. This domain has a subdomain, for example [`assets.example.com`](http://assets.example.com), which has CNAME pointing to `my-company.amazon-s3.com`. If one day you delete your account or delete the s3 bucket, your domain of `assets.example.com` becomes dangling, pointing to nothing. Attacker can make use of that, and register its bucket under same name, `my-company.amazon-s3.com` and host any arbitrary files. Your domain, which is trusted by your users, now points to malicious storage. This also enables cookie re-usage, because cookies from your websites are also sent to malicious website, unless you don’t specify the domain when setting the cookies, which locks down the cookie to the exact same domain.
