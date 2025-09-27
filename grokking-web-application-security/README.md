@@ -289,3 +289,9 @@ Consider a case when you have a website hosted on particular domain. This domain
 ![Subdomain squatting](./assets/subdomain-squatting.png)
 
 First of all, we need to delete the subdomain entry once we delete the resource. If you have many subdomains, scan them periodically with tools like `Amass` or `Sublist3r`. Certificates can also be shared across subdomains - avoid it, and enumerate specific domains you want your certificate to work with.
+
+## Certificate compromise
+
+There are certificate authorities that issue certificates for domain owners. They have root certificates, which are very sensitive, so they sign another certificates with root certificate, and use them to sign other certificates on daily basis. Big companies also issue their certificates for their domains, and act as certificate authorities. Browsers have CAs they trust, and they check for the chain of certificates for that CA.
+
+![Certificates chain](./assets/certificates-chain.png)
