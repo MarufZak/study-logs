@@ -295,3 +295,5 @@ First of all, we need to delete the subdomain entry once we delete the resource.
 There are certificate authorities that issue certificates for domain owners. They have root certificates, which are very sensitive, so they sign another certificates with root certificate, and use them to sign other certificates on daily basis. Big companies also issue their certificates for their domains, and act as certificate authorities. Browsers have CAs they trust, and they check for the chain of certificates for that CA.
 
 ![Certificates chain](./assets/certificates-chain.png)
+
+Hackers can hack a node in chain of trust, and issue fake certificates, as happened with Comodo CA in 2011. NSA also used forged certificates to conduct MITM attacks. Kazakhstan tried to force citizens to use national security certificate (as trusted certificate), that would allow them to snoop on the whole internet traffic in the country (but companies like Google and Apple refused, and didn’t honor these certificates in Safari and Chrome). Basically every OS and browser ships with trusted list of CAs. User can also specify the list of trusted [CAs.cd](http://CAs.cd)
