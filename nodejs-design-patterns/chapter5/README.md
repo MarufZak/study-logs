@@ -372,6 +372,65 @@ We can use previous TaskQueue implementation and convert using async/await, but 
 
 ![Limited execution](./assets/limited-execution.png)
 
+The idea is to put the consumers to sleep where there are no tasks, and wake up when there is. The API interface is the same as with previous implementation. Consumer sleep and wake up is achieved with getNextTask function, which resolves immediately, if there is any task in taskQueue, or delays the resolution until there is new task.
+
+When consumer uses the class with runTask method, if there is free consumer in consumerQueue (which is basically resolve function from getNextTask), we wake up consumer. If there are no free consumers, we push it to taskQueue so consumer execute it as soon as it’s available.
+
+```tsx
+type TRegularTask = () => Promise<unknown>;
+type TConsumerTask = (value: TRegularTask) => void;
+
+class TaskQueuePC {
+  consumerQueue: TConsumerTask[] = [];
+  taskQueue: TRegularTask[] = [];
+
+  constructor(concurrency: number) {
+    for (let i = 0; i < concurrency; i++) {
+      this.consumer();
+    }
+  }
+
+  async consumer() {
+    while (true) {
+      try {
+        const task = await this.getNextTask();
+        await task();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
+  getNextTask() {
+    return new Promise<TRegularTask>((resolve) => {
+      if (this.taskQueue.length > 0) {
+        const task = this.taskQueue.shift()!;
+        resolve(task);
+      }
+
+      this.consumerQueue.push(resolve);
+    });
+  }
+
+  runTask(task: TRegularTask) {
+    return new Promise((resolve, reject) => {
+      const promiseWrapper = () => {
+        const taskPromise = task();
+        taskPromise.then(resolve, reject);
+        return taskPromise;
+      };
+
+      if (this.consumerQueue.length > 0) {
+        const consumer = this.consumerQueue.shift()!;
+        consumer(promiseWrapper);
+      } else {
+        this.taskQueue.push(promiseWrapper);
+      }
+    });
+  }
+}
+```
+
 ## Parallel execution
 
 Parallel execution can be done in 2 ways.
