@@ -366,6 +366,12 @@ Sometimes developers use `forEach` or `map` to execute the asynchronous code seq
   // console.log after 2000ms: 2000
   ```
 
+## Limited parallel execution
+
+We can use previous TaskQueue implementation and convert using async/await, but it’s trivial task. Instead, we can see another approach to build TaskQueue, with producer/consumer approach. On one side, producers push tasks to the task queue, and on another, the set of consumers execute them. Concurrency determines the number of consumers.
+
+![Limited execution](./assets/limited-execution.png)
+
 ## Parallel execution
 
 Parallel execution can be done in 2 ways.
