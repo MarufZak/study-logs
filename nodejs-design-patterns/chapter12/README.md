@@ -486,3 +486,11 @@ So far we have scaled our application in X-axis, which is about creating multipl
 The term microservices and monolithic architecture comes from the past, kernels. The philosophy in Unix systems is that there are many microkernels, basically meaning some and most important services operate under kernel privilege, and others operate under user privilege, usually each with own process. This makes so when kernel service fails, it doesn’t affect the availability of the whole system.
 
 By comparison, monolithic kernel is about having having hundreds and thousands of modules running in kernel mode. If one module fails, it affects the whole system. Linux has monolithic kernel architecture, as opposing to Unix philosophy.
+
+- Monolith
+
+  Monolithic architecture is about having every service in one codebase. In example below, although it’s the code is split into modules, it is in the same codebase operating as a single instance of the application. Failure in one of them would down entire system.
+
+  Another problem is about high coupling between the services. The codebase is the same, and it’s easy for developer to write code that affects other service. In result, the application becomes more complex to scale, and harder to maintain.
+
+  ![Monolith architecture](./assets/monolith.png)
