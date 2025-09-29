@@ -297,3 +297,8 @@ There are certificate authorities that issue certificates for domain owners. The
 ![Certificates chain](./assets/certificates-chain.png)
 
 Hackers can hack a node in chain of trust, and issue fake certificates, as happened with Comodo CA in 2011. NSA also used forged certificates to conduct MITM attacks. Kazakhstan tried to force citizens to use national security certificate (as trusted certificate), that would allow them to snoop on the whole internet traffic in the country (but companies like Google and Apple refused, and didn’t honor these certificates in Safari and Chrome). Basically every OS and browser ships with trusted list of CAs. User can also specify the list of trusted [CAs.cd](http://CAs.cd)
+
+If the certificate private keys are stolen, or certificate authority is compromised, certificate revocation is needed. There are 2 ways browsers check for certificate revocation, and usually they do both:
+
+1. Certificate revocation list (CRL) - list of certificates, provided by CA, that browsers periodically fetch and save locally. When certificate is encountered, it checks against this list.
+2. Online certificate status protocol (OCSP) response - basically CA’s online service, that responds whether certificate is revoked.
