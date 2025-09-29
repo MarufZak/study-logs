@@ -302,3 +302,7 @@ If the certificate private keys are stolen, or certificate authority is compromi
 
 1. Certificate revocation list (CRL) - list of certificates, provided by CA, that browsers periodically fetch and save locally. When certificate is encountered, it checks against this list.
 2. Online certificate status protocol (OCSP) response - basically CA’s online service, that responds whether certificate is revoked.
+
+It’s possible to revoke the certificate using CLI tools like `*certbot*`, or using CA’s admin panels. If certificate is revoked, user gets warning.
+
+But what if the CA is compromised, and it issues rogue certificates for your domain? To prevent such attacks, CA’s now implement _certificate transparency_ logs, which is publishing any certificate being issued to your domain.
