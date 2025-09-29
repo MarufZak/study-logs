@@ -306,3 +306,7 @@ If the certificate private keys are stolen, or certificate authority is compromi
 It’s possible to revoke the certificate using CLI tools like `*certbot*`, or using CA’s admin panels. If certificate is revoked, user gets warning.
 
 But what if the CA is compromised, and it issues rogue certificates for your domain? To prevent such attacks, CA’s now implement _certificate transparency_ logs, which is publishing any certificate being issued to your domain.
+
+Websites are usually hosted with web server, which communicates with application server. There is a certificate (which is public), and private keys. Private keys should be stored privately. It’s usually stored in web server, which encrypts the traffic from the application server, and decrypts it, passing it to the downstream (application server). Private keys can be obtained if hacker gets access to server, such as with SSH protocol. Make sure you grand accesses only to someone who needs it, and revoke access once it’s not needed. If your application server and web server is hosted in one machine, attacker can make script injection attack, so it’s better to host these on separate machines. Make sure only privileged users (like web server process) have access to private directory of private keys.
+
+Also it’s better to make the processes automized, like issuing and revoking the TLS certificates.
