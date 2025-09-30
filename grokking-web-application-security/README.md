@@ -322,3 +322,7 @@ The way with passwords is not good, but there is solution. The best way to solve
 ### OAuth
 
 Back in days, if user wanted to import contacts from gmail to app, he had to give username and passwords, so app can grab them and import. This is ridiculous. Instead, there is new approach, open authorization (authorization - what permissions user has). It lets the application to get specified permissions on behalf of user. User logs in to their account in gmail, grand permissions for application. Google issues some access token, which can be used to access to gmail API for that user. Application uses it and imports contacts. User can revoke the access token at any time.
+
+![OAuth 1](./assets/oauth1.png)
+
+![Oauth 2](./assets/oauth2.png)
