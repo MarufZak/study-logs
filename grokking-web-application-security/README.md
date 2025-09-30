@@ -27,6 +27,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [Subdomain squatting](#subdomain-squatting)
 - [Authentication vulnerabilities](#authentication-vulnerabilities)
   - [OAuth](#oauth)
+  - [OIDC](#oidc)
 
 ## Know your enemy
 
@@ -326,3 +327,9 @@ Back in days, if user wanted to import contacts from gmail to app, he had to giv
 ![OAuth 1](./assets/oauth1.png)
 
 ![Oauth 2](./assets/oauth2.png)
+
+The authentication (who the user is) can be done with OAuth, but there is another standard called Open ID Connect (OIDC). The way to do with OAuth is obtaining access token with permissions, and get user info from some endpoint with that access token.
+
+### OIDC
+
+OIDC is built on top of OAuth, and except access token, it provides JWT token that can be used to get user identity, for example username or email. The endpoint for OIDC is standardized - `/userinfo`.
