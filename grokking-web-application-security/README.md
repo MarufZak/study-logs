@@ -25,6 +25,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
 - [Misdirection vulnerabilities](#misdirection-vulnerabilities)
   - [DNS poisoning](#dns-poisoning)
   - [Subdomain squatting](#subdomain-squatting)
+- [Authentication vulnerabilities](#authentication-vulnerabilities)
 
 ## Know your enemy
 
@@ -310,3 +311,9 @@ But what if the CA is compromised, and it issues rogue certificates for your dom
 Websites are usually hosted with web server, which communicates with application server. There is a certificate (which is public), and private keys. Private keys should be stored privately. It’s usually stored in web server, which encrypts the traffic from the application server, and decrypts it, passing it to the downstream (application server). Private keys can be obtained if hacker gets access to server, such as with SSH protocol. Make sure you grand accesses only to someone who needs it, and revoke access once it’s not needed. If your application server and web server is hosted in one machine, attacker can make script injection attack, so it’s better to host these on separate machines. Make sure only privileged users (like web server process) have access to private directory of private keys.
 
 Also it’s better to make the processes automized, like issuing and revoking the TLS certificates.
+
+## Authentication vulnerabilities
+
+Most websites allow signing up and logging in for their apps. Usually with username and password. Assuming username can be 8 chars, and password can be 8 chars, using brute-force technique (basically trying every combination of username and password), it would take 15 quadrillion years, assuming each entry takes 1 second, to list all combinations. Instead, there are some tools that use brute-force with some set of username and passwords, which were leaked before. Humans tend to reuse them. Using tools like Hydra, this produces result in minutes.
+
+The way with passwords is not good, but there is solution. The best way to solve the problem is delegate it to third-party, which is expert at security. This leads us to OAuth.
