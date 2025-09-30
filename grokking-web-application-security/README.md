@@ -26,6 +26,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [DNS poisoning](#dns-poisoning)
   - [Subdomain squatting](#subdomain-squatting)
 - [Authentication vulnerabilities](#authentication-vulnerabilities)
+  - [OAuth](#oauth)
 
 ## Know your enemy
 
@@ -317,3 +318,7 @@ Also it’s better to make the processes automized, like issuing and revoking th
 Most websites allow signing up and logging in for their apps. Usually with username and password. Assuming username can be 8 chars, and password can be 8 chars, using brute-force technique (basically trying every combination of username and password), it would take 15 quadrillion years, assuming each entry takes 1 second, to list all combinations. Instead, there are some tools that use brute-force with some set of username and passwords, which were leaked before. Humans tend to reuse them. Using tools like Hydra, this produces result in minutes.
 
 The way with passwords is not good, but there is solution. The best way to solve the problem is delegate it to third-party, which is expert at security. This leads us to OAuth.
+
+### OAuth
+
+Back in days, if user wanted to import contacts from gmail to app, he had to give username and passwords, so app can grab them and import. This is ridiculous. Instead, there is new approach, open authorization (authorization - what permissions user has). It lets the application to get specified permissions on behalf of user. User logs in to their account in gmail, grand permissions for application. Google issues some access token, which can be used to access to gmail API for that user. Application uses it and imports contacts. User can revoke the access token at any time.
