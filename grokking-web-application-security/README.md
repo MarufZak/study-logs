@@ -28,6 +28,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
 - [Authentication vulnerabilities](#authentication-vulnerabilities)
   - [OAuth](#oauth)
   - [OIDC](#oidc)
+  - [SAML](#saml)
 
 ## Know your enemy
 
@@ -333,3 +334,7 @@ The authentication (who the user is) can be done with OAuth, but there is anothe
 ### OIDC
 
 OIDC is built on top of OAuth, and except access token, it provides JWT token that can be used to get user identity, for example username or email. The endpoint for OIDC is standardized - `/userinfo`.
+
+### SAML
+
+SAML is comparable to OAuth, it uses XML format to to exchange message with identity provider. Typically companies who owns their own identity provider services use SAML. In SAML there is identity provider, and service provider. Service provider publishes XML document, containing URL to which identity provider redirects the user to after successful login, and certificate, which is used by identity provider to sign requests. SAML is also used as SSO.
