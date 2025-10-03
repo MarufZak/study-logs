@@ -29,6 +29,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [OAuth](#oauth)
   - [OIDC](#oidc)
   - [SAML](#saml)
+  - [Strengthening authentication](#strengthening-authentication)
 
 ## Know your enemy
 
@@ -338,3 +339,9 @@ OIDC is built on top of OAuth, and except access token, it provides JWT token th
 ### SAML
 
 SAML is comparable to OAuth, it uses XML format to to exchange message with identity provider. Typically companies who owns their own identity provider services use SAML. In SAML there is identity provider, and service provider. Service provider publishes XML document, containing URL to which identity provider redirects the user to after successful login, and certificate, which is used by identity provider to sign requests. SAML is also used as SSO.
+
+### Strengthening authentication
+
+There are multiple ways to make the authentication stronger.
+
+1. Password complexity rules - enforcing user to set password with specified rules, for example minimum 8 characters, 2 symbols, and others. Password can be rated with tool like `zxcvbn`. Also password rotation is common, which means enforcing user to change the password in specified period of time.
