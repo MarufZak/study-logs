@@ -31,7 +31,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [SAML](#saml)
   - [Strengthening authentication](#strengthening-authentication)
   - [MFA](#mfa)
-  - [Storing credentials](#stroring-credentials)
+  - [Storing credentials](#storing-credentials)
 
 ## Know your enemy
 
@@ -123,6 +123,13 @@ HTTPS is HTTP traffic passed over TLS connection, so attacker cannot intercept a
 ![TLS cipher suite](./assets/tls-cipher-suite.png)
 
 Encryption is encouraged via web servers such as NGINX, by redirecting to HTTPS. It can also be done in application servers, using HTTP Strict Transport Security (HSTS), by specifying `Strict-Transport-Security: max-age=123` in HTTP response.
+
+Here is TLS traffic encryption flow:
+
+1. Client generates nonce and sends to server, alongside supported encryption algorithms.
+2. Server generates nonce and sends to client, alongside the certificate and encryption algorithm to use.
+3. Client and server generate random private key, and derive public from it. They share the public key, and keep the private key in secret. With the help of Diffie-Hellman algorithm, same output is produced when both parties combine private key with public key of other party.
+4. Both combine secret, and the nonces (with HKDF function). The result is session key. This session key is used as symmetric key to encrypt/decrypt the traffic.
 
 ### Encryption at rest
 
@@ -362,7 +369,7 @@ Because the authenticator app is only third-party holding the private key, if us
 
 Another form of MFA is biometrics, verified with WebAuthn, browser API that allows to use biometric information to validate the users.
 
-### Stroring credentials
+### Storing credentials
 
 Credentials like password should be stored in hashed manner. Hashing algorithms like MD5 or SH1 or considered insecure, because multiple inputs might produce same output. Instead, hashing functions like SHA-2 or SHA-3, or bcrypt should be used. Only hashed passwords are not enough, because there are _rainbow tables,_ tables of precomputed hashes of most popular passwords. Also bcrypt lets us specify how many rounds algorithm has to complete, because computing power increases year by year.
 
