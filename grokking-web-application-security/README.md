@@ -31,6 +31,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [SAML](#saml)
   - [Strengthening authentication](#strengthening-authentication)
   - [MFA](#mfa)
+  - [Storing credentials](#stroring-credentials)
 
 ## Know your enemy
 
@@ -360,3 +361,9 @@ The flow with authentication apps is following: server generates a secret key, s
 Because the authenticator app is only third-party holding the private key, if user loses the phone, the private key is lost also. For these cases, server should generate set of recovery codes, which can be used once each (OTP).
 
 Another form of MFA is biometrics, verified with WebAuthn, browser API that allows to use biometric information to validate the users.
+
+### Stroring credentials
+
+Credentials like password should be stored in hashed manner. Hashing algorithms like MD5 or SH1 or considered insecure, because multiple inputs might produce same output. Instead, hashing functions like SHA-2 or SHA-3, or bcrypt should be used. Only hashed passwords are not enough, because there are _rainbow tables,_ tables of precomputed hashes of most popular passwords. Also bcrypt lets us specify how many rounds algorithm has to complete, because computing power increases year by year.
+
+We should also use salting and peppering the password, like following. Note that salt is different for every user, and stored alongside password in table. Pepper is taken from configuration file, and same for all users. This makes so hacker has to crack different parts of the system to obtain passwords. Just brute forcing them taking ‘infinite’ time.
