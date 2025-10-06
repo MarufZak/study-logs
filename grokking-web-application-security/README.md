@@ -126,10 +126,11 @@ Encryption is encouraged via web servers such as NGINX, by redirecting to HTTPS.
 
 Here is TLS traffic encryption flow:
 
-1. Client generates nonce and sends to server, alongside supported encryption algorithms.
-2. Server generates nonce and sends to client, alongside the certificate and encryption algorithm to use.
-3. Client and server generate random private key, and derive public from it. They share the public key, and keep the private key in secret. With the help of Diffie-Hellman algorithm, same output is produced when both parties combine private key with public key of other party.
-4. Both combine secret, and the nonces (with HKDF function). The result is session key. This session key is used as symmetric key to encrypt/decrypt the traffic.
+1. Client generates nonce and sends to server, alongside supported encryption algorithms and ephemeral public key. Ephemeral private key is generated, public key is derived from it. This is called ephemeral public key.
+2. Server generates nonce and sends to client, alongside the certificate, encryption algorithm to use, and its own ephemeral public key. Later, server sends the handshake transcript, signing with private key (form private certificate).
+3. Client verifies the identity of the party by verifying transcript with server's certificate's public key, and checks fields like hostname and expiration dates.
+4. With the help of Diffie-Hellman algorithm, same output is produced when both parties combine their own ephemeral private key with ephemeral public key of other party.
+5. Both combine secret and the nonces (with HKDF function). The result is session key. This session key is used as symmetric key to encrypt/decrypt the traffic.
 
 ### Encryption at rest
 
