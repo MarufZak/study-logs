@@ -367,3 +367,11 @@ Another form of MFA is biometrics, verified with WebAuthn, browser API that allo
 Credentials like password should be stored in hashed manner. Hashing algorithms like MD5 or SH1 or considered insecure, because multiple inputs might produce same output. Instead, hashing functions like SHA-2 or SHA-3, or bcrypt should be used. Only hashed passwords are not enough, because there are _rainbow tables,_ tables of precomputed hashes of most popular passwords. Also bcrypt lets us specify how many rounds algorithm has to complete, because computing power increases year by year.
 
 We should also use salting and peppering the password, like following. Note that salt is different for every user, and stored alongside password in table. Pepper is taken from configuration file, and same for all users. This makes so hacker has to crack different parts of the system to obtain passwords. Just brute forcing them taking ‘infinite’ time.
+
+```tsx
+const hashed_password = bcrypt.hash(input + pepper, salt_level);
+```
+
+Modern bcrypt algorithm stores the salt inside the hash, so it’s not necessary to store salt in db anymore.
+
+Hashing credentials for inbound access is useful, but what about outbound access, when we want to use credentials to connect to external system, like database? In such cases, credentials are stored in encrypted manner, and decrypted only when needed. Major cloud providers have service of storing credentials in secure store. Some credentials can be marked as sensitive, so only allowed users or processes can have them. It’s also possible to encrypt/decrypt the credentials at application code level, before putting into store.
