@@ -375,3 +375,7 @@ const hashed_password = bcrypt.hash(input + pepper, salt_level);
 Modern bcrypt algorithm stores the salt inside the hash, so it’s not necessary to store salt in db anymore.
 
 Hashing credentials for inbound access is useful, but what about outbound access, when we want to use credentials to connect to external system, like database? In such cases, credentials are stored in encrypted manner, and decrypted only when needed. Major cloud providers have service of storing credentials in secure store. Some credentials can be marked as sensitive, so only allowed users or processes can have them. It’s also possible to encrypt/decrypt the credentials at application code level, before putting into store.
+
+For encryption algorithms, we need encryption keys. It is not good idea to store encryption keys alongside the encrypted configuration file. If config file is compromised, the only thing hacker would have to do is guess the encryption algorithm, which is relatively easy. Ideal solution is to use key management store outside config file.
+
+As a last resort, it’s also not bad to store encryption keys in application config files, but the encryption key should be changed regularly, and credentials need to be rotated.
