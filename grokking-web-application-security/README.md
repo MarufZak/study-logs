@@ -394,3 +394,7 @@ As a last resort, it’s also not bad to store encryption keys in application co
 If login or sign up page shows message like “Incorrect username” or “Incorrect password”, this is user enumeration vulnerability. Attacker can exploit it to enumerate the users that registered to the website. Guessing passwords only is easier than guessing combination of user and password. The correct way is to display some general message like “Invalid credentials”.
 
 This vulnerability also exists in password reset pages. In these cases, it’s better to show messages like “Email is sent to this mail” or “Check your inbox”, even if account doesn’t exist.
+
+Because such pages can be attacked with millions of requests than can generate millions of messages to emails, such pages should be protected with CAPTCHA.
+
+There is another vector for user enumeration attack. If you check username, and generate a hash of supplied password to check with real password, there is a time difference if attacker sends invalid and valid credentials. Valid email (or username) would take more time, because password is hashed and checked with original one. For such cases, it’s necessary to generate a hash even if username doesn’t match the email.
