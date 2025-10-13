@@ -32,6 +32,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [Strengthening authentication](#strengthening-authentication)
   - [MFA](#mfa)
   - [Storing credentials](#storing-credentials)
+  - [User enumeration](#user-enumeration)
 
 ## Know your enemy
 
@@ -387,3 +388,9 @@ Hashing credentials for inbound access is useful, but what about outbound access
 For encryption algorithms, we need encryption keys. It is not good idea to store encryption keys alongside the encrypted configuration file. If config file is compromised, the only thing hacker would have to do is guess the encryption algorithm, which is relatively easy. Ideal solution is to use key management store outside config file.
 
 As a last resort, it’s also not bad to store encryption keys in application config files, but the encryption key should be changed regularly, and credentials need to be rotated.
+
+### User enumeration
+
+If login or sign up page shows message like “Incorrect username” or “Incorrect password”, this is user enumeration vulnerability. Attacker can exploit it to enumerate the users that registered to the website. Guessing passwords only is easier than guessing combination of user and password. The correct way is to display some general message like “Invalid credentials”.
+
+This vulnerability also exists in password reset pages. In these cases, it’s better to show messages like “Email is sent to this mail” or “Check your inbox”, even if account doesn’t exist.
