@@ -415,3 +415,7 @@ There are different ways to implement sessions:
     This is solved with shared database or in-memory data store like Redis. Using database as session store, however, causes bottlenecks for large applications.
 
     ![Session sharing solution](./assets/session-sharing-solution.png)
+
+- Client side session
+
+    Sessions can be attached in cookie, and entire session state is sent by browser to server. Whichever server receives the request, it has everything it needs to identify the user. However, there are security risks as attacker can tamper with the session state, unless it’s encrypted or digitally signed.
