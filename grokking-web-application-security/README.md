@@ -33,6 +33,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [MFA](#mfa)
   - [Storing credentials](#storing-credentials)
   - [User enumeration](#user-enumeration)
+  - [Session vulnerabilities](#session-vulnerabilities)
 
 ## Know your enemy
 
@@ -398,3 +399,7 @@ This vulnerability also exists in password reset pages. In these cases, it’s b
 Because such pages can be attacked with millions of requests than can generate millions of messages to emails, such pages should be protected with CAPTCHA.
 
 There is another vector for user enumeration attack. If you check username, and generate a hash of supplied password to check with real password, there is a time difference if attacker sends invalid and valid credentials. Valid email (or username) would take more time, because password is hashed and checked with original one. For such cases, it’s necessary to generate a hash even if username doesn’t match the email.
+
+## Session vulnerabilities
+
+Identifying the user with username and password for each HTTP request made from their account leads to a lot of unnecessary work in server, because rechecking password each time is a lot of work. To prevent this, there are sessions, identifiers that let server identify the user without requiring them to submit credentials.
