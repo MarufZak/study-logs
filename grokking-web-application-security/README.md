@@ -500,3 +500,7 @@ Access Control is an umbrella for Authentication and Authorization, because we n
     ![ABAC](./assets/abac.png)
 
     Most systems use both RBAC and ABAC. RBAC for identifying the user category, and ABAC for identifying the objects user category can interact with. For example in Figma. RBAC is used to grand reading access for readers, writing access to writers (RBAC). However, they cannot do so for every document, only those they own or joined to (ABAC).
+
+Here are some ways how to provide access control checks. Dynamic routing tables can be used based on the user category. It’s available in ruby on rails, and the routing table is defined at runtime. However, not all languages offer this. Another way is to use decorators. Decorator is a function that runs before specified function. This can be used to ensure user is authenticated, for example. Another way is about using middleware in request/response cycle, and ensure request is authenticated before it reaches specified endpoint.
+
+When access control check fails, there are codes to respond with. All of them are correct depending on the context. 403, forbidden, is used when user doesn’t have access to some resource, and to indicate the resource exists. When user is not authenticated, it’s possible to respond with redirect status code (302) to the login page, or 401. When the resource is not found, or when user doesn’t have access to it and you don’t want to expose it exists, 404 (not found) is appropriate.
