@@ -33,7 +33,8 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [MFA](#mfa)
   - [Storing credentials](#storing-credentials)
   - [User enumeration](#user-enumeration)
-  - [Session vulnerabilities](#session-vulnerabilities)
+[Session vulnerabilities](#session-vulnerabilities)
+  - [Session hijacking](#session-hijacking)
 
 ## Know your enemy
 
@@ -463,3 +464,12 @@ There are different ways to implement sessions:
     return `${encode(header)}.${encode(payload)}.${signature}}`
     }
     ```
+
+### Session hijacking
+
+Sessions can be hijacked or forged in different ways:
+
+1. On network - sessions are hijacked in the network level, when using insecure connection. For example with MITM attack, entire requests are visible, so it’s easy to steal the session.
+2. Via XSS - if you store your sessions in local storage, or in cookie without HttpOnly flag, our sessions are vulnerable to XSS.
+3. Weak identifiers - it’s also possible to forge the sessions by just guessing them, when using weak session identifiers. Tomcat server once used to use `Random` util function from java standard library, but the outcome of this function could be guessed, so does session identifiers. This was patched to use `SecureRandom` later. Make sure you don’t generate identifiers that are guessable.
+4. Session fixation - in older days session ids used to be passed via URL. This creates fixation attack, where hacker could share some url with random session id. Victim logs in, and server creates session under the same session id. Hacker now can log in with same URL with victim’s account. Server shouldn’t trust the session ids suggested by the client.
