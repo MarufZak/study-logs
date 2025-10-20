@@ -484,3 +484,11 @@ Every application is domain-specific, there is some domain the application touch
 For example applications like Reddit have 3 types of users: regular users, moderators, admins. All of them have some kind of role, user can post message, moderator can do what user can, and delete message in subreddit, admins can do what moderators can and delete subreddits. Another application is CMS, where writer can write post, and only admin can publish it. Authorization for these case studies differ.
 
 Authorization logic should be documented, because it evolves as the business logic of the application. This will serve as a living document. Describe clearly what authorization roles are and what they can do at an abstract level.
+
+Access Control is an umbrella for Authentication and Authorization, because we need to know who the user is before granting permissions. Access control can be split into 2 categories:
+
+- RBAC
+
+    Role Based Access Control (RBAC) is splitting users into different categories, and allow them perform some privileges based on their role. For example, in CMS system, roles would be writer and publisher. Privileges would be writing article, and publishing it.
+
+    ![RBAC](./assets/rbac.png)
