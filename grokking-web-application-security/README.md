@@ -419,3 +419,47 @@ There are different ways to implement sessions:
 - Client side session
 
     Sessions can be attached in cookie, and entire session state is sent by browser to server. Whichever server receives the request, it has everything it needs to identify the user. However, there are security risks as attacker can tamper with the session state, unless it’s encrypted or digitally signed.
+
+- JWT
+
+    JSON Web Tokens are just a way to transmit information over the network, but with capability of ensuring payload sent inside the token is same as it was sent → it’s not tampered with, as long as it passes validation. JWT includes:
+
+    1. Header - information about the token itself, like the algorithm used to sign it, and media type of jwt, or any other metadata. Can be obtained by using formula, which is basically base64URL (url safe).
+
+        ```tsx
+        const encodingReplacements = {
+            "+": "-",
+            "/": "_",
+            "=": ''
+        }
+
+        const makeUrlSafe = (encoded) => {
+            return encoded.replace(/[+/=]/g, match => encodingReplacements[match])
+        }
+
+        const encode = (object) => {
+            return makeUrlSafe(btoa(JSON.stringify(object)));
+        }
+
+        encode(...)
+        ```
+
+    2. Payload - actual piece of information. Payload is encoded in same manner as header, in base64URL format. Payload contains claims, pieces of information. There are 3 types of claims: registered - ones with specified meaning (like iss, sub, exp), public (custom ones shared between parties, like roles), and private (only for particular application, like theme).
+    3. Signature - Verification information is not tampered with. Includes following formula, hashing function `hmacSHA256` and `Base64` formatter comes from `crypto-js`. Hashing function is the one written in header.
+
+        ```tsx
+        const createSignature = (header, payload, secret) => {
+        const hashed = hmacSHA256(`${encode(header)}.${encode(payload)}`, secret)
+        const stringified = Base64.stringify(hashed);
+        return makeUrlSafe(stringified);
+        }
+        ```
+
+    So final representation of JWT is following. JWT verification is just decoding the header, payload, create signature with them and a secret, and compare the signatures. If payload changes slightly, the signature would not match. Also verification happens according to exp (expiry) claim.
+
+    ```tsx
+    const createJwt = (header, payload, secret) => {
+    const signature = createSignature(header, payload, secret);
+    return `${encode(header)}.${encode(payload)}.${signature}}`
+    }
+    ```
