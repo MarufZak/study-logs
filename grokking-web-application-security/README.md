@@ -403,3 +403,15 @@ There is another vector for user enumeration attack. If you check username, and 
 ## Session vulnerabilities
 
 Identifying the user with username and password for each HTTP request made from their account leads to a lot of unnecessary work in server, because rechecking password each time is a lot of work. To prevent this, there are sessions, identifiers that let server identify the user without requiring them to submit credentials.
+
+There are different ways to implement sessions:
+
+- Server side session
+
+    When user logs in, random combination of numbers is sent back as cookie, and is stored locally in the server. It’s used to identify the user for subsequent requests. Beyond just identifying users, session stores can include temporary session state - records that help server reply quickly for requests made by this user. But there is a problem. Typically web servers are deployed to multiple machines, and have load balancer as an entry point behind them. This means that in-memory session stores are ineffective, because each process in each machine has its own memory.
+
+    ![Session sharing](./assets/session-sharing.png)
+
+    This is solved with shared database or in-memory data store like Redis. Using database as session store, however, causes bottlenecks for large applications.
+
+    ![Session sharing solution](./assets/session-sharing-solution.png)
