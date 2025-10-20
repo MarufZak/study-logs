@@ -480,3 +480,7 @@ Sessions can be hijacked or forged in different ways:
 Basic tutorials teach us the basics like session management, authentication, how to render templates, etc. They instruct how to implement authorization, and leave to the student the reason authorization needs to be done in that way.
 
 Every application is domain-specific, there is some domain the application touches, bound to its business logic. There are different users, and different flows. For these reasons, one authorization strategy cannot uniquely fit into all applications. Every application needs its own authorization flow.
+
+For example applications like Reddit have 3 types of users: regular users, moderators, admins. All of them have some kind of role, user can post message, moderator can do what user can, and delete message in subreddit, admins can do what moderators can and delete subreddits. Another application is CMS, where writer can write post, and only admin can publish it. Authorization for these case studies differ.
+
+Authorization logic should be documented, because it evolves as the business logic of the application. This will serve as a living document. Describe clearly what authorization roles are and what they can do at an abstract level.
