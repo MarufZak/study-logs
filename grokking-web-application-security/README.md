@@ -492,3 +492,11 @@ Access Control is an umbrella for Authentication and Authorization, because we n
     Role Based Access Control (RBAC) is splitting users into different categories, and allow them perform some privileges based on their role. For example, in CMS system, roles would be writer and publisher. Privileges would be writing article, and publishing it.
 
     ![RBAC](./assets/rbac.png)
+
+- ABAC
+
+    Attribute Based Access Control (ABAC), is about users having control over some resources based on their attributes. Users are subjects, and resources are objects. Subjects usually own the objects, and can perform actions based on attributes defined by subject or object.
+
+    ![ABAC](./assets/abac.png)
+
+    Most systems use both RBAC and ABAC. RBAC for identifying the user category, and ABAC for identifying the objects user category can interact with. For example in Figma. RBAC is used to grand reading access for readers, writing access to writers (RBAC). However, they cannot do so for every document, only those they own or joined to (ABAC).
