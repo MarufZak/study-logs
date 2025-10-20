@@ -35,6 +35,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [User enumeration](#user-enumeration)
 [Session vulnerabilities](#session-vulnerabilities)
   - [Session hijacking](#session-hijacking)
+[Authorization vulnerabilities](#authorization-vulnerabilities)
 
 ## Know your enemy
 
@@ -473,3 +474,9 @@ Sessions can be hijacked or forged in different ways:
 2. Via XSS - if you store your sessions in local storage, or in cookie without HttpOnly flag, our sessions are vulnerable to XSS.
 3. Weak identifiers - it’s also possible to forge the sessions by just guessing them, when using weak session identifiers. Tomcat server once used to use `Random` util function from java standard library, but the outcome of this function could be guessed, so does session identifiers. This was patched to use `SecureRandom` later. Make sure you don’t generate identifiers that are guessable.
 4. Session fixation - in older days session ids used to be passed via URL. This creates fixation attack, where hacker could share some url with random session id. Victim logs in, and server creates session under the same session id. Hacker now can log in with same URL with victim’s account. Server shouldn’t trust the session ids suggested by the client.
+
+## Authorization vulnerabilities
+
+Basic tutorials teach us the basics like session management, authentication, how to render templates, etc. They instruct how to implement authorization, and leave to the student the reason authorization needs to be done in that way.
+
+Every application is domain-specific, there is some domain the application touches, bound to its business logic. There are different users, and different flows. For these reasons, one authorization strategy cannot uniquely fit into all applications. Every application needs its own authorization flow.
