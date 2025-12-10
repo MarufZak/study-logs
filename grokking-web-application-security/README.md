@@ -33,9 +33,9 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [MFA](#mfa)
   - [Storing credentials](#storing-credentials)
   - [User enumeration](#user-enumeration)
-[Session vulnerabilities](#session-vulnerabilities)
+    [Session vulnerabilities](#session-vulnerabilities)
   - [Session hijacking](#session-hijacking)
-[Authorization vulnerabilities](#authorization-vulnerabilities)
+    [Authorization vulnerabilities](#authorization-vulnerabilities)
 
 ## Know your enemy
 
@@ -261,7 +261,7 @@ I also observed that if javascript file response includes CORS policy, when load
 
 One way of protection is using fetch call inside javascript file, to receive sensitive data in json. When script is run on the loading side, the origin is the loading side, evil website in this case. JSON is protected by cross-origin policy, so javascript is not able to read the response. Or include it in HTML response, as a value of meta tag, and retrieve with javascript.
 
-Also it’s possible to protect against such attack with `Cross-Origin-Resource-Policy` HTTP header, telling browsers not to leak the body of the response, so the body is stripped, and so response is not executed.
+Also it’s possible to protect against such attack with `Cross-Origin-Resource-Policy` HTTP header, telling browsers not to leak the body of the response, so the body is stripped, and so response is not executed. The difference between it and `Access-Control-Allow-Origin` is that last one restricts the response to JS, and the first one cuts the response at all if policy is not met.
 
 ## Network vulnerabilities
 
@@ -299,7 +299,7 @@ DNS resolvers are naive, they believe in whatever response they get from DNS ser
 
 DNS poisoning is not dangerous on its own, with HTTPS. If this happens, the destination website should provide valid certificate for connection. If it provides original website certificate, it cannot decrypt the messages, assuming they haven’t stolen encryption keys. Or if it provides invalid certificate, browser warns its invalid.
 
-DNS is being upgraded these days. DNSSEC is new standard for DNS that enables signed responses from resolvers, which can be verified. All DNSSEC validation happens on DNS resolvers, and clients like browser gets raw IP address. But browser might bypass the OS resolver, and use DoH (DNS over HTTP) when configured. Now it can choose which resolvers to choose, and if DNSSEC is configured in browser, it chooses resolvers that support DNS.
+DNS is being upgraded these days. DNSSEC is new standard for DNS that enables signed responses from resolvers, which can be verified. All DNSSEC validation happens on DNS resolvers, and clients like browser gets raw IP address. But browser might bypass the OS resolver, and use DoH (DNS over HTTP) when configured, and it can choose which resolvers to use, and if DNSSEC is configured in browser, it chooses resolvers that support DNSSEC.
 
 ### Subdomain squatting
 
@@ -315,7 +315,7 @@ There are certificate authorities that issue certificates for domain owners. The
 
 ![Certificates chain](./assets/certificates-chain.png)
 
-Hackers can hack a node in chain of trust, and issue fake certificates, as happened with Comodo CA in 2011. NSA also used forged certificates to conduct MITM attacks. Kazakhstan tried to force citizens to use national security certificate (as trusted certificate), that would allow them to snoop on the whole internet traffic in the country (but companies like Google and Apple refused, and didn’t honor these certificates in Safari and Chrome). Basically every OS and browser ships with trusted list of CAs. User can also specify the list of trusted [CAs.cd](http://CAs.cd)
+Hackers can hack a node in chain of trust, and issue fake certificates, as happened with Comodo CA in 2011. NSA also used forged certificates to conduct MITM attacks. Kazakhstan tried to force citizens to use national security certificate (as trusted certificate), that would allow them to snoop on the whole internet traffic in the country (but companies like Google and Apple refused, and didn’t honor these certificates in Safari and Chrome). Basically every OS and browser ships with trusted list of CAs. User can also specify the list of trusted certificates.
 
 If the certificate private keys are stolen, or certificate authority is compromised, certificate revocation is needed. There are 2 ways browsers check for certificate revocation, and usually they do both:
 
@@ -324,11 +324,11 @@ If the certificate private keys are stolen, or certificate authority is compromi
 
 It’s possible to revoke the certificate using CLI tools like `*certbot*`, or using CA’s admin panels. If certificate is revoked, user gets warning.
 
-But what if the CA is compromised, and it issues rogue certificates for your domain? To prevent such attacks, CA’s now implement _certificate transparency_ logs, which is publishing any certificate being issued to your domain.
+But what if the CA is compromised, and it issues rogue certificates for your domain? To prevent such attacks, CA’s now implement _certificate transparency_ logs, which is writing logs of any certificate being issued in global append-only log. Only certificate metadata, issuer, expiration, cert fingerprint are logged.
 
 Websites are usually hosted with web server, which communicates with application server. There is a certificate (which is public), and private keys. Private keys should be stored privately. It’s usually stored in web server, which encrypts the traffic from the application server, and decrypts it, passing it to the downstream (application server). Private keys can be obtained if hacker gets access to server, such as with SSH protocol. Make sure you grand accesses only to someone who needs it, and revoke access once it’s not needed. If your application server and web server is hosted in one machine, attacker can make script injection attack, so it’s better to host these on separate machines. Make sure only privileged users (like web server process) have access to private directory of private keys.
 
-Also it’s better to make the processes automized, like issuing and revoking the TLS certificates.
+Also it’s better to make the processes automated, like issuing and revoking the TLS certificates.
 
 ## Authentication vulnerabilities
 
@@ -388,7 +388,7 @@ Modern bcrypt algorithm stores the salt inside the hash, so it’s not necessary
 
 Hashing credentials for inbound access is useful, but what about outbound access, when we want to use credentials to connect to external system, like database? In such cases, credentials are stored in encrypted manner, and decrypted only when needed. Major cloud providers have service of storing credentials in secure store. Some credentials can be marked as sensitive, so only allowed users or processes can have them. It’s also possible to encrypt/decrypt the credentials at application code level, before putting into store.
 
-For encryption algorithms, we need encryption keys. It is not good idea to store encryption keys alongside the encrypted configuration file. If config file is compromised, the only thing hacker would have to do is guess the encryption algorithm, which is relatively easy. Ideal solution is to use key management store outside config file.
+For encryption algorithms, we need encryption keys. It is not good idea to store encryption keys alongside the configuration file. If config file is compromised, the only thing hacker would have to do is guess the encryption algorithm, which is relatively easy. Ideal solution is to use key management store outside config file.
 
 As a last resort, it’s also not bad to store encryption keys in application config files, but the encryption key should be changed regularly, and credentials need to be rotated.
 
@@ -410,61 +410,64 @@ There are different ways to implement sessions:
 
 - Server side session
 
-    When user logs in, random combination of numbers is sent back as cookie, and is stored locally in the server. It’s used to identify the user for subsequent requests. Beyond just identifying users, session stores can include temporary session state - records that help server reply quickly for requests made by this user. But there is a problem. Typically web servers are deployed to multiple machines, and have load balancer as an entry point behind them. This means that in-memory session stores are ineffective, because each process in each machine has its own memory.
+  When user logs in, random combination of numbers is sent back as cookie, and is stored locally in the server. It’s used to identify the user for subsequent requests. Beyond just identifying users, session stores can include temporary session state - records that help server reply quickly for requests made by this user. But there is a problem. Typically web servers are deployed to multiple machines, and have load balancer as an entry point behind them. This means that in-memory session stores are ineffective, because each process in each machine has its own memory.
 
-    ![Session sharing](./assets/session-sharing.png)
+  ![Session sharing](./assets/session-sharing.png)
 
-    This is solved with shared database or in-memory data store like Redis. Using database as session store, however, causes bottlenecks for large applications.
+  This is solved with shared database or in-memory data store like Redis. Using database as session store, however, causes bottlenecks for large applications.
 
-    ![Session sharing solution](./assets/session-sharing-solution.png)
+  ![Session sharing solution](./assets/session-sharing-solution.png)
 
 - Client side session
 
-    Sessions can be attached in cookie, and entire session state is sent by browser to server. Whichever server receives the request, it has everything it needs to identify the user. However, there are security risks as attacker can tamper with the session state, unless it’s encrypted or digitally signed.
+  Sessions can be attached in cookie, and entire session state is sent by browser to server. Whichever server receives the request, it has everything it needs to identify the user. However, there are security risks as attacker can tamper with the session state, unless it’s encrypted or digitally signed.
 
 - JWT
 
-    JSON Web Tokens are just a way to transmit information over the network, but with capability of ensuring payload sent inside the token is same as it was sent → it’s not tampered with, as long as it passes validation. JWT includes:
+  JSON Web Tokens are just a way to transmit information over the network, but with capability of ensuring payload sent inside the token is same as it was sent → it’s not tampered with, as long as it passes validation. JWT includes:
 
-    1. Header - information about the token itself, like the algorithm used to sign it, and media type of jwt, or any other metadata. Can be obtained by using formula, which is basically base64URL (url safe).
+  1. Header - information about the token itself, like the algorithm used to sign it, and media type of jwt, or any other metadata. Can be obtained by using formula, which is basically base64URL (url safe).
 
-        ```tsx
-        const encodingReplacements = {
-            "+": "-",
-            "/": "_",
-            "=": ''
-        }
+     ```tsx
+     const encodingReplacements = {
+         "+": "-",
+         "/": "_",
+         "=": ''
+     }
 
-        const makeUrlSafe = (encoded) => {
-            return encoded.replace(/[+/=]/g, match => encodingReplacements[match])
-        }
+     const makeUrlSafe = (encoded) => {
+         return encoded.replace(/[+/=]/g, match => encodingReplacements[match])
+     }
 
-        const encode = (object) => {
-            return makeUrlSafe(btoa(JSON.stringify(object)));
-        }
+     const encode = (object) => {
+         return makeUrlSafe(btoa(JSON.stringify(object)));
+     }
 
-        encode(...)
-        ```
+     encode(...)
+     ```
 
-    2. Payload - actual piece of information. Payload is encoded in same manner as header, in base64URL format. Payload contains claims, pieces of information. There are 3 types of claims: registered - ones with specified meaning (like iss, sub, exp), public (custom ones shared between parties, like roles), and private (only for particular application, like theme).
-    3. Signature - Verification information is not tampered with. Includes following formula, hashing function `hmacSHA256` and `Base64` formatter comes from `crypto-js`. Hashing function is the one written in header.
+  2. Payload - actual piece of information. Payload is encoded in same manner as header, in base64URL format. Payload contains claims, pieces of information. There are 3 types of claims: registered - ones with specified meaning (like iss, sub, exp), public (custom ones shared between parties, like roles), and private (only for particular application, like theme).
+  3. Signature - Verification information is not tampered with. Includes following formula, hashing function `hmacSHA256` and `Base64` formatter comes from `crypto-js`. Hashing function is the one written in header.
 
-        ```tsx
-        const createSignature = (header, payload, secret) => {
-        const hashed = hmacSHA256(`${encode(header)}.${encode(payload)}`, secret)
-        const stringified = Base64.stringify(hashed);
-        return makeUrlSafe(stringified);
-        }
-        ```
+     ```tsx
+     const createSignature = (header, payload, secret) => {
+       const hashed = hmacSHA256(
+         `${encode(header)}.${encode(payload)}`,
+         secret
+       );
+       const stringified = Base64.stringify(hashed);
+       return makeUrlSafe(stringified);
+     };
+     ```
 
-    So final representation of JWT is following. JWT verification is just decoding the header, payload, create signature with them and a secret, and compare the signatures. If payload changes slightly, the signature would not match. Also verification happens according to exp (expiry) claim.
+  So final representation of JWT is following. JWT verification is just decoding the header, payload, create signature with them and a secret, and compare the signatures. If payload changes slightly, the signature would not match. Also verification happens according to exp (expiry) claim.
 
-    ```tsx
-    const createJwt = (header, payload, secret) => {
+  ```tsx
+  const createJwt = (header, payload, secret) => {
     const signature = createSignature(header, payload, secret);
-    return `${encode(header)}.${encode(payload)}.${signature}}`
-    }
-    ```
+    return `${encode(header)}.${encode(payload)}.${signature}}`;
+  };
+  ```
 
 ### Session hijacking
 
@@ -489,17 +492,17 @@ Access Control is an umbrella for Authentication and Authorization, because we n
 
 - RBAC
 
-    Role Based Access Control (RBAC) is splitting users into different categories, and allow them perform some privileges based on their role. For example, in CMS system, roles would be writer and publisher. Privileges would be writing article, and publishing it.
+  Role Based Access Control (RBAC) is splitting users into different categories, and allow them perform some privileges based on their role. For example, in CMS system, roles would be writer and publisher. Privileges would be writing article, and publishing it.
 
-    ![RBAC](./assets/rbac.png)
+  ![RBAC](./assets/rbac.png)
 
 - ABAC
 
-    Attribute Based Access Control (ABAC), is about users having control over some resources based on their attributes. Users are subjects, and resources are objects. Subjects usually own the objects, and can perform actions based on attributes defined by subject or object.
+  Attribute Based Access Control (ABAC), is about users having control over some resources based on their attributes. Users are subjects, and resources are objects. Subjects usually own the objects, and can perform actions based on attributes defined by subject or object.
 
-    ![ABAC](./assets/abac.png)
+  ![ABAC](./assets/abac.png)
 
-    Most systems use both RBAC and ABAC. RBAC for identifying the user category, and ABAC for identifying the objects user category can interact with. For example in Figma. RBAC is used to grand reading access for readers, writing access to writers (RBAC). However, they cannot do so for every document, only those they own or joined to (ABAC).
+  Most systems use both RBAC and ABAC. RBAC for identifying the user category, and ABAC for identifying the objects user category can interact with. For example in Figma. RBAC is used to grand reading access for readers, writing access to writers (RBAC). However, they cannot do so for every document, only those they own or joined to (ABAC).
 
 Here are some ways how to provide access control checks. Dynamic routing tables can be used based on the user category. It’s available in ruby on rails, and the routing table is defined at runtime. However, not all languages offer this. Another way is to use decorators. Decorator is a function that runs before specified function. This can be used to ensure user is authenticated, for example. Another way is about using middleware in request/response cycle, and ensure request is authenticated before it reaches specified endpoint.
 
