@@ -39,6 +39,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
 - [Payload vulnerabilities](#payload-vulnerabilities)
   - [Deserialization attacks](#deserialization-attacks)
   - [JSON vulnerabilities](#json-vulnerabilities)
+  - [Prototype pollution](#prototype-pollution)
 
 ## Know your enemy
 
@@ -526,3 +527,22 @@ Another risk is that attacker can easily tamper with data sent to the browser in
 ### JSON vulnerabilities
 
 JSON is valid subset of JavaScript. This means that JSON is valid JS. Anything written in JSON can be executed by JavaScript runtime. Consider a case where the JSON is being handled, and `eval` is used for deserialization. This is vulnerability, because it allows attacker to perform remote code execution by specifying any arbitrary code. For JSON deserialization, JSON.parse should be used.
+
+### Prototype pollution
+
+JavaScript uses prototype-based inheritance, rather than class-based inheritance. In languages that use prototype-based inheritance, if some field or value is not found in current object, it's searched in its prototype, until root prototype is reached. Some method up the prototype chain can be easily modified, and all calls to this method results in custom defined behavior. Prototype pollution refers to this.
+
+Consider a case when some merging algorithm exists, which takes two objects, one is from user input. If merge algorithm is incorrect, it lets the user input object to change the methods or properties in prototype chain. What if attacker replaces some function, which deletes all files in server?
+
+Consider a case when this merging happens, and attacker gives following json. When merge happens, prototype is changed, and it can go up to Object prototype itself. Now every object has access_code assigned to brainworms. If some access-control checks are done based on this, attacker gets privileged.
+
+```js
+{
+  name: "sneaky_pete";
+  __proto__: {
+    access_code: "brainworms";
+  }
+}
+```
+
+To mitigate such attacks, allow lists of fields should be used (for merging in this case), or explicitly taken from the object, like user.input = object.input
