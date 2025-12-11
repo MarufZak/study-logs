@@ -36,6 +36,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
     [Session vulnerabilities](#session-vulnerabilities)
   - [Session hijacking](#session-hijacking)
     [Authorization vulnerabilities](#authorization-vulnerabilities)
+    [Payload vulnerabilities](#payload-vulnerabilities)
 
 ## Know your enemy
 
@@ -507,3 +508,15 @@ Access Control is an umbrella for Authentication and Authorization, because we n
 Here are some ways how to provide access control checks. Dynamic routing tables can be used based on the user category. It’s available in ruby on rails, and the routing table is defined at runtime. However, not all languages offer this. Another way is to use decorators. Decorator is a function that runs before specified function. This can be used to ensure user is authenticated, for example. Another way is about using middleware in request/response cycle, and ensure request is authenticated before it reaches specified endpoint.
 
 When access control check fails, there are codes to respond with. All of them are correct depending on the context. 403, forbidden, is used when user doesn’t have access to some resource, and to indicate the resource exists. When user is not authenticated, it’s possible to respond with redirect status code (302) to the login page, or 401. When the resource is not found, or when user doesn’t have access to it and you don’t want to expose it exists, 404 (not found) is appropriate.
+
+Authorization flaws can be detected by QA team, or writing unit tests. Also one important thing is to separate trusted and untrusted input into its boundaries. If trusted and untrusted inputs are stored together, unaware developer might make decision considering these inputs, without knowing they are untrusted. User input is always untrusted until it's validated, data from the system (db for ex) is trusted by default. Auth decisions should be made by trusted data. Access-control checks based on untrusted data leads to _horizontal escalation attack_, where attacker manipulates the input to gain some privileges, or _horizontal escalation_, where attacker changes the identity to match another user.
+
+## Payload vulnerabilities
+
+Most vulnerabilities come from untrusted input, and usually these target the web servers directly.
+
+### Deserialization attacks
+
+Many serialization libraries allow defining some functions, that are executed before the deserialization happens. Attacker can make use of it and define some function that deletes all files in web server (deserialization happens on the server in this case). To avoid it, better format should be considered, for example yaml or json, which are less vulnerable to these attacks, because these can be deserialized safely.
+
+Another risk is that attacker can easily tamper with data sent to the browser in serialized way. This data is going to travel back to server, and can cause problems (for example data stored in localhost might make round trip). To prevent attacker from tampering with these, HMAC (hash based message authentication code) signature should be used and sent alongside the serialized data itself. When the serialized data is received back alongside the signature, we should check the signature against the serialized data to make sure the data is not tampered with.
