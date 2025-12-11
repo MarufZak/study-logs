@@ -42,6 +42,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [Prototype pollution](#prototype-pollution)
   - [XML vulnerabilities](#xml-vulnerabilities)
   - [File upload vulnerabilities](#file-upload-vulnerabilities)
+  - [Path traversal](#path-traversal)
 
 ## Know your enemy
 
@@ -636,3 +637,7 @@ First of all, it's important to validate the file. The name, maximum file size (
 It's even possible to upload some file, that is a script accepting some params and executing, and attacker can request this file with some headers to perform RPCs. That's why files should never be written to disk with executable permissions.
 
 It's also possible to use cloud services like S3, and they handle the risks of the file storage.
+
+### Path traversal
+
+Suppose the static files are being served through our application. Application takes the name of the file from query params (`?file=myfile.png`). In this case attacker could use (`?file=../../sensitive-file.yaml`) to obtain sensitive file. This is called file traversal. No path should be allowed in the filename, and when requesting the filename, filename should always be tested against path characters.
