@@ -41,6 +41,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [JSON vulnerabilities](#json-vulnerabilities)
   - [Prototype pollution](#prototype-pollution)
   - [XML vulnerabilities](#xml-vulnerabilities)
+  - [File upload vulnerabilities](#file-upload-vulnerabilities)
 
 ## Know your enemy
 
@@ -623,3 +624,15 @@ Inline DTDs are under control of the ones who submit XML document, which gives a
 Second danger is that we can specify external URLs there, which are going to be loaded and inlined. Attackers can abuse this ability and include links to malicious websites, probe your network, and perform some attacks. Also it's possible to reference the files. Parsing will likely to fail, because expanded XML doesn't pass the validation, but the error might reveal the sensitive file contents.
 
 DTD is old technology, and modern XML parsers disable DTD by default, but this security threat exists in legacy stacks. Sometimes we should explicitly disable DTD for the parser.
+
+### File upload vulnerabilities
+
+Uploading files functionality is favorite for attackers, because it's direct opportunity to insert some files in the file system, or overwrite something there. The payload can also be some malicious code or files.
+
+First of all, it's important to validate the file. The name, maximum file size (large files can lead to DoS), file extensions compared with headers, file extensions compared to magic number (it's possible to craft files that are valid in multiple formats, though), be aware of ZIP bombs, where the ZIP files get bigger and bigger as they get unzipped. The name can also contain path characters like ../../, which can overwrite some files etc. It's much safer to generate some name for the file and store it like this. If file names matter, it's possible to store the files with arbitrary names, and store the original name in the database for further lookups.
+
+![File upload](./assets/file-upload.png)
+
+It's even possible to upload some file, that is a script accepting some params and executing, and attacker can request this file with some headers to perform RPCs. That's why files should never be written to disk with executable permissions.
+
+It's also possible to use cloud services like S3, and they handle the risks of the file storage.
