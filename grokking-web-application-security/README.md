@@ -40,6 +40,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [Deserialization attacks](#deserialization-attacks)
   - [JSON vulnerabilities](#json-vulnerabilities)
   - [Prototype pollution](#prototype-pollution)
+  - [XML vulnerabilities](#xml-vulnerabilities)
 
 ## Know your enemy
 
@@ -546,3 +547,79 @@ Consider a case when this merging happens, and attacker gives following json. Wh
 ```
 
 To mitigate such attacks, allow lists of fields should be used (for merging in this case), or explicitly taken from the object, like user.input = object.input
+
+### XML vulnerabilities
+
+In the past days, XML was used pretty much for everything, including config files, remote procedure calls, data labelling, build scripts. But now it has been replaced by many other formats, like YAML for config files. Anyway web servers can parse the XML.
+
+There was a technique to validate XML, called Document Type Definition (DTD), where field names, values, and ordering of tags in XML could be specified.
+
+```xml
+<?xml version="1.0"?>
+<people>
+<person>
+<name>Fred Flintstone</name>
+<age>44</age>
+</person>
+<person>
+<name>Barney Rubble</name>
+<age>45</age>
+</person>
+</root>
+```
+
+DTD:
+
+```dtd
+<!ELEMENT people (person*) >
+<!ELEMENT person (name, age) >
+<!ELEMENT name (#PCDATA) >
+<!ELEMENT age (#PCDATA) >
+```
+
+DTD is deprecated and replaced by XML schemas, but still supported. Security concerns arise because DTD can be specified in inline way inside XML.
+
+DTD has feature where 'variables' can be specified, and these 'variables' are replaced in DTD before parsing. In following example, &company is going to be replaced to Rock and Gravel Company in XML document. Note that DTD is inlined inside XML.
+
+```xml
+<?xml version="1.0"?>
+<!DOCTYPE employees [
+<!ELEMENT employees (employee)*>
+<!ELEMENT employee (#PCDATA)>
+<!ENTITY company "Rock and Gravel Company">
+]>
+<employees>
+<employee>
+Fred Flintstone, &company;
+</employee>
+<employee>
+Barney Rubble, &company;
+</employee>
+</employees>
+```
+
+Inline DTDs are under control of the ones who submit XML document, which gives attacker some power. Consider following case:
+
+```xml
+<?xml version="1.0"?>
+<!DOCTYPE lolz [
+<!ENTITY lol "lol">
+<!ENTITY lol2 "&lol;&lol;&lol;&lol;&lol;">
+<!ENTITY lol3 "&lol2;&lol2;&lol2;&lol2;&lol2;">
+<!ENTITY lol4 "&lol3;&lol3;&lol3;&lol3;&lol3;">
+<!ENTITY lol5 "&lol4;&lol4;&lol4;&lol4;&lol4;">
+<!ENTITY lol6 "&lol5;&lol5;&lol5;&lol5;&lol5;">
+<!ENTITY lol7 "&lol6;&lol6;&lol6;&lol6;&lol6;">
+<!ENTITY lol8 "&lol7;&lol7;&lol7;&lol7;&lol7;">
+<!ENTITY lol9 "&lol8;&lol8;&lol8;&lol8;&lol8;">
+]>
+<lolz>&lol9;</lolz>
+```
+
+&lo19 is going to be replaced by five instances of &lo18, and so on, and this results in several GB of space in the server after parsing. This attack is called billion of laughs, type of XML bombs attack that explodes the server memory with single HTTP request, to perform DoS.
+
+![XML bomb](./assets/xml-bomb.png)
+
+Second danger is that we can specify external URLs there, which are going to be loaded and inlined. Attackers can abuse this ability and include links to malicious websites, probe your network, and perform some attacks. Also it's possible to reference the files. Parsing will likely to fail, because expanded XML doesn't pass the validation, but the error might reveal the sensitive file contents.
+
+DTD is old technology, and modern XML parsers disable DTD by default, but this security threat exists in legacy stacks. Sometimes we should explicitly disable DTD for the parser.
