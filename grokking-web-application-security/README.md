@@ -33,10 +33,12 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [MFA](#mfa)
   - [Storing credentials](#storing-credentials)
   - [User enumeration](#user-enumeration)
-    [Session vulnerabilities](#session-vulnerabilities)
+  - [Session vulnerabilities](#session-vulnerabilities)
   - [Session hijacking](#session-hijacking)
-    [Authorization vulnerabilities](#authorization-vulnerabilities)
-    [Payload vulnerabilities](#payload-vulnerabilities)
+  - [Authorization vulnerabilities](#authorization-vulnerabilities)
+- [Payload vulnerabilities](#payload-vulnerabilities)
+  - [Deserialization attacks](#deserialization-attacks)
+  - [JSON vulnerabilities](#json-vulnerabilities)
 
 ## Know your enemy
 
@@ -520,3 +522,7 @@ Most vulnerabilities come from untrusted input, and usually these target the web
 Many serialization libraries allow defining some functions, that are executed before the deserialization happens. Attacker can make use of it and define some function that deletes all files in web server (deserialization happens on the server in this case). To avoid it, better format should be considered, for example yaml or json, which are less vulnerable to these attacks, because these can be deserialized safely.
 
 Another risk is that attacker can easily tamper with data sent to the browser in serialized way. This data is going to travel back to server, and can cause problems (for example data stored in localhost might make round trip). To prevent attacker from tampering with these, HMAC (hash based message authentication code) signature should be used and sent alongside the serialized data itself. When the serialized data is received back alongside the signature, we should check the signature against the serialized data to make sure the data is not tampered with.
+
+### JSON vulnerabilities
+
+JSON is valid subset of JavaScript. This means that JSON is valid JS. Anything written in JSON can be executed by JavaScript runtime. Consider a case where the JSON is being handled, and `eval` is used for deserialization. This is vulnerability, because it allows attacker to perform remote code execution by specifying any arbitrary code. For JSON deserialization, JSON.parse should be used.
