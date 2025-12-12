@@ -44,6 +44,8 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [File upload vulnerabilities](#file-upload-vulnerabilities)
   - [Path traversal](#path-traversal)
   - [Mass assignment](#mass-assignment)
+- [Injection vulnerabilities](#injection-vulnerabilities)
+  - [Remote code execution](#remote-code-execution)
 
 ## Know your enemy
 
@@ -660,3 +662,18 @@ const name = body.name;
 const surname = body.surname;
 db.user.save({ name, surname });
 ```
+
+## Injection vulnerabilities
+
+### Remote code execution
+
+The code in programming languages is written in text files, which are given to some compiler or runtime to produce bytecode or binary. But programming languages allow executing dynamic code, stored as a variable. For example `eval("console('hi')")`, where the console statement is dynamic code. This opens the doors for attacks. For example, artificial:
+
+```js
+server.use("/execute", async (req) => {
+  const body = await req.text();
+  eval(body);
+});
+```
+
+DSL (domain-specific language) is a language that solves specific problem, unlike general purpose languages. If you build DLS into web application, you probably end up running it dynamically, and in fact it's easiest way. But, unless you did proper sandboxing, it opens doors for RCE. One solution is to use some scripting languages specifically designed to be embedded to other languages, like Lua. You can control which objects are passed to the context. Another solution is to safely parse and evaluate each expression by breaking it into expressions, and evaluating each of them (this is hard, because we are building our own parser). This way each operation is already defined, and there is no way to run arbitrary operations.
