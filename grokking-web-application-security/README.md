@@ -46,6 +46,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [Mass assignment](#mass-assignment)
 - [Injection vulnerabilities](#injection-vulnerabilities)
   - [Remote code execution](#remote-code-execution)
+  - [SQL injections](#sql-injections)
 
 ## Know your enemy
 
@@ -693,3 +694,18 @@ Another possibility for RCE is server-side includes. For example in PHP, while e
 ```
 
 Suppose the file is taken from some query param of request. Attacker could put some malicious script url there, and it would be evaluated at the server. Don't trust the input from the user.
+
+### SQL injections
+
+Web applications commonly use databases like Postgresql. SQl describes how the data should be stored in the database, and language to be accessed from outside. Web applications communicate with database via database driver, which allows manipulating database data. Sometimes it's possible to see code like:
+
+```js
+const username = body.username;
+SELECT * from users where username = '" + username + "' and password_hash = '" + hash + '"'
+```
+
+This code is vulnerable to SQL injections. Hacker could provide something like `sam'--'`, which would bypass password by just making password checking a comment, or maybe drop the tables.
+
+To protect against such attacks, application should use parameterized statements. Placeholders (like %s) are given in sql query, and the arguments are provided separately. This way driver can ensure that the arguments don't contain something malicious, and fail if they do.
+
+Sometimes, though, using parameterized queries is complex because of, for example, complex order_by, where the order is taken from query params. In this case, an allow list of params is good protection against sql injections.
