@@ -677,3 +677,19 @@ server.use("/execute", async (req) => {
 ```
 
 DSL (domain-specific language) is a language that solves specific problem, unlike general purpose languages. If you build DLS into web application, you probably end up running it dynamically, and in fact it's easiest way. But, unless you did proper sandboxing, it opens doors for RCE. One solution is to use some scripting languages specifically designed to be embedded to other languages, like Lua. You can control which objects are passed to the context. Another solution is to safely parse and evaluate each expression by breaking it into expressions, and evaluating each of them (this is hard, because we are building our own parser). This way each operation is already defined, and there is no way to run arbitrary operations.
+
+Another possibility for RCE is server-side includes. For example in PHP, while evaluating HTML, you can include other files:
+
+```php
+<head>
+  <title>Server side includes</title>
+  <body>
+    <div>
+      <?php include 'https://example.com/header.php'; ?>
+      <p>This is content</p>
+    </div>
+  </body>
+</head>
+```
+
+Suppose the file is taken from some query param of request. Attacker could put some malicious script url there, and it would be evaluated at the server. Don't trust the input from the user.
