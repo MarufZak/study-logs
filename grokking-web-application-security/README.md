@@ -43,6 +43,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [XML vulnerabilities](#xml-vulnerabilities)
   - [File upload vulnerabilities](#file-upload-vulnerabilities)
   - [Path traversal](#path-traversal)
+  - [Mass assignment](#mass-assignment)
 
 ## Know your enemy
 
@@ -641,3 +642,21 @@ It's also possible to use cloud services like S3, and they handle the risks of t
 ### Path traversal
 
 Suppose the static files are being served through our application. Application takes the name of the file from query params (`?file=myfile.png`). In this case attacker could use (`?file=../../sensitive-file.yaml`) to obtain sensitive file. This is called file traversal. No path should be allowed in the filename, and when requesting the filename, filename should always be tested against path characters.
+
+### Mass assignment
+
+Consider following code:
+
+```js
+const body = req.json();
+db.user.save(body);
+```
+
+This code is vulnerable to mass assignment. If user has field `isAdmin` for example, attacker might include it in the body to obtain admin privileges. The fields should be explicitly written.
+
+```js
+const body = req.json();
+const name = body.name;
+const surname = body.surname;
+db.user.save({ name, surname });
+```
