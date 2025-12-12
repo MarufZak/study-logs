@@ -720,3 +720,5 @@ SQL is considered to consist of four sublanguages:
 4. Data Control Language (DCL) - for modifying permissions with GRAND and REVOKE commands.
 
 Usually the application code requires only reading and writing to the database, so making proper permissions for the account is another protection layer.
+
+There are also NoSQL databases, family of approaches to loosen the constraints of traditional SQL databases (traditional SQL databases tend to be very strict about the data types, which might lead to bottleneck in large applications, and writing to database is queued up and validated before being written). NoSQL databases tackle scaling problems by loosening strictness. However, they are still vulnerable to SQL injections when used improperly. For example MongoDB allows constructing command strings, and interpolating (joining strings) from untrusted input might lead to SQL injections.
