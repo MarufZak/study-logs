@@ -709,3 +709,14 @@ This code is vulnerable to SQL injections. Hacker could provide something like `
 To protect against such attacks, application should use parameterized statements. Placeholders (like %s) are given in sql query, and the arguments are provided separately. This way driver can ensure that the arguments don't contain something malicious, and fail if they do.
 
 Sometimes, though, using parameterized queries is complex because of, for example, complex order_by, where the order is taken from query params. In this case, an allow list of params is good protection against sql injections.
+
+Many apps use ORMs, and most of them are safe, they use parametrized queries. They also allow to explicitly write the sql query or some clauses (like where), so be aware of them. Alongside raw queries, parameters are also supported.
+
+SQL is considered to consist of four sublanguages:
+
+1. Data Query Language (DQL) - for querying data via SELECT commands.
+2. Data Manipulation Language (DML) - for manipulating data with UPDATE, DELETE, INSERT.
+3. Data Definition Language (DDL) - for defining and changing structure of columns, structured, indexes, with CREATE, MODIFY and DROP commands.
+4. Data Control Language (DCL) - for modifying permissions with GRAND and REVOKE commands.
+
+Usually the application code requires only reading and writing to the database, so making proper permissions for the account is another protection layer.
