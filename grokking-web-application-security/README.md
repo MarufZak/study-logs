@@ -48,6 +48,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [Remote code execution](#remote-code-execution)
   - [SQL injections](#sql-injections)
   - [LDAP injections](#ldap-injections)
+  - [CRLF injections](#crlf-injections)
 
 ## Know your enemy
 
@@ -748,3 +749,21 @@ Attacker might use chaining to perform additional system calls, for example he c
 Making system calls from application code are common in one programming languages than in others. For example in PHP it's common to make command line calls that use system calls, in Node.js it's also possible, but also other native APIs are provided, like fs module. In Node.js we can use `child_process` module, which provides `spawn` function to make command line calls, which accepts arguments as array. This can server as protection against command injection attacks.
 
 ![Injection attack](./assets/command-injection.png)
+
+### CRLF injections
+
+In UNIX-based systems, new lines are marked with Line Feed character - \n. In Windows systems, new lines are marked with two characters, Carriage Return (CR) - \r, and Line Feed.
+
+Attacker might inject LF or CRLF combination to make log injection. Suppose you are logging operations in your server, for example user is logging in with some username. Attacker might use LF or CRLF to mark newline in your logs.
+
+```txt
+username =  username\nhere are logs from attackers!
+```
+
+This can be used to disguise the footprints and make hard to debug.
+
+The most effective way to mitigate this attack is strip newline characters from the input, and use standard logging package, that adds some metadata like request id, or timestamp, to make it obvious the log is from attacker.
+
+The second use-case for this attack is HTTP response splitting. In HTTP spec, the headers are split with \r\n characters. If you take some untrusted input from the user to include in HTTP response, make sure you escape these characters. Otherwise attacker can provide input like `value\r\n\r\n<script>Oops!!!</script>` to provide custom body to the response.
+
+![HTTP response splitting](./assets/http-response-splitting.png)
