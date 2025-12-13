@@ -50,6 +50,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [LDAP injections](#ldap-injections)
   - [CRLF injections](#crlf-injections)
   - [Regex injections](#regex-injections)
+- [Vulnerabilities in third-party code](#vulnerabilities-in-third-party-code)
 
 ## Know your enemy
 
@@ -778,3 +779,15 @@ Regexes are usually defined statically at the code level, but there are some cas
 If he provides some complicated regex that takes too much computation power, and make a query where this regex is used, this causes server to go offline. This attack is called regular expression DoS attack (ReDoS).
 
 The thing to do is to use some tools that analyze the codebase and detect such vulnerabilities, like SonarSource tool, or use packages like escape-string-regexp.
+
+## Vulnerabilities in third-party code
+
+Most of the code in the applications are not written by us, but by third-party. How to ensure these don't have security problems?
+
+First of all, we should track the dependency versions we are using. We have package-lock.json, which records exact versions of dependencies and sub-dependencies to install, providing consistency in dev and prod. When some vulnerabilities are detected, they are usually published in social media, hacker news, or subreddits. These vulnerabilities usually exist in specific versions of dependencies, so tracking your dependencies versions helps to identify whether you have problems. It's also possible to audit your codebase against these vulnerabilities with `npm audit`
+
+Sometimes making dependency update to prevent some attacks is difficult, because it might not have compatibility with previous one, the testing of entire application that it doesn't break might require time, or deployment freezes occur. In these cases we should consider how critical the vulnerability is. If it does not touch the client, it's safe to update the patches (fixed version of dependency) in next release.
+
+We should also hide the tech stack project is using, for example hiding the extensions of files in URL, or hide headers from nginx, and any other things that might leak the tech stack information.
+
+However, it's possible to use server fingerprinting tools like NMap, that send some ambiguous requests and see how server responds, and they determine server type by this. It also scans the ports, and much more. This doesn't mean we shouldn't make protections described earlier, though, because many attacks are high-level attacks.
