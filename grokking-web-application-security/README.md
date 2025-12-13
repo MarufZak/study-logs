@@ -733,3 +733,18 @@ ldap_query = f"(&(uid={username})(userPassword={password}))"
 ```
 
 But user can enter special characters like \*, which would allow him to bypass the authentication. We should filter any special-meaning characters for LDAP.
+
+### Command injection
+
+There are some applications that take user's input, and make some system call on the server. For example DNS lookup website, which takes domain from user, and does something like this in server:
+
+```php
+// php, domain is user's input
+$lookup = system("nslookup {$domain}");
+```
+
+Attacker might use chaining to perform additional system calls, for example he can provide input: `google.com && cat /etc/passwords` to read sensitive file, or another actions.
+
+Making system calls from application code are common in one programming languages than in others. For example in PHP it's common to make command line calls that use system calls, in Node.js it's also possible, but also other native APIs are provided, like fs module. In Node.js we can use `child_process` module, which provides `spawn` function to make command line calls, which accepts arguments as array. This can server as protection against command injection attacks.
+
+![Injection attack](./assets/command-injection.png)
