@@ -47,6 +47,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
 - [Injection vulnerabilities](#injection-vulnerabilities)
   - [Remote code execution](#remote-code-execution)
   - [SQL injections](#sql-injections)
+  - [LDAP injections](#ldap-injections)
 
 ## Know your enemy
 
@@ -722,3 +723,13 @@ SQL is considered to consist of four sublanguages:
 Usually the application code requires only reading and writing to the database, so making proper permissions for the account is another protection layer.
 
 There are also NoSQL databases, family of approaches to loosen the constraints of traditional SQL databases (traditional SQL databases tend to be very strict about the data types, which might lead to bottleneck in large applications, and writing to database is queued up and validated before being written). NoSQL databases tackle scaling problems by loosening strictness. However, they are still vulnerable to SQL injections when used improperly. For example MongoDB allows constructing command strings, and interpolating (joining strings) from untrusted input might lead to SQL injections.
+
+### LDAP injections
+
+LDAP (Lightweight directory access protocol) is method of storing and accessing directory information about users, systems, and devices. Web applications might use ldap with ldap://localhost:389 protocol to check user's credentials. Usually these credentials are taken from users' input. So query might look like:
+
+```py
+ldap_query = f"(&(uid={username})(userPassword={password}))"
+```
+
+But user can enter special characters like \*, which would allow him to bypass the authentication. We should filter any special-meaning characters for LDAP.
