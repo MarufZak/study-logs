@@ -49,6 +49,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [SQL injections](#sql-injections)
   - [LDAP injections](#ldap-injections)
   - [CRLF injections](#crlf-injections)
+  - [Regex injections](#regex-injections)
 
 ## Know your enemy
 
@@ -767,3 +768,13 @@ The most effective way to mitigate this attack is strip newline characters from 
 The second use-case for this attack is HTTP response splitting. In HTTP spec, the headers are split with \r\n characters. If you take some untrusted input from the user to include in HTTP response, make sure you escape these characters. Otherwise attacker can provide input like `value\r\n\r\n<script>Oops!!!</script>` to provide custom body to the response.
 
 ![HTTP response splitting](./assets/http-response-splitting.png)
+
+### Regex injections
+
+Regexes are usually defined statically at the code level, but there are some cases where regex might come from user input. In this case, attacker might perform attack, and cause DoS.
+
+![regex injection](./assets/regex-injection.png)
+
+If he provides some complicated regex that takes too much computation power, and make a query where this regex is used, this causes server to go offline. This attack is called regular expression DoS attack (ReDoS).
+
+The thing to do is to use some tools that analyze the codebase and detect such vulnerabilities, like SonarSource tool, or use packages like escape-string-regexp.
