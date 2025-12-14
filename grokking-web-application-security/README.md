@@ -807,7 +807,7 @@ Thirdly, some software come with default configuration, like databases with defa
 
 ## Being an unwitting accomplice
 
-Our web applications are not islands, they are connected to the internet. Sometimes hackers might use another web application in the internet for attacks to hide their trail.
+Our web applications are not islands, they are connected to the internet. Sometimes hackers might use another web application in the internet for attacks to hide their trail. Or just because the server has much more computational power.
 
 ### Server-side request forgery
 
@@ -831,3 +831,5 @@ To prevent attacker from probing the network, following steps should be taken:
 2. The port should be one of standard ports.
 3. Protocol should be HTTPS, with valid certificate.
 4. Limit the number of internal servers accessible by your server.
+
+Another use case where URL to make request to comes from incoming request is link-sharing website (link-shortener for example). In these cases, make sure to have a blocklist of domains you will never send request to, either inside configuration file or database. This list can be huge, and it's better to use some [well-known list](https://github.com/StevenBlack/hosts)
