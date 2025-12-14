@@ -56,6 +56,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [Server-side request forgery](#server-side-request-forgery)
   - [Email spoofing](#email-spoofing)
   - [Open redirects](#open-redirects)
+- [What to do when you got hacker](#what-to-do-when-you-get-hacked)
 
 ## Know your enemy
 
@@ -863,3 +864,13 @@ If your website has ability to redirect the user into arbitrary URLs, it's vulne
 It's often done for UX in websites, for example redirect the user after login to URL put in query params. To protect against attacks, it's important to check that URL is relative path, that is, start with backslash.
 
 Another protection is to check `Referer` header, which should be our domain. If it's not, the redirect is not performed. Attacker can change `Referer` header if the request is in full control of attacker. But often attacker has no such control, and just sends links.
+
+## What to do when you get hacked
+
+Being hacked is inevitable. First of all, we should know when we are being hacked. Logs are essential, logs should be everywhere. It's important to inspect these logs and detect malicious traffic. This can be automated with cloud services that has alerting capabilities.
+
+Large organizations have SOC (security operations center) team that can detect attacks in progress. Sometimes it makes sense to shut the server down if attack is in progress, if the service is not critical. Or other techniques, like deploying the fix, rolling back, rotating password keys might be enough, depending on the vulnerability. Also status pages are implemented to make customers aware.
+
+After the attack is done, and after it was mitigated, so called `digital forensics` is made. It's timeline of everything, starting when vulnerability was deployed, what hackers did, ending with when it was mitigated.
+
+![digital forensics](./assets/digital-forensics.png)
