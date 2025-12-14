@@ -51,6 +51,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [CRLF injections](#crlf-injections)
   - [Regex injections](#regex-injections)
 - [Vulnerabilities in third-party code](#vulnerabilities-in-third-party-code)
+  - [Insecure configuration](#insecure-configuration)
 
 ## Know your enemy
 
@@ -791,3 +792,13 @@ Sometimes making dependency update to prevent some attacks is difficult, because
 We should also hide the tech stack project is using, for example hiding the extensions of files in URL, or hide headers from nginx, and any other things that might leak the tech stack information.
 
 However, it's possible to use server fingerprinting tools like NMap, that send some ambiguous requests and see how server responds, and they determine server type by this. It also scans the ports, and much more. This doesn't mean we shouldn't make protections described earlier, though, because many attacks are high-level attacks.
+
+### Insecure configuration
+
+The security of deployed application also depends on the security of configurations.
+
+First thing to check is to ensure that the public serving directory and private content directory are different. Sometimes they are in one directory, and private files can be served as public. Apache also had `open directory listing` vulnerability, which should be disabled in order not to let the attackers see the contents of directory.
+
+Secondly, client-side error reporting should be disabled on production, in order not to leak the server information to the client.
+
+Thirdly, some software come with default configuration, like databases with default username and password. Make sure to check the configurations are not default, but customized.
