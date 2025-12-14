@@ -54,6 +54,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [Insecure configuration](#insecure-configuration)
 - [Being an unwitting accomplice](#being-an-unwitting-accomplice)
   - [Server-side request forgery](#server-side-request-forgery)
+  - [Email spoofing](#email-spoofing)
 
 ## Know your enemy
 
@@ -833,3 +834,13 @@ To prevent attacker from probing the network, following steps should be taken:
 4. Limit the number of internal servers accessible by your server.
 
 Another use case where URL to make request to comes from incoming request is link-sharing website (link-shortener for example). In these cases, make sure to have a blocklist of domains you will never send request to, either inside configuration file or database. This list can be huge, and it's better to use some [well-known list](https://github.com/StevenBlack/hosts)
+
+### Email spoofing
+
+Attacks can be done with emails also, with SMTP protocol, for phishing attacks. It has `From` header which is easily manipulated and is not authenticated.
+
+The first way to protect against these attacks is to use Sender Policy Framework (SPF), with the help of what we can list the IPs of servers, which can be used to send some emails from some domain. It's done by adding DNS record of type TXT.
+
+![spf](./assets/spf.png)
+
+SMTP travels over TCP, and it's much harder to spoof IP address, rather than spoof `From` header in SMTP protocol. This way email clients can verify the sender who they say they are.
