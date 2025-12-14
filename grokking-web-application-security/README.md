@@ -814,3 +814,20 @@ Our web applications are not islands, they are connected to the internet. Someti
 Internet is client-server protocol. Client such as browser makes request to server, and server responds with response. Sometimes servers can also be clients, when they send requests to other servers, acting as a client. But if user can make the server to send request to any arbitrary URL, the server is vulnerable to SSRF attacks. User can make too many requests, and make DoS attack for endpoint server (server which our web server sending requests to).
 
 ![ssrf](./assets/ssrf.png)
+
+They might also use this vulnerability to probe internal network, for example database. Usually some error is returned and hacker needs some luck, but sometimes error might reveal sensitive data, or other combination of circumstances might make this attack to happen.
+
+To prevent such attacks, we should construct HTTP requests based on the incoming request, everything should be on the server side, static.
+
+Sometimes applications need to make such requests, for example social media, which load the thumbnail and captions of shared URL. In these cases, followings should be done:
+
+1. Make outgoing HTTP request only triggered by some action by authenticated user.
+2. For social media sites, limit the number of links user can share.
+3. Consider making CAPTCHA before sharing URL.
+
+To prevent attacker from probing the network, following steps should be taken:
+
+1. Validate the URL is domain, not IP (attackers might point some domain to some private IPs, so just doing this step is not enough)
+2. The port should be one of standard ports.
+3. Protocol should be HTTPS, with valid certificate.
+4. Limit the number of internal servers accessible by your server.
