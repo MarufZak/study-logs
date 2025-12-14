@@ -844,3 +844,11 @@ The first way to protect against these attacks is to use Sender Policy Framework
 ![spf](./assets/spf.png)
 
 SMTP travels over TCP, and it's much harder to spoof IP address, rather than spoof `From` header in SMTP protocol. This way email clients can verify the sender who they say they are.
+
+To prevent the emails to be tampered with, we can use DomainKeys identified mail (DKIM). In this case, we add public key as DNS record, and signing each email with private key. Private key signs, public key verifies. Email clients can recalculate the signature when mail arrives, and reject if not same. This technique is more complex than SPF, but good news is email service will do most of the job.
+
+![dkim](./assets/dkim.png)
+
+What happens to rejected emails is dictated by Domain-based message authentication, reporting, and conformance (DMARC) policy. It's itself a DNS record, TXT type, that should be on `subdomain_dmarc.example.com`.
+
+![spf](./assets/dmarc.png)
