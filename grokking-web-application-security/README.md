@@ -55,6 +55,7 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
 - [Being an unwitting accomplice](#being-an-unwitting-accomplice)
   - [Server-side request forgery](#server-side-request-forgery)
   - [Email spoofing](#email-spoofing)
+  - [Open redirects](#open-redirects)
 
 ## Know your enemy
 
@@ -852,3 +853,13 @@ To prevent the emails to be tampered with, we can use DomainKeys identified mail
 What happens to rejected emails is dictated by Domain-based message authentication, reporting, and conformance (DMARC) policy. It's itself a DNS record, TXT type, that should be on `subdomain_dmarc.example.com`.
 
 ![spf](./assets/dmarc.png)
+
+### Open redirects
+
+Mail service providers usually parse the URLs in links, and check against banned list of domains, and if there is a match, the mail is moved to the junk folder.
+
+If your website has ability to redirect the user into arbitrary URLs, it's vulnerable to `open redirect` vulnerability. Spam emailers use your website to make the redirect to malicious website, and because of trust your users have on you, they might do what is instructed.
+
+It's often done for UX in websites, for example redirect the user after login to URL put in query params. To protect against attacks, it's important to check that URL is relative path, that is, start with backslash.
+
+Another protection is to check `Referer` header, which should be our domain. If it's not, the redirect is not performed. Attacker can change `Referer` header if the request is in full control of attacker. But often attacker has no such control, and just sends links.
