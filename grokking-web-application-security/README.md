@@ -52,6 +52,8 @@ My notes and takeaways from the Grokking Web Application Security book by Malcol
   - [Regex injections](#regex-injections)
 - [Vulnerabilities in third-party code](#vulnerabilities-in-third-party-code)
   - [Insecure configuration](#insecure-configuration)
+- [Being an unwitting accomplice](#being-an-unwitting-accomplice)
+  - [Server-side request forgery](#server-side-request-forgery)
 
 ## Know your enemy
 
@@ -802,3 +804,13 @@ First thing to check is to ensure that the public serving directory and private 
 Secondly, client-side error reporting should be disabled on production, in order not to leak the server information to the client.
 
 Thirdly, some software come with default configuration, like databases with default username and password. Make sure to check the configurations are not default, but customized.
+
+## Being an unwitting accomplice
+
+Our web applications are not islands, they are connected to the internet. Sometimes hackers might use another web application in the internet for attacks to hide their trail.
+
+### Server-side request forgery
+
+Internet is client-server protocol. Client such as browser makes request to server, and server responds with response. Sometimes servers can also be clients, when they send requests to other servers, acting as a client. But if user can make the server to send request to any arbitrary URL, the server is vulnerable to SSRF attacks. User can make too many requests, and make DoS attack for endpoint server (server which our web server sending requests to).
+
+![ssrf](./assets/ssrf.png)
