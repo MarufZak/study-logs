@@ -871,6 +871,14 @@ Being hacked is inevitable. First of all, we should know when we are being hacke
 
 Large organizations have SOC (security operations center) team that can detect attacks in progress. Sometimes it makes sense to shut the server down if attack is in progress, if the service is not critical. Or other techniques, like deploying the fix, rolling back, rotating password keys might be enough, depending on the vulnerability. Also status pages are implemented to make customers aware.
 
-After the attack is done, and after it was mitigated, so called `digital forensics` is made. It's timeline of everything, starting when vulnerability was deployed, what hackers did, ending with when it was mitigated.
+After the attack is done, and after it was mitigated, so called `digital forensics` is made. It's timeline of everything, created out of logs, starting when vulnerability was deployed, what hackers did, ending with when it was mitigated.
 
 ![digital forensics](./assets/digital-forensics.png)
+
+Some steps are taken to prevent such attacks, like adding vulnerabilities analysis, more frequent patching release cycles, better reviews, and etc.
+
+It's important to be transparent to users in order not to lose their trust.
+
+It's also important to provide security file for people who want to report about the vulnerability, without exposing it to public, with /.well-known/security.txt.
+
+![security](./assets/security.png)
