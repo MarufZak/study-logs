@@ -2,9 +2,13 @@
   "check_status": true,
   "commit_type": {
     "enable": true,
-    "initial_value": "nodejs-design-patterns",
+    "initial_value": "system-design-interview",
     "infer_type_from_branch": true,
     "options": [
+      {
+        "value": "system-design-interview",
+        "label": "system-design-interview"
+      },
       {
         "value": "typescript-pro-essentials",
         "label": "typescript-pro-essentials"
