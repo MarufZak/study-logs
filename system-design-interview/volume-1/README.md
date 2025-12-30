@@ -23,3 +23,12 @@ With one server setup, if load is high, users generally experience slow response
 ![3](./assets/3.png)
 
 In this case, the IP user receives from DNS is load balancer's public IP address. The web servers are not exposed to the internet, and load balancer accesses them through private IP addresses in private network. No there is no failover if server goes offline, and if load is high, you only need to add new servers if necessary, and load balancer does the work.
+
+Now web tier is good, but what about data tier? Single database can cause failover and redundancy. The way to go is database replication.
+
+Database replication is having relationship of master node and slave nodes. Master node is used for modifications, while slave nodes are used for reading. Because usually the number of reads is much bigger, slave nodes are usually more than master nodes. This setup provides better performance - as many operations can be handled in parallel, reliability - if one database is destroyed by natural disaster, the copies are preserved in other nodes, high availability - if one node gets offline, another nodes provides availability.
+
+![4](./assets/4.png)
+
+If only one slave database is available and it goes offline, all read operations are temporarily executed on master database. As issue is found, new slave database is created, and it replaces the old one. If multiple slave databases are available, read operations are executed on other healthy slave databases.
+If master database goes offline, slave database is promoted to master, and all operations are temporarily executed on new master. New slave database is created immediately for replications. Promoting slave to master can be complicated, because the slave might not have up-to-date data as master does, so some data recovery scripts are needed. There are also other techniques for replication.
