@@ -46,3 +46,18 @@ Some considerations for using cache:
 3. Consistency between data store and cache. When scaling across multiple regions, it might be challenging to keep them in sync. Facebook has great article about [scaling memcache](https://www.usenix.org/system/files/conference/nsdi13/nsdi13-final170_update.pdf).
 4. Single cache server might lead to single point of failure, where cache tier is not accessible at all. To mitigate this, multiple cache servers across different datacenters are used. Also cache overprovisioning is used, where more memory is allocated for cache than it would regularly need (it serves as buffer as memory usage increases).
 5. Once cache is full, eviction policy is applied, meaning some item from cache is evicted. It can be LRU (least recently used, most popular), LFU (least frequently used), or FIFO (first in first out).
+
+CDN (Content Delivery Network) is a network of geographically dispersed servers that are used to serve static content, like images, videos, html/css/js files, etc. Closest server to user is chosen to serve the content. Users located closer to the location of CDN server have better response times.
+
+![6](./assets/6.png)
+
+Users access the files through URL depending on CDN provider. If files exist in CDN, they are served to users. If not, they are fetched from origin (S3 or web server), cached in CDN, and served to the users. Origin might include optional TTL HTTP header, and it's used to invalidate the cache in CDN if provided. Considerations:
+
+1. CDN is provided by third-party, and you are charged for every in and out. Don't cache infrequently accessed items in CDN.
+2. Set good cache expiry, not too short, not too long.
+3. If CDN is temporarily unavailable, users should be able to access these files from origin.
+4. It's possible to invalidate the files from CDN via APIs, or by adding a param to query string, such as version number `v=2`.
+
+So here is our system after these modifications:
+
+![7](./assets/7.png)
