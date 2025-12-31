@@ -64,4 +64,14 @@ So here is our system after these modifications:
 
 Applications can have state stored in web tier, for example user sessions. In this case, if there are two servers, and session is stored on server A, if user connects to server B he is unauthenticated. It's possible to solve this problem with sticky load balancing, but it becomes more complex to scale horizontally. The solution is to use some shared store for the sessions, and servers communicate with this store for sessions. The store can be NoSQL DB, Redis/Memcached, or relational DB.
 
+Application where the state is stored in web tier is called stateful, and where the state is stored separately or there is no stored state, it's stateless.
+
 ![8](./assets/8.png)
+
+Users number grows, and to provide better availability and UX, it's better to distribute the load across different data centers. Also in case of outage in one data center, traffic can be routed to different data center. Challenges:
+
+1. Routing traffic to different datacenter is difficult.
+2. If there are local databases in datacenter, it will not be available in another datacenter, so synchronization problems should be resolved.
+3. Testing and automating tools for deployment are needed for different datacenters.
+
+![9](./assets/9.png)
