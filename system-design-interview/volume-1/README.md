@@ -61,3 +61,7 @@ Users access the files through URL depending on CDN provider. If files exist in 
 So here is our system after these modifications:
 
 ![7](./assets/7.png)
+
+Applications can have state stored in web tier, for example user sessions. In this case, if there are two servers, and session is stored on server A, if user connects to server B he is unauthenticated. It's possible to solve this problem with sticky load balancing, but it becomes more complex to scale horizontally. The solution is to use some shared store for the sessions, and servers communicate with this store for sessions. The store can be NoSQL DB, Redis/Memcached, or relational DB.
+
+![8](./assets/8.png)
