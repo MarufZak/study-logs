@@ -71,7 +71,23 @@ Application where the state is stored in web tier is called stateful, and where 
 Users number grows, and to provide better availability and UX, it's better to distribute the load across different data centers. Also in case of outage in one data center, traffic can be routed to different data center. Challenges:
 
 1. Routing traffic to different datacenter is difficult.
-2. If there are local databases in datacenter, it will not be available in another datacenter, so synchronization problems should be resolved.
+2. If there are local databases in datacenter, it will not be available in another datacenter, so synchronization problems should be resolved. [Article](https://netflixtechblog.com/active-active-for-multi-regional-resiliency-c47719f6685b) by netflix tech blog.
 3. Testing and automating tools for deployment are needed for different datacenters.
 
 ![9](./assets/9.png)
+
+Other improvements are:
+
+1. Using message queue. Message queue is component stored in memory that supports asynchronous communication. Publishers publish some messages to this queue, and subscribers consume these messages. So decoupling is happening between publisher and subscriber.
+2. Logging, metrics, automation.
+
+As data becomes more, our database becomes overloaded. It's time to scale data tier. There are 2 types of database scaling:
+
+Vertical scaling - adding more RAM and CPU. Database server can be massive, even up to 24TB of RAM. Stackoverflow had only 1 master database with 10M unique visitors every day. However there are hardware limits, and the cost becomes much higher on big scaling, and there is single point of failure.
+
+Horizontal scaling - also known as sharding, is separating large database into smaller more easily manageable databases, and data inside each shard is unique. Hash function is used which shard to go with, and it calculates it based on sharding key (partition key). For example if user_id is sharding key, and if hash function is user_id % 4, if result is 1, go to first database, if 2, go to second, ... Sharding key can consist of multiple columns of database, and it's important to choose right one to evenly distribute the load.
+However, sharding has some complexities:
+
+1. Re-sharding data might be needed if hashing function distributes load more to one DB than to another (shard exhaustion), or when single shard cannot hold data due to rapid growth.
+2. Celebrity problem, where one shard might be overloaded with read operations (for example) if many celebrities are in one shard.
+3. Join operations cannot happen on different shards, workaround would be duplicating data from different shard.
