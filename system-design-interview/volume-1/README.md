@@ -91,3 +91,19 @@ However, sharding has some complexities:
 1. Re-sharding data might be needed if hashing function distributes load more to one DB than to another (shard exhaustion), or when single shard cannot hold data due to rapid growth.
 2. Celebrity problem, where one shard might be overloaded with read operations (for example) if many celebrities are in one shard.
 3. Join operations cannot happen on different shards, workaround would be duplicating data from different shard.
+
+## Chapter 4. Design rate limiter
+
+Rate limiter in the context of networking is limiting the traffic by some origin. In context of HTTP requests, it's about limiting the number of requests sent by client.
+
+Rate limiter has following pros: resistance against DoS/DDoS attacks, reducing costs (such as allocating less server resources or focusing on more impactful APIs), and preventing overloading of servers.
+
+Rate limiter can be implemented in both client side and server side, but the client side is not reliable as we don't have control over the code once it reaches the client, so malicious actors might misbehave.
+
+Here is how it's done in server side:
+
+![10](./assets/10.png)
+
+Or it can be done as a middleware, so the requests are throttled before reaching the server.
+
+![11](./assets/11.png)
