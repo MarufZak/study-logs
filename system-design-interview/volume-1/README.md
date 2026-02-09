@@ -107,3 +107,13 @@ Here is how it's done in server side:
 Or it can be done as a middleware, so the requests are throttled before reaching the server.
 
 ![11](./assets/11.png)
+
+In cloud services architecture rate limiting is usually done by component called API Gateway. It's gateway that does rate limiting, authentication, IP allowlist/blacklist, serving static content, etc. Whether or not to make a rate-limiter in API gateway depends on circumstances (for example whether or not you already have microservices architecture with gateway). Making rate-limiter takes time, so sometimes it makes sense to use commercial rate limiters.
+
+### Token bucket algorithm
+
+First algorithm to implement rate limiting is called Token Bucket algorithm. Bucket has number of tokens. Bucket is refilled with tokens every second/minute. Each request costs 1 token. When request is made, and if there is available tokens in the bucket, request proceeds, otherwise it's blocked.
+
+How many buckets to make? It depends. For example if you want some user to like some post max 5 times/sec, and post 10 posts/sec, you can make 2 buckets for each action.
+
+Pros of this algo is it's easy to implement, memory efficient, and traffic burst are handled properly. The con is that there are 2 params to specify: max tokens (bucket size), and refilling period (refilling rate). Configuring them properly might be hard to achieve.
