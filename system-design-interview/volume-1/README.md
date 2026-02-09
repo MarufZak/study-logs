@@ -117,3 +117,12 @@ First algorithm to implement rate limiting is called Token Bucket algorithm. Buc
 How many buckets to make? It depends. For example if you want some user to like some post max 5 times/sec, and post 10 posts/sec, you can make 2 buckets for each action.
 
 Pros of this algo is it's easy to implement, memory efficient, and traffic burst are handled properly. The con is that there are 2 params to specify: max tokens (bucket size), and refilling period (refilling rate). Configuring them properly might be hard to achieve.
+
+### Leaked bucket algorithm
+
+It's same as token bucket algo, but this time FIFO is used. Bucket is a queue. When a request is made, and if bucket has space, request is added to the queue. Otherwise it's dropped. The requests are processed at constant rate (for example 5 requests per second).
+
+Takes 2 params: queue size and outflow rate (requests number to be processed each second).
+
+Pros: memory efficient given fixed size of queue, and good for use cases where stable outflaw is needed.
+Cons: burst of requests makes so old requests are queued, while new requests are discarded. Requires 2 params to be specified, which again might make it difficult to configure properly.
