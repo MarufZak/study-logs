@@ -176,3 +176,5 @@ To properly reply to client that it has been throttled, some HTTP headers are al
 3. X-Ratelimit-Retry-After - number of seconds to wait to make request that is not throttled.
 
 When too many requests are made, 429 alongside X-Ratelimit-Retry-After is sent.
+
+![12](./assets/12.png)
