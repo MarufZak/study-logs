@@ -160,3 +160,19 @@ If request number exceeds threshold, request is blocked, otherwise it's accepted
 
 Pros: smooths out traffic spikes, memory efficient (stores only 2 counters).
 Cons: not 100% accurate and might allow requests beyond threshold (0.003% among 400 million), because it assumes requests are evenly distributed in previous time window.
+
+### Architecture
+
+How rate limiter config is written? It can be specified as some file in file system and saved in disk. We can use some worker that periodically fetches this config and stores it in memory, so we can access the config with no latency problem.
+
+Where to store the counters? We need fast to access store, so in-memory stores are efficient, such as Redis. It also has commands like INCR and EXPIRE to increment the counter and set expiration period for some record.
+
+When client sends request to servers, it first goes to rate limiter middleware. This middleware gets config from worker, and gets the counters and last request timestamp from Redis. If condition meets the requirements, request is passed to servers, otherwise it is declined (or any other thing, like added to queue to process later, depending on use case).
+
+To properly reply to client that it has been throttled, some HTTP headers are also used alongside status code 429 (too many requests).
+
+1. X-Ratelimit-Remaining - remaining number of requests within the window.
+2. X-Ratelimit-Limit - number of requests that can be made per window.
+3. X-Ratelimit-Retry-After - number of seconds to wait to make request that is not throttled.
+
+When too many requests are made, 429 alongside X-Ratelimit-Retry-After is sent.
