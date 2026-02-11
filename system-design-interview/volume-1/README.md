@@ -133,3 +133,12 @@ Timeline is split into time intervals (units), which might be 1 second, 1 minute
 
 Pros: memory efficient, easy to understand, and resetting quota per unit time might fit some use cases.
 Cons: requests between the edges of two time intervals might cause more requests than specified in threshold. For example, if time unit is 1 minute, requests number might be 20 between 03:30:30 and 04:31:30.
+
+### Sliding window log algorithm
+
+It fixes the issue with fixed window counter algorithm. When request comes in, its timestamp is added to the set (such as sorted set in Redis). All outdated timestamps are deleted from set (those that are older than time unit. For example if time unit is minute and requests comes at 13:30:30, all timestamps before (13:30:00 - 00:01:00) 13:29:00 are deleted). If number of timestamps exceeds the threshold, request is rejected, otherwise it's accepted.
+
+Consider an example. Threshold is 2 req/min. First request comes at 13:30:20 (accepted), second comes at 13:30:40 (accepted), and third comes at 13:31:30. Requests between 13:30:30 and 13:31:30 are valid, but the rest is outdated. So queue now has timestamps of 13:30:40 and 13:31:30, which is already full. Any request that comes before 13:31:40 is blocked.
+
+Pros: solves the problem with fixed window counter
+Cons: not memory efficient, because stores blocked request timestamps in memory.
