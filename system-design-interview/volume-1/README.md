@@ -126,3 +126,10 @@ Takes 2 params: queue size and outflow rate (requests number to be processed eac
 
 Pros: memory efficient given fixed size of queue, and good for use cases where stable outflaw is needed.
 Cons: burst of requests makes so old requests are queued, while new requests are discarded. Requires 2 params to be specified, which again might make it difficult to configure properly.
+
+### Fixed window counter algorithm
+
+Timeline is split into time intervals (units), which might be 1 second, 1 minute, and so on. Each interval has a threshold of how many maximum requests are allowed. If request number goes beyond this threshold, requests are blocked. Request number is reset on next time interval.
+
+Pros: memory efficient, easy to understand, and resetting quota per unit time might fit some use cases.
+Cons: requests between the edges of two time intervals might cause more requests than specified in threshold. For example, if time unit is 1 minute, requests number might be 20 between 03:30:30 and 04:31:30.
