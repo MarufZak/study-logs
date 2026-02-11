@@ -142,3 +142,21 @@ Consider an example. Threshold is 2 req/min. First request comes at 13:30:20 (ac
 
 Pros: solves the problem with fixed window counter
 Cons: not memory efficient, because stores blocked request timestamps in memory.
+
+### Sliding window count algorithm
+
+It's combination of fixed window counter and sliding window log.
+
+The algorithm keeps track of current window counter, previous window counter, and current timestamp (to determine sliding window). To calculate requests number in rolling window, following formula is used:
+
+```js
+const requests_number =
+  requests_in_previous_time_window * overlap + requests_in_current_time_window;
+```
+
+Where overlap is percentage of previous time window overlapping with current rolling time window. For example if requests come at 13:30:10, 13:30:20, 13:30:30, 13:31:20, overlap is 2/3 (previous time window is 13:30:00 - 13:31:00, current time window is 13:31:00 - 13:32:00. Current time is 13:31:20. So sliding window is 13:30:20 - 13:31:20, and overlap with previous time window is 40 seconds, which is 2/3).
+
+If request number exceeds threshold, request is blocked, otherwise it's accepted.
+
+Pros: smooths out traffic spikes, memory efficient (stores only 2 counters).
+Cons: not 100% accurate and might allow requests beyond threshold (0.003% among 400 million), because it assumes requests are evenly distributed in previous time window.
