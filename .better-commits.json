@@ -2,7 +2,7 @@
   "check_status": true,
   "commit_type": {
     "enable": true,
-    "initial_value": "system-design-interview",
+    "initial_value": "linux-command-line",
     "infer_type_from_branch": true,
     "options": [
       {
@@ -32,6 +32,10 @@
       {
         "value": "grokking-web-application-security",
         "label": "grokking-web-application-security"
+      },
+      {
+        "value": "linux-command-line",
+        "label": "linux-command-line"
       },
       {
         "label": "none",

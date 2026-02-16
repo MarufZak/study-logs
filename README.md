@@ -13,6 +13,7 @@ The repository is organized into different folders, each representing a specific
 - **`total-typescript`** — My notes and takeaways from the TotalTypeScript workshops series by Matt Pocock.
 - **`nodejs-design-patterns`** — My notes and takeaways from the NodeJS Design Patterns book by Mario Casciaro and Luciano Mammino.
 - **`understanding-linux-kernel`** — My notes and takeaways from the Understanding Linux Kernel book by Daniel P. Bovet and Marco Cesati.
+- **`linux-command-line`** — My notes and takeaways from the Linux Command Line book.
 - **`data-structures-algorithms`** — My notes and takeaways about data structures and algorithms, including some implementations in typescript.
 - **`grokking-web-application-security`** — My notes and takeaways from the Grokking Web Application Security book by Malcolm McDonald.
 - **`system-design-interview`** — My notes and takeaways from the System Design Interview book series by Alex Xu & Sahn Lam.
