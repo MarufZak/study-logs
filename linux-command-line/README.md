@@ -60,3 +60,17 @@ drwx------ 2 maruf maruf  4096 Feb  5 06:05 .ssh
 Text files can be viewed with `less` command. There is saying `less is more`, which means less does the same job as more (more is old command), but also adds ability to go to viewed lines. Many config files, scripts are written in text format, so this command is useful.
 
 In Unix-like systems it's possible to have same file with different names. Symbolic link (or symlink) is reference to some original file. We can create multiple symlinks that point to some file, and when original file is changed, all programs referencing symbolic links have the file contents changed too. Symbolic link is indicated with `l` as first char when listing with `ls -la`.
+
+---
+
+Most used commands in linux are: `mkdir`, `mv`, `cp`, `rm`, `ln`. While most actions done with these commands can be done with GUI, these commands make it easy to perform tasks that are complex on GUI, for example copy all .html files.
+
+Because filenames are used so much in shell, shell has a feature of listing filenames in convenient way, glob patterns (wildcards).
+
+1. `*` - any character
+2. `?` - any single character
+3. `[characters]` - any character in set of _characters_
+4. `![characters]` - any character not in set of _characters_
+5. `[[:class:]]` - any character that is member of specified class. These classes include `[[:lower:]]`, `[[:upper:]]`, `[[:alpha:]]`, `[[:alnum:]]`, `[[:digit:]]`.
+
+`[a-z]` and `[A-Z]` used to work in older version of Linux, they do now too, but they don't produce expected results unless configured properly.
