@@ -77,5 +77,16 @@ Because filenames are used so much in shell, shell has a feature of listing file
 
 `ln` command creates hard link or soft link (with `-s` param).
 
-1. Hard link. If we consider the filename as a reference to the INode (basically struct that stores file's information), creating hard link means creating another filename for the same INode. This means both files refer to same data. Each file has number of hard links attached (second column of `ls -la` command), and if this number becomes 0, file is deleted. Hard links can't point to directories or point to files inside other disk partitions (meaning it can point to files only in same fileysystem). Hard links are created with `ln original_file link_file` command. Hard link is original way of creating links between files in Unix systems.
-2. Soft link. Soft link don't have limitations as in hard link. When we create soft link, we create separate INode, which points to the original file's INode. It accumulates a little space because of the pointer. Once original file is deleted, soft links becomes broken (usually indicated in terminal emulators as red). Soft link is created with `ln -s original_file link_file` command. Soft link is modern practice.
+_Hard link_. If we consider the filename as a reference to the INode (basically struct that stores file's information), creating hard link means creating another filename for the same INode. This means both files refer to same data. Each file has number of hard links attached (second column of `ls -la` command), and if this number becomes 0, file is deleted.
+Hard links can't point to directories or point to files inside other disk partitions (meaning it can point to files only in same fileysystem).
+Hard links are created with `ln original_file link_file` command.
+Hard link is original way of creating links between files in Unix systems.
+In order to understand if two files are same file (meaning one of them is hard link), we can use `ls -li`, which prints out INode numbers as first column. If INode numbers match, these are same file.
+
+_Soft link_. Soft link don't have limitations as in hard link. When we create soft link, we create separate INode, which points to the original file's INode.
+It accumulates a little space because of the pointer, and the size is pathname size.
+When creating symlink, the path is specified relative to symlink location, not current working directory.
+Once original file is deleted, soft links becomes broken (usually indicated in terminal emulators as red). Soft link is created with `ln -s original_file link_file` command. Soft link is modern practice.
+Almost all file operations operate on end file itself, but `rm` command operates on the link itself.
+
+---
