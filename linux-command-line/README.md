@@ -90,3 +90,34 @@ Once original file is deleted, soft links becomes broken (usually indicated in t
 Almost all file operations operate on end file itself, but `rm` command operates on the link itself.
 
 ---
+
+Commands can be separated into 4 categories:
+
+1. Executable programs - either compiled binaries or scripts written in some languages, located in `/usr/bin`.
+2. Command line builtins - shell (for example bash) provides some builtin commands, also known as shell builtins.
+3. Shell functions - functions written in shell script and encorporated into environment.
+4. Alises - commands defined with alises.
+
+Here are commands that are helpful when working with commands. Also most commands so far (and followings) come from GNU's `coreutils` package.
+
+_type_ - this command determines which type of command listed above input command is. For example it says `ls` command is alias for `ls --color=auto` (in Ubuntu), or that `mkdir` is executable program located in `/usr/bin/mkdir`.
+
+_which_ - sometimes multiple versions of same command is installed in the system. This command determines where executable program is located. Only works for executable programs, and not for aliases or shell builtins.
+
+_help_ - get documentation for command. This works only for shell builtins (for example `cd` command), and documentation is not very readable. Many executable program commands display how the command's options, usage etc, with `--help` option.
+
+_man_ - display manual page of executable program command. Manual page is not tutorial, but just reference, describing what the command is, its options, usage. It has 8 sections, describing different aspects of command. We can go straightly to some section by providing it with `man number search_term`
+
+_apropos_ - display commands by making a search from available manual pages. Displays command and a match in its manual page. Same effect can be done with `man -k search_term`x
+
+_whatis_ - display brief description of executable program command.
+
+_info_ - alternative to `man`, by GNU project. It reads info files, which are organized in tree-structure, and has hyperlinks.
+
+Docs for commands can also be found in `/usr/share/docs/`, in plain text or even html format.
+
+One more things about commands is that these can be concatinated with `;`. For example `ls; ls; ls` runs `ls` 3 times.
+
+_alias_ - it's possible to create aliases with `alias name='string'` command, where string is command(s) to execute, and name is alias name. For example `alias foo='ls -la'` makes alias for `foo`, so writing `foo` does `ls -la` under the hood. To remove alias `unalias name` command is used. To see all alises use `alias`. Aliases created this way are erased once current session ends.
+
+---
