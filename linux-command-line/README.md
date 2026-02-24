@@ -187,3 +187,15 @@ Bash uses Readline library (collection of shared routines that other programs ca
 5. `CTRL-L` - clear console and move cursor to top left.
 
 In Readline docs there is keyword _meta_. It modern keyboards it maps to `ALT` key. However in older keyboards it might be different.
+
+Bash also has feature of completion. When typing a command, and pressing Tab, bash can make completion, or list possible completions on double Tab press. Completions are supported for commands, pathnames, hostnames (starting with `@` and listed in `/etc/hosts`), variables (starting with `$`), usernames (starting with `~`). There are also programmable completions to enable some programs to have completion flags, or match specific file types application supports. Distributions usually come with a set of completions, can be seen with `set | less`.
+
+**Using history**
+
+History is a file stored in `~/.bash_history`, by default stores last 500 commands. There are some useful tricks i found useful.
+
+1. When typed `history` command, it displays commands alongside number. When `!number` is entered, history item at number is copied into command line. This is called history expansion.
+2. It's possible to perform incremental (search as you type) search in history with `CTRL-R` command. To go to next match, press `CTRL-R` again. Pressing `Enter` causes command to execute.
+3. It's possible to record the shell session in some file with `script file` command.
+
+And of course searching in history can be done with regular command `history | grep pattern`.
