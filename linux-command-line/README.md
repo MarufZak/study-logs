@@ -159,3 +159,13 @@ Another type of expansion is brace expansion. It's a pattern surrounded by brace
 Another one is parameter expansion. Shell has some variables which we can access with their names. For example `echo $USER` displays current user name. We can see these variables with `printenv | less`. This one is more used in shell scripts.
 
 Another type of expansion is command substituion. We can use output of some command as an argument for commands. For example `echo $(ls | grep data)` prints files matching data in current directory. Or `file $(ls /usr/bin/* | grep zip)`. In older shell programs ``is used instead of `$()`.
+
+**Quoting**
+
+Now we know how expansion works, it's time to understand how to control it. `echo hello      world` prints `hello world`, as these words are treated as separate arguments. This is done by word splitting algorithm. It sees spaces, tabs, newlines as delimeters, and removes unnecessary delimeters. This results to have 2 arguments in this example instead of 1.
+
+To suppress word splitting, we need double quotes. `echo "hello     world"`. When double quotes are used, shell expansions (except parameter expansion, command substituion, arithmetic expansion) lose their meanings.
+
+The fact that word splitting considers newlines as delimeters causes interesting effect. For example output of command `echo $(cal)` is one line string, instead of columns and raws. To fix it `echo "$(cal)"` is used.
+
+To suppress all expansions, single quotes are used. For example `echo '$(cal)'`.
