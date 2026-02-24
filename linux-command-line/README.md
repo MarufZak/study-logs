@@ -169,3 +169,7 @@ To suppress word splitting, we need double quotes. `echo "hello     world"`. Whe
 The fact that word splitting considers newlines as delimeters causes interesting effect. For example output of command `echo $(cal)` is one line string, instead of columns and raws. To fix it `echo "$(cal)"` is used.
 
 To suppress all expansions, single quotes are used. For example `echo '$(cal)'`.
+
+It's also possible to escape special characters with backslash. For example to prevent some single expansion, we would use `echo "Hello $USER, balance is \$123"`. It's also possible to escape special meaning characters (`$`, `&`, ` ` space, `!`) in filenames. When used inside single quotes, backslash behaves as a regular character.
+
+Besides escaping purpose, backslash also serves as control codes. In ASCII, first 32 characters are used to transmit commands to teletype devices, These includes special characers like `\n` (newline, in Unix it's linefeed), `\b` (backspace), `/a` (bell).
