@@ -199,3 +199,19 @@ History is a file stored in `~/.bash_history`, by default stores last 500 comman
 3. It's possible to record the shell session in some file with `script file` command.
 
 And of course searching in history can be done with regular command `history | grep pattern`.
+
+## Permissions
+
+Linux is not only multitasking system, but also multiuser system. Multiple users can operate on a computer at the same time. Usually computers have only one keyboard and screen, but other users can connect to it with secure shell (ssh), and even have their own GUI remotely.
+
+Some files are not accessible to regular users, for example `/etc/passwd`. This is bound to security model in Unix. User can own a file or directory, and has control over its access. It can grant some access to specified group, and for everybode else (also referred as world). To see the user id, groups user belongs to and their ids, `id` command is used.
+
+Groups, users, etc are taken, as everything in Linux, from files:
+
+1. `/etc/passwd` - defines user accounts.
+2. `/etc/group` - defines groups.
+3. `/etc/shadow` - information about users passwords.
+
+We can see permissions on files and directories with `ls -la` command, in first column. First char defines file type, next 3 permission bits for owner, next 3 permission bits for group, and rest 3 is for the everyone else.
+
+Symbolic links have all permissions, with `l` file type, and original permissions are specified in target file.
