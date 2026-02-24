@@ -172,4 +172,18 @@ To suppress all expansions, single quotes are used. For example `echo '$(cal)'`.
 
 It's also possible to escape special characters with backslash. For example to prevent some single expansion, we would use `echo "Hello $USER, balance is \$123"`. It's also possible to escape special meaning characters (`$`, `&`, ` ` space, `!`) in filenames. When used inside single quotes, backslash behaves as a regular character.
 
-Besides escaping purpose, backslash also serves as control codes. In ASCII, first 32 characters are used to transmit commands to teletype devices, These includes special characers like `\n` (newline, in Unix it's linefeed), `\b` (backspace), `/a` (bell).
+Besides escaping purpose, backslash also serves as control codes. In ASCII, first 32 characters are used to transmit commands to teletype devices, These includes special characers like `\n` (newline, in Unix it's linefeed), `\b` (backspace), `/a` (bell). Idea of backslash originated in C and was adopted by shell. Fun fact is that `\a` can make beep. In program `sleep 10; echo "Done\a"`, beep is done after 10 seconds.
+
+---
+
+**Command line editing**
+
+Bash uses Readline library (collection of shared routines that other programs can use) to implement command line editing. Some include using arrow keys to move the cursor. There are other key bindings for different types of actions. What i found most interesting are:
+
+1. `CTRL-A` - move to the start of the line
+2. `CTRL-E` - move to the end of the line.
+3. `ALT-F` - move cursor forward by one word
+4. `ALT-B` - move cursor backward by one word
+5. `CTRL-L` - clear console and move cursor to top left.
+
+In Readline docs there is keyword _meta_. It modern keyboards it maps to `ALT` key. However in older keyboards it might be different.
