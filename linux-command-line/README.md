@@ -139,3 +139,23 @@ The command to concatenate the files is `cat`. We can specify file names and it 
 Redirection is taken from shell feature called _pipeline_. It's about redirecting stdout to stdin with `|` character. For example `ls -la | less` redirects output to `less` command. So yes, `less` also accepts input from stdin.
 
 We can make pipelines more complex, by adding some layers. These layers might serve as filtering layers. It can be done with `sort`, `uniq`, `grep`, and other commands. These commands are also discussed: `wc` (lines, words, bytes count), `head/tail` (tail has feature of viewing the changes in realtime with `-f` option), `tee` (read from stdin and output to stdout and files).
+
+---
+
+When we type a command and press enter, there are some steps shell performs before carrying out our command to the program.
+
+**Expansion**
+
+Expansion is when transforms special characters into the strings, for example `*` char. If we do `echo *` it prints all filenames in current directory (`*` means match all characters in filename). `echo` program doesn't see `*`, but only the results of its expansion.
+
+There are different types of expansions. One of them is pathname expansion. For example `ls -la [[:upper:]]` expands `[[:upper:]]` into filenames matching this pattern.
+
+Another one is tilde expansion. When `~` is used in the beginning of word, it expands to the home directory pathname of current user, or of specified user if specified as `echo ~username`.
+
+It's possible to make arithmetics with arithmetic expansion with `$(( arithmetic ))` syntax. Only integers are supported, so the results are integers too. Adding, substracting, multiplication, division, remainder (%), and exponentation (\*\*) are supported. Expressions can be nested as `$(( $(( arithmetic )) + arithmetic ))` or like `$(( (arithmetic) + arithmetic ))`.
+
+Another type of expansion is brace expansion. It's a pattern surrounded by braces. Pattern can be either some sequence of characters or numbers seperated by comma, or ranges of number or characters. No whitespace in pattern. For example `echo Hello-{World,Man,Book}`, `echo Hello-{1..9}`, `echo Hello-{A..Z}`, `mkdir {2009..2011}-0{1..9} {2009..2011}-{10..12}`.
+
+Another one is parameter expansion. Shell has some variables which we can access with their names. For example `echo $USER` displays current user name. We can see these variables with `printenv | less`. This one is more used in shell scripts.
+
+Another type of expansion is command substituion. We can use output of some command as an argument for commands. For example `echo $(ls | grep data)` prints files matching data in current directory. Or `file $(ls /usr/bin/* | grep zip)`. In older shell programs ``is used instead of `$()`.
