@@ -215,3 +215,10 @@ Groups, users, etc are taken, as everything in Linux, from files:
 We can see permissions on files and directories with `ls -la` command, in first column. First char defines file type, next 3 permission bits for owner, next 3 permission bits for group, and rest 3 is for the everyone else.
 
 Symbolic links have all permissions, with `l` file type, and original permissions are specified in target file.
+
+It's possible to change the permissions with `chmod` command. It accepts 2 forms:
+
+1. Octal. Octal digit represents 3 binary digits. This is convenient because we have owner, group, and the world. Each number is translated into binary representation, for example `7 -> 111`, which means access to read/write/execute.
+2. Symbolic. It has its syntax i don't like, but it has advantage over octal to add or remove specific permissions, without resetting them.
+
+When file is created, it has default permissions (usually 666). `umask` command lets us specify which permissions to unset by default. In Ubuntu it's `0002`, meaning we do `666 - 002 (ignore first number for now) = 664` to get final permissions. We can set default unsetting permissions with `umask number`.
