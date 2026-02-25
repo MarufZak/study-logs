@@ -222,3 +222,9 @@ It's possible to change the permissions with `chmod` command. It accepts 2 forms
 2. Symbolic. It has its syntax i don't like, but it has advantage over octal to add or remove specific permissions, without resetting them.
 
 When file is created, it has default permissions (usually 666). `umask` command lets us specify which permissions to unset by default. In Ubuntu it's `0002`, meaning we do `666 - 002 (ignore first number for now) = 664` to get final permissions. We can set default unsetting permissions with `umask number`.
+
+Although it's common to see 3 octal numbers to represent the permission bits, it's more accurate to represent it with 4 numbers. Because there are some not usually used permissions bits:
+
+1. setuid - when set on executable, it sets _essential user id_ to the one of file's owner, rather than the one who is running the program. It's set with `4000` bit, for example `4644`. Useful when other users need to run a program under root priveleges. Must be kept at minimum because of security concerns. Example permission bits when setuit is set: `-rwSrw-r--`
+2. setgid - it sets _essential group id_ to the one of directory. When set on file, when executing some program, group id of file is accounted, not the one who is executing it. When set on directory, files or directories created inside this directory inherits parent directory group. Useful for shared directories. Set with `2000`, for example `2644`. Example permission bits: `-rw-r-Sr--`.
+3. sticky bits - comes from ancient Unix, and makes file "unswappable". Ignored by Linux, but if set on directory, it makes so directory entries cannot be deleted or renamed unless it's directory owner, file owner, superuser is doing it. Set with `1000`, for example `1644`. Example permission bits: `drw-r--r-T`. Often used to control access to shared directory like `/tmp`.
