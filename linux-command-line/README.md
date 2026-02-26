@@ -240,8 +240,9 @@ It's also possible to execute specific command with `su -c 'command'`. command i
 `sudo` - execute command as another user. It's primarily same as `su`, but with important additions. Administrator can configure which users can run commands in behalf of other users (usually superuser), and which commands exactly. It doesn't require target password, but user's password.
 We can see which permissions are given to current user with `sudo -l`.
 This command doesn't load environment of target user nor starts a new shell.
+Special file `/etc/sudoers` is configured by administrators to restrict which commands can be executed under and for assumed identity.
 
-In windows users are granted administrative privileges to do some tasks if administrative privileges are required. This is usually what we want, but it also allows malicious programs to run as administrator if misused.
+In Windows users are granted administrative privileges to do some tasks if administrative privileges are required. This is usually what we want, but it also allows malicious programs to run as administrator if misused.
 
 Linux uses broader gap between root user and regular users. Users can switch inbetween with `su` or `sudo` commands (giving administrative privileges only when necessary). This caused a problem. Many users started to use root user as default in order to avoid permission denied errors. This means problem arose in Windows is same in Linux.
 
