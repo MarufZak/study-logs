@@ -241,9 +241,10 @@ It's also possible to execute specific command with `su -c 'command'`. command i
 We can see which permissions are given to current user with `sudo -l`.
 This command doesn't load environment of target user nor starts a new shell.
 Special file `/etc/sudoers` is configured by administrators to restrict which commands can be executed under and for assumed identity.
+Some interesting options exist like `-s` to open in a new shell, or `-u` to specify user (if not specified, root is assumed).
 
 In Windows users are granted administrative privileges to do some tasks if administrative privileges are required. This is usually what we want, but it also allows malicious programs to run as administrator if misused.
 
 Linux uses broader gap between root user and regular users. Users can switch inbetween with `su` or `sudo` commands (giving administrative privileges only when necessary). This caused a problem. Many users started to use root user as default in order to avoid permission denied errors. This means problem arose in Windows is same in Linux.
 
-To prevent it, Ubuntu decided to lock root user and reject connecting as root. Instead it grants all superuser privileges to initial user. Initial user can do same for other users.
+To prevent it, Ubuntu decided to lock root user and reject connecting as root. Instead it grants all superuser privileges to initial user (by adding it to sudo group which allows it to run commands with `sudo` as root). Initial user can do same for other users.
