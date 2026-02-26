@@ -228,3 +228,21 @@ Although it's common to see 3 octal numbers to represent the permission bits, it
 1. setuid - when set on executable, it sets _essential user id_ to the one of file's owner, rather than the one who is running the program. It's set with `4000` bit, for example `4644`. Useful when other users need to run a program under root priveleges. Must be kept at minimum because of security concerns. Example permission bits when setuit is set: `-rwSrw-r--`
 2. setgid - it sets _essential group id_ to the one of directory. When set on file, when executing some program, group id of file is accounted, not the one who is executing it. When set on directory, files or directories created inside this directory inherits parent directory group. Useful for shared directories. Set with `2000`, for example `2644`. Example permission bits: `-rw-r-Sr--`.
 3. sticky bits - comes from ancient Unix, and makes file "unswappable". Ignored by Linux, but if set on directory, it makes so directory entries cannot be deleted or renamed unless it's directory owner, file owner, superuser is doing it. Set with `1000`, for example `1644`. Example permission bits: `drw-r--r-T`. Often used to control access to shared directory like `/tmp`.
+
+---
+
+Changing identities. There are 2 ways to change identities in shell:
+
+`su` - run some command or start a new shell with substitute user id and group id. It has usage of `su [-l] user`, which is similar to `su - user`. It can be switched to root also, with `su -`.
+When this method is used, environment of target user is loaded and shell starts at home directory of target user.
+It's also possible to execute specific command with `su -c 'command'`. command is in single quotes in order to prevent expansion in current session.
+
+`sudo` - execute command as another user. It's primarily same as `su`, but with important additions. Administrator can configure which users can run commands in behalf of other users (usually superuser), and which commands exactly. It doesn't require target password, but user's password.
+We can see which permissions are given to current user with `sudo -l`.
+This command doesn't load environment of target user nor starts a new shell.
+
+In windows users are granted administrative privileges to do some tasks if administrative privileges are required. This is usually what we want, but it also allows malicious programs to run as administrator if misused.
+
+Linux uses broader gap between root user and regular users. Users can switch inbetween with `su` or `sudo` commands (giving administrative privileges only when necessary). This caused a problem. Many users started to use root user as default in order to avoid permission denied errors. This means problem arose in Windows is same in Linux.
+
+To prevent it, Ubuntu decided to lock root user and reject connecting as root. Instead it grants all superuser privileges to initial user. Initial user can do same for other users.
