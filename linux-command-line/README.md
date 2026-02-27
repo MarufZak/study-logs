@@ -248,3 +248,14 @@ In Windows users are granted administrative privileges to do some tasks if admin
 Linux uses broader gap between root user and regular users. Users can switch inbetween with `su` or `sudo` commands (giving administrative privileges only when necessary). This caused a problem. Many users started to use root user as default in order to avoid permission denied errors. This means problem arose in Windows is same in Linux.
 
 To prevent it, Ubuntu decided to lock root user and reject connecting as root. Instead it grants all superuser privileges to initial user (by adding it to sudo group which allows it to run commands with `sudo` as root). Initial user can do same for other users.
+
+---
+
+It's possible to change file owner or group owner of file or directory with `chown` command. The syntax is `chown [user]:[[group]]`. Here are examples:
+
+1. `chown bob file` - changes file owner to bob, group remains same
+2. `chown bob:bobgroup file` - changes file owner to bob and group to bobgroup
+3. `chown :bobgroup file` - changes group to bobgroup
+4. `chown bob: file` - changes owner to bob and group to bob's login group (primary group)
+
+There is `chgrp` command too, but it's old and less limited.
