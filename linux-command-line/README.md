@@ -259,3 +259,10 @@ It's possible to change file owner or group owner of file or directory with `cho
 4. `chown bob: file` - changes owner to bob and group to bob's login group (primary group)
 
 There is `chgrp` command too, but it's old and less limited.
+
+Some other useful commands:
+
+1. `adduser` - create user, interactive
+2. `groupadd` - create group
+3. `usermod` - modify user account, `usermod -aG group username` adds user to group.
+4. `passwd` - modify current user password, or specify username to change other's if you have superuser priveleges.
