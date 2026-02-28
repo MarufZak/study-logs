@@ -266,3 +266,48 @@ Some other useful commands:
 2. `groupadd` - create group
 3. `usermod` - modify user account, `usermod -aG group username` adds user to group.
 4. `passwd` - modify current user password, or specify username to change other's if you have superuser priveleges.
+
+## Processes
+
+Modern operating systems have feature of `multiprocessing`, meaning it can make an illusion of executing multiple tasks at the same time, but instead switches between the tasks periodically. Linux manages it with `processes`, instance of programs in execution, to somehow keep track of the programs running. Process has its id (PID), user id, etc.
+
+First process is created when system is starting, with init shell script. It creates other processes, mostly which run in the background (daemon). Init process has PID of 1, and next processes have their PIDs incremented. Init shell script creates a process, which itself creates other processes. This is called parent process creating child processes.
+
+Processes can be inspected with `ps` command, which reports snapshot of current processes. By default it outputs processes running in current terminal session:
+
+```bash
+PID TTY          TIME CMD
+6303 pts/0    00:00:00 bash
+6399 pts/0    00:00:00 ps
+```
+
+`TTY` field indicates terminal associated with the process, and `TIME` indicates CPU time the process is consuming.
+
+There is `x` option, which displays processes regardless of the terminal session. It means processes with no terminal session are displayed too. These are indicated by `?` in TTY column.
+
+```bash
+PID TTY      STAT   TIME COMMAND
+964 ?        Ss     0:00 /usr/lib/systemd/systemd --user
+965 ?        S      0:00 (sd-pam)
+1066 ?        S      0:00 sshd: ubuntu@notty
+6302 ?        S      0:00 sshd: ubuntu@pts/0
+6303 pts/0    Ss     0:00 -bash
+6420 pts/0    R+     0:00 ps x
+```
+
+`STAT` refers to the state of the process:
+
+1. `R` - running or runnable (waiting for CPU to pick up)
+2. `S` - sleeping, can be interrupted, waiting for events.
+3. `D` - sleeping, cannot be interrupted, usually waiting for events like I/O.
+4. `T` - stopped, by signal or debugger.
+5. `Z` - zombie, terminated but not yet reaped up by parent.
+
+There are other flags shown after state:
+
+1. `<` - high priority process, given more CPU time than usual. Not `nice`, because takes more CPU time.
+2. `N` - nice process, takes less CPU time to be polite to other processes.
+3. `L` - pages locked in memory and cannot be swapped to disk.
+4. `s` - session leader, a process which started session group, typically `bash` shell. If it dies, all processes inside session group hang.
+5. `l` - multi threaded, started multiple threads.
+6. `+` - foreign process group, runs in foreground, and can recieve keyboard input.
