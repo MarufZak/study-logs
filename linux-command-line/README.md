@@ -311,3 +311,21 @@ There are other flags shown after state:
 4. `s` - session leader, a process which started session group, typically `bash` shell. If it dies, all processes inside session group hang.
 5. `l` - multi threaded, started multiple threads.
 6. `+` - foreign process group, runs in foreground, and can recieve keyboard input.
+
+There is another preset, `aux`, which displays all the processes across all users, both with terminal session associated and without.
+
+```bash
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  1.2  22044 12564 ?        Ss   04:02   0:03 /sbin/init
+root           2  0.0  0.0      0     0 ?        S    04:02   0:00 [kthreadd]
+root           3  0.0  0.0      0     0 ?        S    04:02   0:00 [pool_workqueue_release]
+```
+
+1. `User` - username that started a process, process owner
+2. `CPU` - CPU time in percentage (average from process lifetime)
+3. `MEM` - memory taken in percentage
+4. `VSZ` - virtual memory size, total memory process could use
+5. `RSS` - redident set size in kb, actual size of RAM taken.
+6. `START` - date or time process started.
+7. `TIME` - total CPU time consumed.
+8. `COMMAND` - command that launched the process.
