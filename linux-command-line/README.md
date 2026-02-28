@@ -329,3 +329,23 @@ root           3  0.0  0.0      0     0 ?        S    04:02   0:00 [pool_workque
 6. `START` - date or time process started.
 7. `TIME` - total CPU time consumed.
 8. `COMMAND` - command that launched the process.
+
+`ps` command is good, but it catches the snapshot of processes at the time it's called. To monitor processes in real time, `top` command can be used. It has 2 sections:
+
+_General section_ about system information
+
+1. Such as current time, uptime, users logged in.
+2. Average load (average number of processes waiting for CPU) in last 1 minute, 5 minutes, and 15 minutes. If value is less than 1, CPU is not busy.
+3. Total number of tasks (processes) in different states.
+4. CPU used by user processes (`us`), by system processes (`sy`), nice processes (`ni`), idle (`id`), waiting for I/O (cpu idle, `wa`), handling hadrware interrupts like keyboard (`hi`), handling software generated signals (`si`), CPU time stolen by hypervisor (software managing virtual machines) (relevant in VM) (`st`).
+5. Number of total physical RAM, unused RAM, used RAM, buff/cache - used by kernel for caching, can be freed up if processes need it.
+6. Total swap space on disk, unused swap, used swap (data moved from RAM to disk due to memory pressure), avail memory - estimated memory without swapping, includes buff/cache that can be reclaimed.
+
+_Processes section_
+
+1. `PR` - priority of process for kernel, lower - higher priority.
+2. `NI` - user-set nice value, lower - nicer. `PR` is calculated based on it, so `NI` affects priority of process.
+3. `VIRT` - total memory process reserved, may not be fully in RAM.
+4. `RES` - actual RAM process is consuming.
+5. `SHR` - portion of RES that is shared with other processes, for example shared libs. They are loaded into RAM once and reused.
+6. And others we already know like `S`, `TIME+` (total time consumed since process started),
