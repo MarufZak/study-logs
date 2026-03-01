@@ -10,6 +10,20 @@ While GUI makes easy tasks easy, CLI makes difficult tasks possible. Because Lin
 
 GNU has big impact on Linux, as Linux is the name of kernel, and it cannot be the whole system on its own. GNU provided essential operating system components such as core utilities, built tools, editors, etc. That's why some refer to Linux as GNU/Linux.
 
+## Table of contents
+
+- [Part 1, learning the shell](#part-1-learning-the-shell)
+  - [What is Shell](#what-is-shell)
+  - [Navigation](#navigation)
+  - [Exploring System](#exploring-system)
+  - [Navigating Files and Directories](#navigating-files-and-directories)
+  - [Working with Commands](#working-with-commands)
+  - [Redirection](#redirection)
+  - [Seeing the World as the Shell Sees It](#seeing-the-world-as-the-shell-sees-it)
+  - [Advanced Keyboard Tricks](#advanced-keyboard-tricks)
+  - [Permissions](#permissions)
+  - [Processes](#processes)
+
 ## Part 1, learning the shell
 
 ### What is Shell
