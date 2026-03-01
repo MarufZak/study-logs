@@ -73,7 +73,7 @@ Because filenames are used so much in shell, shell has a feature of listing file
 4. `![characters]` - any character not in set of _characters_
 5. `[[:class:]]` - any character that is member of specified class. These classes include `[[:lower:]]`, `[[:upper:]]`, `[[:alpha:]]`, `[[:alnum:]]`, `[[:digit:]]`.
 
-`[a-z]` and `[A-Z]` used to work in older version of Linux, they do now too, but they don't produce expected results unless configured properly.
+`[a-z]` and `[A-Z]` used to work in older version of Linux, they do now too, but they don't produce expected results unless configured properly. The reason `[a-z]` and `[A-Z]` don't work is because from past Unix assumed ASCII ordering, which is `a, b, c, d, ...`, but modern locales (like en_US of UTF8) have different ordering `a A b B c C ...`, so `[a-z]` matches all locales inbetween of `a` and `z`, which include upperacse letters. POSIX character classes (`[[:class:]]`) don't rely on ranges.
 
 `ln` command creates hard link or soft link (with `-s` param).
 
