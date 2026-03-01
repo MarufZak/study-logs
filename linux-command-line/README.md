@@ -87,6 +87,7 @@ _Soft link_. Soft link don't have limitations as in hard link. When we create so
 It accumulates a little space because of the pointer, and the size is pathname size.
 When creating symlink, the path is specified relative to symlink location, not current working directory.
 Once original file is deleted, soft links becomes broken (usually indicated in terminal emulators as red). Soft link is created with `ln -s original_file link_file` command. Soft link is modern practice.
+
 Almost all file operations operate on end file itself, but `rm` command operates on the link itself.
 
 ---
@@ -126,9 +127,9 @@ Almost all commands we have dealt so far includes producing outputs or errors. W
 
 We can redirect _stdout_ of program to some file. It's done with **>** operator. If file doesn't exist, it's created. Note that file contents are overwritten once **>** is used. To append output to the file, **>>** is used.
 
-Redirecting stderr is a bit harder. Program produces output to file streams. First three are _stdin_, _stdout_, _stderr_. Shell them internally by file descriptiors 0, 1, 2 respectively. Shell provides notation to redirect files using file descriptor numbers. To redirect _stderr_ to some file, **2>** syntax is used. For example `ls -la nonefile 2> errors.txt`.
+Redirecting stderr is a bit harder. Program produces output to file streams. First three are _stdin_, _stdout_, _stderr_. Shell references them internally by file descriptiors 0, 1, 2 respectively. Shell provides notation to redirect files using file descriptor numbers. To redirect _stderr_ to some file, **2>** syntax is used. For example `ls -la nonefile 2> errors.txt`.
 
-Sometimes it's useful to redirect both output and errors to same file. For this `ls -la somefile files.txt 2>&1` is used. In this case output of command is redirected to the file, and _stderr_ is redirected to _stdout_. Swapping the order of these redirects doesn't work, redirecting _stderr_ should be after _stdout_ redirection.
+Sometimes it's useful to redirect both output and errors to same file. For this `ls -la somefile > files.txt 2>&1` is used. In this case output of command is redirected to the file, and _stderr_ is redirected to _stdout_. Swapping the order of these redirects doesn't work, redirecting _stderr_ should be after _stdout_ redirection.
 
 Modern bash provides another way to redirect both _stdout_ and _stderr_ to same file, for example `ls -la somefile &> files.txt`, with **&>** operator.
 
@@ -170,9 +171,11 @@ The fact that word splitting considers newlines as delimeters causes interesting
 
 To suppress all expansions, single quotes are used. For example `echo '$(cal)'`.
 
-It's also possible to escape special characters with backslash. For example to prevent some single expansion, we would use `echo "Hello $USER, balance is \$123"`. It's also possible to escape special meaning characters (`$`, `&`, ` ` space, `!`) in filenames. When used inside single quotes, backslash behaves as a regular character.
+It's also possible to escape special characters with backslash. For example to prevent some single expansion, we would use `echo "Hello $USER, balance is \$123"`. It's also possible to escape special meaning characters (`$`, `&`, ` ` space, `!`) in filenames.
 
-Besides escaping purpose, backslash also serves as control codes. In ASCII, first 32 characters are used to transmit commands to teletype devices, These includes special characers like `\n` (newline, in Unix it's linefeed), `\b` (backspace), `/a` (bell). Idea of backslash originated in C and was adopted by shell. Fun fact is that `\a` can make beep. In program `sleep 10; echo "Done\a"`, beep is done after 10 seconds.
+When used inside single quotes, backslash behaves as a regular character.
+
+Besides escaping purpose, backslash also serves as control codes. In ASCII, first 32 characters are used to transmit commands to teletype devices, These includes special characers like `\n` (newline, in Unix it's linefeed), `\b` (backspace), `\a` (bell). Idea of backslash originated in C and was adopted by shell. Fun fact is that `\a` can make beep. In program `sleep 10; echo "Done\a"`, beep is done after 10 seconds.
 
 ---
 
@@ -226,7 +229,7 @@ When file is created, it has default permissions (usually 666). `umask` command 
 Although it's common to see 3 octal numbers to represent the permission bits, it's more accurate to represent it with 4 numbers. Because there are some not usually used permissions bits:
 
 1. setuid - when set on executable, it sets _essential user id_ to the one of file's owner, rather than the one who is running the program. It's set with `4000` bit, for example `4644`. Useful when other users need to run a program under root priveleges. Must be kept at minimum because of security concerns. Example permission bits when setuit is set: `-rwSrw-r--`
-2. setgid - it sets _essential group id_ to the one of directory. When set on file, when executing some program, group id of file is accounted, not the one who is executing it. When set on directory, files or directories created inside this directory inherits parent directory group. Useful for shared directories. Set with `2000`, for example `2644`. Example permission bits: `-rw-r-Sr--`.
+2. setgid - it sets _essential group id_ to the one of directory. When set on file, when executing some program, group id of file is accounted, not the one who is executing it. When set on directory, files or directories created inside this directory inherits parent directory group permission bits. Useful for shared directories. Set with `2000`, for example `2644`. Example permission bits: `-rw-r-Sr--`.
 3. sticky bits - comes from ancient Unix, and makes file "unswappable". Ignored by Linux, but if set on directory, it makes so directory entries cannot be deleted or renamed unless it's directory owner, file owner, superuser is doing it. Set with `1000`, for example `1644`. Example permission bits: `drw-r--r-T`. Often used to control access to shared directory like `/tmp`.
 
 ---
@@ -258,7 +261,7 @@ It's possible to change file owner or group owner of file or directory with `cho
 3. `chown :bobgroup file` - changes group to bobgroup
 4. `chown bob: file` - changes owner to bob and group to bob's login group (primary group)
 
-There is `chgrp` command too, but it's old and less limited.
+There is `chgrp` command too, but it's old and more limited.
 
 Some other useful commands:
 
@@ -348,4 +351,4 @@ _Processes section_
 3. `VIRT` - total memory process reserved, may not be fully in RAM.
 4. `RES` - actual RAM process is consuming.
 5. `SHR` - portion of RES that is shared with other processes, for example shared libs. They are loaded into RAM once and reused.
-6. And others we already know like `S`, `TIME+` (total time consumed since process started),
+6. And others we already know like `S`, `TIME+` (total CPU time consumed since process started),
