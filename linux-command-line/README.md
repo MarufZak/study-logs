@@ -12,6 +12,8 @@ GNU has big impact on Linux, as Linux is the name of kernel, and it cannot be th
 
 ## Part 1, learning the shell
 
+### What is Shell
+
 Shell is a program that takes the commands we enter and give to operating system to carry out. Most Linux distributions supply `bash` shell program, which is enhanced version of `sh`, original shell program for Unix.
 
 When using GUI, we need another interface to write commands, it's called terminal emulator. Once we start it, prompt is shown, usually prepended by username, machine name, and current directory. If it ends with `$` sign, it means we are regular user, if with `#`, it means we are root user.
@@ -20,6 +22,8 @@ Command history is remembered, usually up to 500 commands.
 
 Basic commands like `date`, `cal`, `free`, `df`
 
+### Navigation
+
 Linux has one filesystem, while Windows uses separate file systems for each device mounted to it. Filesystem is structured as tree-like structure. Basic commands include `ls`, `pwd`, 'cd'.
 
 Most top-level folder is root folder, and can be accessed with `cd /`. Each user has own directory, called home directory, can be accessed with `cd`.
@@ -27,6 +31,8 @@ Most top-level folder is root folder, and can be accessed with `cd /`. Each user
 - Linux has no concept of file extension, and content type is determined other way. It uses magic numbers (special bytes patterns at the start of the file, there is `file` command for this too). Though some applications might use its extension to determine the contents.
 - In Linux the files are case-sensitive.
 - Although many characters are allowed, use dash, dot, or \_ to make a space in filenames, instead of using spaces or other characters. Using spaces makes navigation commands much more harder.
+
+### Exploring System
 
 Commands in Linux come in form of `command -options arguments`. Options control the behavior of the program. There are short options (like `-a` for `ls`), and long options (like `--all` for `ls`). Many short options have corresponding long option.
 
@@ -63,6 +69,8 @@ In Unix-like systems it's possible to have same file with different names. Symbo
 
 ---
 
+### Navigating Files and Directories
+
 Most used commands in linux are: `mkdir`, `mv`, `cp`, `rm`, `ln`. While most actions done with these commands can be done with GUI, these commands make it easy to perform tasks that are complex on GUI, for example copy all .html files.
 
 Because filenames are used so much in shell, shell has a feature of listing filenames in convenient way, glob patterns (wildcards).
@@ -91,6 +99,8 @@ Once original file is deleted, soft links becomes broken (usually indicated in t
 Almost all file operations operate on end file itself, but `rm` command operates on the link itself.
 
 ---
+
+### Working with Commands
 
 Commands can be separated into 4 categories:
 
@@ -123,6 +133,8 @@ _alias_ - it's possible to create aliases with `alias name='string'` command, wh
 
 ---
 
+### Redirection
+
 Almost all commands we have dealt so far includes producing outputs or errors. When program executes, it produces some results, or some errors. Knowing that in Unix philosophy everything is a file, output of a program is put in file named _standard output_, named _stdout_. And error is put inside _standard error_, also named _stderr_. Both _stdout_ and _stderr_ are linked to the screen. There is also _stdin_, which is linked to the keyboard by default. With I/O redirection, it's possible to change this behavior.
 
 We can redirect _stdout_ of program to some file. It's done with **>** operator. If file doesn't exist, it's created. Note that file contents are overwritten once **>** is used. To append output to the file, **>>** is used.
@@ -142,6 +154,8 @@ Redirection is taken from shell feature called _pipeline_. It's about redirectin
 We can make pipelines more complex, by adding some layers. These layers might serve as filtering layers. It can be done with `sort`, `uniq`, `grep`, and other commands. These commands are also discussed: `wc` (lines, words, bytes count), `head/tail` (tail has feature of viewing the changes in realtime with `-f` option), `tee` (read from stdin and output to stdout and files).
 
 ---
+
+### Seeing the World as the Shell Sees It
 
 When we type a command and press enter, there are some steps shell performs before carrying out our command to the program.
 
@@ -179,6 +193,8 @@ Besides escaping purpose, backslash also serves as control codes. In ASCII, firs
 
 ---
 
+### Advanced Keyboard Tricks
+
 **Command line editing**
 
 Bash uses Readline library (collection of shared routines that other programs can use) to implement command line editing. Some include using arrow keys to move the cursor. There are other key bindings for different types of actions. What i found most interesting are:
@@ -203,7 +219,7 @@ History is a file stored in `~/.bash_history`, by default stores last 500 comman
 
 And of course searching in history can be done with regular command `history | grep pattern`.
 
-## Permissions
+### Permissions
 
 Linux is not only multitasking system, but also multiuser system. Multiple users can operate on a computer at the same time. Usually computers have only one keyboard and screen, but other users can connect to it with secure shell (ssh), and even have their own GUI remotely.
 
@@ -270,7 +286,7 @@ Some other useful commands:
 3. `usermod` - modify user account, `usermod -aG group username` adds user to group.
 4. `passwd` - modify current user password, or specify username to change other's if you have superuser priveleges.
 
-## Processes
+### Processes
 
 Modern operating systems have feature of `multiprocessing`, meaning it can make an illusion of executing multiple tasks at the same time, but instead switches between the tasks periodically. Linux manages it with `processes`, instance of programs in execution, to somehow keep track of the programs running. Process has its id (PID), user id, etc.
 
