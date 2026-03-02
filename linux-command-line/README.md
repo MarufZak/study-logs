@@ -410,14 +410,16 @@ Ability of programs to listen to signals is to do clean up work when they are re
 
 Essential signals to know:
 
-1. `HUP` - 1, hung up, sent to the processes whose parent process dies or terminal closes. Can be catched. By default terminates.
-2. `INT` - 2, interrupt, sent with `CTRL+C`. By default terminates.
-3. `KILL` - 9, not sent to application program, instead kernel terminates the process itself. Cannot be catched. By default terminates.
-4. `SEGV` - 11, sent to process who tried to access invalid memory (not allowed to write). Can be catched (bad idea). By default terminates with core dump.
-5. `TERM` - 15, polite ask to terminate, can be catched. By default terminates. Technically same as `INT`, but applications might use them in different purposes, for example `INT` for task cancellation, and `TERM` for graceful process termination. This is default command `kill` signal sends.
-6. `STOP` - 17, force stop of the program, it's not sent to application program, cannot be catched. Program stops executing, gets no CPU time, until `CONT` is received.
-7. `CONT` - 18, continue stopped process, can be catched.
-8. `TSTP` - 20, stop the program, can be catched unlike `STOP`.
-9. `WINCH` - 28, terminal window has resized, can be catched. Applications like `top` make redrawings after receiving this signal.
+| # | Name | Catchable | Default Behavior | Description |
+|---|------|-----------|-----------------|-------------|
+| 1 | HUP | Yes | Terminate | Hung up, sent to the processes whose parent process dies or terminal closes. |
+| 2 | INT | Yes | Terminate | Interrupt, sent with `CTRL+C`. |
+| 9 | KILL | **No** | Terminate | Not sent to application program, instead kernel terminates the process itself. |
+| 11 | SEGV | Yes (bad idea) | Terminate + core dump | Sent to process who tried to access invalid memory (not allowed to write). |
+| 15 | TERM | Yes | Terminate | Polite ask to terminate. Technically same as `INT`, but applications might use them in different purposes, for example `INT` for task cancellation, and `TERM` for graceful process termination. This is default command `kill` signal sends. |
+| 17 | STOP | **No** | Stop | Force stop of the program, it's not sent to application program. Program stops executing, gets no CPU time, until `CONT` is received. |
+| 18 | CONT | Yes | Continue | Continue stopped process. |
+| 20 | TSTP | Yes | Stop | Stop the program, can be catched unlike `STOP`. |
+| 28 | WINCH | Yes | Ignore | Terminal window has resized. Applications like `top` make redrawings after receiving this signal. |
 
 All signals can be viewed with `kill -l`. Only signals that cannot be catched at application level are `SIGKILL` and `SIGSTOP`.
