@@ -382,3 +382,18 @@ _Processes section_
 4. `RES` - actual RAM process is consuming.
 5. `SHR` - portion of RES that is shared with other processes, for example shared libs. They are loaded into RAM once and reused.
 6. And others we already know like `S`, `TIME+` (total CPU time consumed since process started),
+
+Processes can be controlled. For example there is `xlogo` command that opens a window, this is example program. This program can be interrupted (politely asked to terminate) with `CTRL+C`. Many programs can be interrupted this way.
+
+We can also start the program in the background with `command &`, for example `xlogo &`, or `yes &`. Note that `yes &` still runs in the background, but stdout is still connected to the terminal (this can be viewed with `ps` command TTY column). It's possible to forward stdout to `/dev/null`. Running program in background gives job_spec (basically job id), and PID.
+
+Another way to run the program in background is `bg %job_spec` command. For this we need to obtain job_spec, which can be obtained by stopping the program. Stopping the program can be done with `CTRL+Z`, which gives job_spec.
+
+Stopped process - process is paused, frozen in memory, can be resumed.
+Interrupted process - process told to terminate, cannot be resumed.
+
+Process can be returned to foreground with `fg %job_spec` command.
+
+Both `bg` and `fg` can accept no job_spec if there is only 1 job in job table (list of jobs shell tracks for current shell session).
+
+Jobs can be viewed with `jobs` command.
