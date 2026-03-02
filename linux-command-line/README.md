@@ -397,3 +397,27 @@ Process can be returned to foreground with `fg %job_spec` command.
 Both `bg` and `fg` can accept no job_spec if there is only 1 job in job table (list of jobs shell tracks for current shell session).
 
 Jobs can be viewed with `jobs` command.
+
+_Signals_
+
+`kill` command can be used to terminate the processes, by specifying PID or job_spec, like `kill 123` or `kill %1`. But kill under the hood sends signals.
+
+Signals are a way OS communicates with processes. Processes can listen for these signals and react, or completely ignore. `CTRL+C` and `CTRL+Z` send `INT` (interrupt) and `TSTP` (terminal stop) signals respectively.
+
+Signals can be specified by syntax: `kill -signal PID|job_spec`. Note that signal can be either number or name, prepended by `SIG`, for example `kill -SIGINT 231`
+
+Ability of programs to listen to signals is to do clean up work when they are received, and terminate properly.
+
+Essential signals to know:
+
+1. `HUP` - 1, hung up, sent to the processes whose parent process dies or terminal closes. Can be catched. By default terminates.
+2. `INT` - 2, interrupt, sent with `CTRL+C`. By default terminates.
+3. `KILL` - 9, not sent to application program, instead kernel terminates the process itself. Cannot be catched. By default terminates.
+4. `SEGV` - 11, sent to process who tried to access invalid memory (not allowed to write). Can be catched (bad idea). By default terminates with core dump.
+5. `TERM` - 15, polite ask to terminate, can be catched. By default terminates. Technically same as `INT`, but applications might use them in different purposes, for example `INT` for task cancellation, and `TERM` for graceful process termination. This is default command `kill` signal sends.
+6. `STOP` - 17, force stop of the program, it's not sent to application program, cannot be catched. Program stops executing, gets no CPU time, until `CONT` is received.
+7. `CONT` - 18, continue stopped process, can be catched.
+8. `TSTP` - 20, stop the program, can be catched unlike `STOP`.
+9. `WINCH` - 28, terminal window has resized, can be catched. Applications like `top` make redrawings after receiving this signal.
+
+All signals can be viewed with `kill -l`. Only signals that cannot be catched at application level are `SIGKILL` and `SIGSTOP`.
