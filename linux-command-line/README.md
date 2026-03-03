@@ -439,3 +439,10 @@ We can see the environment with 2 commands:
 
 1. `set` - prints environment containing both env variables and shell variables.
 2. `printenv` - print only env variables. We can also print single environment variable value like this `printenv HOME`
+
+Some interesting variable is `PATH`. It's colon sepratad string. When executing some command, shell reads directories specified in `PATH` to find executable file.
+
+These variables are established by reading startup files. Startup files depend on shell type. There are 2 shell types:
+
+1. Login - appears when specifying username and password to login. In this case, shell reads `/etc/profile` as global startup file for all users, and reads: `~/.bash_profile`, if not found -> `~/.bash_login`, if not found -> `~/.profile`. Global startup files are usually configured to read `~/bashrc` too.
+2. Non-login - when shell is started after being logged in, appears typically when starting session in GUI. Reads `/etc/bash.bashrc` for global config script, and `~/.bashrc` for user's personal startup config script.
