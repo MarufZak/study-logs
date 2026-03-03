@@ -446,3 +446,7 @@ These variables are established by reading startup files. Startup files depend o
 
 1. Login - appears when specifying username and password to login. In this case, shell reads `/etc/profile` as global startup file for all users, and reads: `~/.bash_profile`, if not found -> `~/.bash_login`, if not found -> `~/.profile`. Global startup files are usually configured to read `~/bashrc` too.
 2. Non-login - when shell is started after being logged in, appears typically when starting session in GUI. Reads `/etc/bash.bashrc` for global config script, and `~/.bashrc` for user's personal startup config script.
+
+In startup files we can see `export VARIABLE` syntax, this is done to make the variable avaiable to child processes.
+
+We can edit the startup files. After editing them, the changes are not applied, because startup files are read once when starting a shell session. We can make shell reread it with `source ~/.bashrc` command.
