@@ -410,16 +410,32 @@ Ability of programs to listen to signals is to do clean up work when they are re
 
 Essential signals to know:
 
-| # | Name | Catchable | Default Behavior | Description |
-|---|------|-----------|-----------------|-------------|
-| 1 | HUP | Yes | Terminate | Hung up, sent to the processes whose parent process dies or terminal closes. |
-| 2 | INT | Yes | Terminate | Interrupt, sent with `CTRL+C`. |
-| 9 | KILL | **No** | Terminate | Not sent to application program, instead kernel terminates the process itself. |
-| 11 | SEGV | Yes (bad idea) | Terminate + core dump | Sent to process who tried to access invalid memory (not allowed to write). |
-| 15 | TERM | Yes | Terminate | Polite ask to terminate. Technically same as `INT`, but applications might use them in different purposes, for example `INT` for task cancellation, and `TERM` for graceful process termination. This is default command `kill` signal sends. |
-| 17 | STOP | **No** | Stop | Force stop of the program, it's not sent to application program. Program stops executing, gets no CPU time, until `CONT` is received. |
-| 18 | CONT | Yes | Continue | Continue stopped process. |
-| 20 | TSTP | Yes | Stop | Stop the program, can be catched unlike `STOP`. |
-| 28 | WINCH | Yes | Ignore | Terminal window has resized. Applications like `top` make redrawings after receiving this signal. |
+| #   | Name  | Catchable      | Default Behavior      | Description                                                                                                                                                                                                                                   |
+| --- | ----- | -------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | HUP   | Yes            | Terminate             | Hung up, sent to the processes whose parent process dies or terminal closes.                                                                                                                                                                  |
+| 2   | INT   | Yes            | Terminate             | Interrupt, sent with `CTRL+C`.                                                                                                                                                                                                                |
+| 9   | KILL  | **No**         | Terminate             | Not sent to application program, instead kernel terminates the process itself.                                                                                                                                                                |
+| 11  | SEGV  | Yes (bad idea) | Terminate + core dump | Sent to process who tried to access invalid memory (not allowed to write).                                                                                                                                                                    |
+| 15  | TERM  | Yes            | Terminate             | Polite ask to terminate. Technically same as `INT`, but applications might use them in different purposes, for example `INT` for task cancellation, and `TERM` for graceful process termination. This is default command `kill` signal sends. |
+| 17  | STOP  | **No**         | Stop                  | Force stop of the program, it's not sent to application program. Program stops executing, gets no CPU time, until `CONT` is received.                                                                                                         |
+| 18  | CONT  | Yes            | Continue              | Continue stopped process.                                                                                                                                                                                                                     |
+| 20  | TSTP  | Yes            | Stop                  | Stop the program, can be catched unlike `STOP`.                                                                                                                                                                                               |
+| 28  | WINCH | Yes            | Ignore                | Terminal window has resized. Applications like `top` make redrawings after receiving this signal.                                                                                                                                             |
 
 All signals can be viewed with `kill -l`. Only signals that cannot be catched at application level are `SIGKILL` and `SIGSTOP`.
+
+### Environment
+
+Environment is body of data shell session holds, used by programs as configuration file to determine the behavior. Many programs use config files instead, but environment variables (pieces of data in environment) are sometimes read too.
+
+There are 2 things that are stored in environment:
+
+1. Environment variables - everything that is not shell variable
+2. Shell variables - variable set up by shell
+
+Shell also stores aliases and shell scripts.
+
+We can see the environment with 2 commands:
+
+1. `set` - prints environment containing both env variables and shell variables.
+2. `printenv` - print only env variables. We can also print single environment variable value like this `printenv HOME`
