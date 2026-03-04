@@ -23,6 +23,10 @@ GNU has big impact on Linux, as Linux is the name of kernel, and it cannot be th
   - [Advanced Keyboard Tricks](#advanced-keyboard-tricks)
   - [Permissions](#permissions)
   - [Processes](#processes)
+- [Part 2, configuring environment](#part-2-configuring-environment)
+  - [Environment](#environment)
+- [Part 3, common tasks and essential tools](#part-3-common-tasks-and-essential-tools)
+  - [Package management](#package-management)
 
 ## Part 1, learning the shell
 
@@ -424,6 +428,10 @@ Essential signals to know:
 
 All signals can be viewed with `kill -l`. Only signals that cannot be catched at application level are `SIGKILL` and `SIGSTOP`.
 
+## Part 2, configuring environment
+
+I decided to write only about environment section. Other 2 sections are about introduction to `vi`, and configuring the prompt.
+
 ### Environment
 
 Environment is body of data shell session holds, used by programs as configuration file to determine the behavior. Many programs use config files instead, but environment variables (pieces of data in environment) are sometimes read too.
@@ -450,6 +458,8 @@ These variables are established by reading startup files. Startup files depend o
 In startup files we can see `export VARIABLE` syntax, this is done to make the variable avaiable to child processes.
 
 We can edit the startup files. After editing them, the changes are not applied, because startup files are read once when starting a shell session. We can make shell reread it with `source ~/.bashrc` command.
+
+## Part 3, common tasks and essential tools
 
 ### Package management
 
