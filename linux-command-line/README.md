@@ -465,3 +465,13 @@ There are different types of packaging systems, and most distributions use one o
 2. Red Hat style - `.rpm`, used by Red Hat Enterprise Linux, Fedora, CentOS, and others.
 
 Usually package intended for one packaging system is not compatible on another.
+
+Basic unit of package management is package, which includes source program files, its metadata, and some pre/post scripts before/after installation.
+
+Package that distribution supplies is compiled by `package maintainer`, a person who pulled source code, optionally modified so it works well with the distribution, and mainains it. This person is often an employee of distribution vendor. The package is pulled from `upstream provider` - code owner.
+
+Distributions have central repositories where the packages are installed from. These repositories have different stages, for example testing, development, each containing respective packages that are being tested and being developed.
+
+Distributions have also related third-party repositories, not maintained by them, because of patent, legal issues, or just because of quality standards. To install them including them in package management system conifgs is required.
+
+Packages have some shared routines for doing some basic tasks. It's called packages have dependencies. When installing a package, package manager makes sure the shared depenencies (libraries) are installed too.
