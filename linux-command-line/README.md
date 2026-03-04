@@ -549,3 +549,9 @@ To see which package installed some file. If file is symlink, it's not resolved 
 ```bash
 dpkg --search filename
 ```
+
+In Linux device drivers work pretty much the same way as packages. But instead of being separate in the repository, they are part of Linux kernel. There is no such thing as device disk, either Linux kernel supports it or not. When particular device is not supported, most common reasons are:
+
+1. Device is too new - when this happens, and when hardware vendors don't support Linux development, writing device driver lies upon member of Linux community to write kernel code. This takes time.
+2. Device is too exotic - because Linux distributions can modify the kernel code, they come with some supported device drivers by default, while possibly removing others. We can install the kernel source code for device driver, compile it, and install it.
+3. Hardware vendor is hiding something - it has neither kernel code, nor documentation so others can the code. This means vendor is hiding something, and it's better not to use such devices in Linux.
