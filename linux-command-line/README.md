@@ -450,3 +450,18 @@ These variables are established by reading startup files. Startup files depend o
 In startup files we can see `export VARIABLE` syntax, this is done to make the variable avaiable to child processes.
 
 We can edit the startup files. After editing them, the changes are not applied, because startup files are read once when starting a shell session. We can make shell reread it with `source ~/.bashrc` command.
+
+### Package management
+
+There are many Linux distributions out there, and different people prefer different distributions. Some make preference of styles, colors, defaults, but one major component is package management.
+
+Package management is about installing and managing package in the system.
+
+It's used to be following way: some source code is installed in the system, compiled, and used. It's done this way too, but many Linux distributions provide ability to install precompiled programs, because it's faster and easier, with package managers.
+
+There are different types of packaging systems, and most distributions use one of two:
+
+1. Debian style - `.deb`, used by Debian, Ubuntu, and others.
+2. Red Hat style - `.rpm`, used by Red Hat Enterprise Linux, Fedora, CentOS, and others.
+
+Usually package intended for one packaging system is not compatible on another.
