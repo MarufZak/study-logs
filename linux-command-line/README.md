@@ -475,3 +475,28 @@ Distributions have central repositories where the packages are installed from. T
 Distributions have also related third-party repositories, not maintained by them, because of patent, legal issues, or just because of quality standards. To install them including them in package management system conifgs is required.
 
 Packages have some shared routines for doing some basic tasks. It's called packages have dependencies. When installing a package, package manager makes sure the shared depenencies (libraries) are installed too.
+
+_Packaging tools_
+
+There are packaging tools (package managers) for Debian style packaging systems and Red Hat style packaging systems. I will write about Debian style only.
+
+There are 2 types of package managers:
+
+1. High level - `apt-get`, which includes dependency resolution (installing any other necessary dependency not installed in the system).
+2. Low level `dpkg`, doesn't have dependency resolution. If it doesn't find dependency installed in system, it exits with error.
+
+When using `apt-get`, we need to constantly run `apt-get update`, because the repository index is saved locally. If this local cache is stale, we might install some outdated package version, or get not found errors. So we need to constantly update the local index cache.
+
+To search for a package with `string` metadata:
+
+```bash
+apt-get update
+apt-cache search string
+```
+
+To install a package:
+
+```bash
+apt-get update
+apt-get install package_name
+```
