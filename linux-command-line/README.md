@@ -525,3 +525,27 @@ To update a package installed from non-repository source, it can be reinstalled:
 ```bash
 dpkg --install package_file
 ```
+
+To list all packages installed in system:
+
+```bash
+dpkg --list
+```
+
+Determine if package is installed:
+
+```bash
+dpkg --status package_name
+```
+
+Display information about a package if it exists in repository:
+
+```bash
+apt-cache show package_name
+```
+
+To see which package installed some file. If file is symlink, it's not resolved and searching fails.
+
+```bash
+dpkg --search filename
+```
