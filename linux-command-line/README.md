@@ -483,7 +483,7 @@ There are packaging tools (package managers) for Debian style packaging systems 
 There are 2 types of package managers:
 
 1. High level - `apt-get`, which includes dependency resolution (installing any other necessary dependency not installed in the system).
-2. Low level `dpkg`, doesn't have dependency resolution. If it doesn't find dependency installed in system, it exits with error.
+2. Low level `dpkg`, doesn't have dependency resolution. If it doesn't find dependency installed in system, it outputs errors or warnings.
 
 When using `apt-get`, we need to constantly run `apt-get update`, because the repository index is saved locally. If this local cache is stale, we might install some outdated package version, or get not found errors. So we need to constantly update the local index cache.
 
@@ -499,4 +499,29 @@ To install a package:
 ```bash
 apt-get update
 apt-get install package_name
+```
+
+If package is installed directly from source other than repository, it can be installed to system with following, without dependency resolution (package file is some .deb file):
+
+```bash
+dpkg --install package_file
+```
+
+To remove a package:
+
+```bash
+apt-get remove package_name
+```
+
+All packages installed in system can be updated at once:
+
+```bash
+apt-get update
+apt-get upgrade
+```
+
+To update a package installed from non-repository source, it can be reinstalled:
+
+```bash
+dpkg --install package_file
 ```
