@@ -474,7 +474,7 @@ There are different types of packaging systems, and most distributions use one o
 1. Debian style - `.deb`, used by Debian, Ubuntu, and others.
 2. Red Hat style - `.rpm`, used by Red Hat Enterprise Linux, Fedora, CentOS, and others.
 
-Usually package intended for one packaging system is not compatible on another.
+Usually package intended for one packaging system or distribution is not compatible on another.
 
 Basic unit of package management is package, which includes source program files, its metadata, and some pre/post scripts before/after installation.
 
@@ -565,3 +565,9 @@ In Linux device drivers work pretty much the same way as packages. But instead o
 1. Device is too new - when this happens, and when hardware vendors don't support Linux development, writing device driver lies upon member of Linux community to write kernel code. This takes time.
 2. Device is too exotic - because Linux distributions can modify the kernel code, they come with some supported device drivers by default, while possibly removing others. We can install the kernel source code for device driver, compile it, and install it.
 3. Hardware vendor is hiding something - it has neither kernel code, nor documentation so others can the code. This means vendor is hiding something, and it's better not to use such devices in Linux.
+
+### Networking
+
+There is probably nothing that cannot be done for networking in Linux. All sorts of network devices are done in Linux, such as firewalls, name servers, routers.
+
+First command to look is `ping` - it sends special `ICMP ECHO_REQUEST` packet to specified network host. Most network hosts reply to it, but Linux hosts and other network devices can be configured to ignore these packets, for security reasons (Host discovery, DoS). It sends the packet every second by default, and prints statistics when interrupted.
