@@ -1,0 +1,22 @@
+
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon.png" href="/icons/apple-touch-icon.png">
+
+    <link rel="manifest" href="/manifest.json">
+
+    <link rel="stylesheet" href="https://cdn.marufzak.uz/1.0.2/static/css/5d753bbd4e3bf016.css">
+  </head>
+  <body>
+      <div id="root"></div>
+  </body>
+
+    <script type="module" src="https://cdn.marufzak.uz/1.0.2/static/js/a19b721ba9b3b088.js"></script>
+  </html>
+  
