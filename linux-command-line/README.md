@@ -571,3 +571,7 @@ In Linux device drivers work pretty much the same way as packages. But instead o
 There is probably nothing that cannot be done for networking in Linux. All sorts of network devices are done in Linux, such as firewalls, name servers, routers.
 
 First command to look is `ping` - it sends special `ICMP ECHO_REQUEST` packet to specified network host. Most network hosts reply to it, but Linux hosts and other network devices can be configured to ignore these packets, for security reasons (Host discovery, DoS). It sends the packet every second by default, and prints statistics when interrupted.
+
+`traceroute` - command to display the hops packets do when trying to reach destination host, IPs of the routers, timings. If router doesn't show any credentials (indicated by asterisks), it's because they are configured so or there is a firewall, or some other problems.
+
+`netstat` - network interface settings and statistics. With `-ie` option we can see all network interfaces with packets sent/received, errors, IPs, MACs, whether it's up or not. It also contains loopback network inteface, which is virtual interface so machine sends packets to itself. With `-r` option we see kernel routing table. It includes destination field (target ip should match destination field, according to genmask field. Default matches all not matched IPs), gateway (next router to reach), network interface (which interface to use to send the packets to the target ip). So the full picture is: For packets matching Destination/Genmask, send them out of Iface, optionally via Gateway.
