@@ -601,3 +601,8 @@ SSH client might refuse to connect with message that remote identification has c
 By default passwordless auth is enabled in SSH. Only key-based auth is enabled. To generate ssh key `ssh-keygen` command is used, which generates public key and private key. Public key should be placed inside `~/.ssh/authorized_keys` file, and login can be performed with `ssh -i ~/.ssh/key bob@localhost`.
 
 When SSH connection is established, encrypted tunnel between client and server is established. Commands to be executed on remote host are sent via this tunnel, and results are sent back. But it can send most network traffic, including outputs of some GUI programs. So this means GUI of some program can be viewed locally with SSH. To do this `-X` option (or `-Y` option in some systems) should be used, like `ssh -X bob@localhost`, and simply executing command like `xload`.
+
+All of these come with OpenSSH package (for example `ssh` client, `sshd` server, `ssh-keygen`). But it includes another commands:
+
+1. `scp` - secure copy, between local and remote hosts. It works just as `cp` command, but like `scp [username@]host:directory copy_to`.
+2. `sftp` - secure alternative for `ftp` program. Important note is that server doesn't need to run `ftp` server for this. Only running `ssh` server is enough for `sftp` to work just as `ftp` server.
