@@ -596,4 +596,8 @@ Single command can also be executed with `ssh bob@localhost 'ls -la'` and print 
 
 When connecting to remote host, if the host is new and client hasn't seen it yet, client makes a warning like `Authenticity of host cannot be established, continue?`, which can be continued.
 
-SSH client might refuse to connect with message that remote identification has changed and MITM attack might be conducting. This happens because of 3 reasons: MITM attack (unlikely, because ssh errors), host has changed OS, or it reinstalled SSH server. Error also points to offending key in `/home/username/.ssh/known_hosts` with a line number. By deleting it and trying to connect to remote host again, the error is fixed.
+SSH client might refuse to connect with message that remote identification has changed and MITM attack might be conducting. This happens because of 3 reasons: MITM attack (unlikely, because ssh errors), host has changed OS, or it reinstalled SSH server. Error also points to offending key in `~/.ssh/known_hosts` with a line number. By deleting it and trying to connect to remote host again, the error is fixed.
+
+By default passwordless auth is enabled in SSH. Only key-based auth is enabled. To generate ssh key `ssh-keygen` command is used, which generates public key and private key. Public key should be placed inside `~/.ssh/authorized_keys` file, and login can be performed with `ssh -i ~/.ssh/key bob@localhost`.
+
+When SSH connection is established, encrypted tunnel between client and server is established. Commands to be executed on remote host are sent via this tunnel, and results are sent back. But it can send most network traffic, including outputs of some GUI programs. So this means GUI of some program can be viewed locally with SSH. To do this `-X` option (or `-Y` option in some systems) should be used, like `ssh -X bob@localhost`, and simply executing command like `xload`.
