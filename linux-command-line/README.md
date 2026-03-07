@@ -576,8 +576,24 @@ First command to look is `ping` - it sends special `ICMP ECHO_REQUEST` packet to
 
 `netstat` - network interface settings and statistics. With `-ie` option we can see all network interfaces with packets sent/received, errors, IPs, MACs, whether it's up or not. It also contains loopback network inteface, which is virtual interface so machine sends packets to itself. With `-r` option we see kernel routing table. It includes destination field (target ip should match destination field, according to genmask field. Default matches all not matched IPs), gateway (next router to reach), network interface (which interface to use to send the packets to the target ip). So the full picture is: For packets matching Destination/Genmask, send them out of Iface, optionally via Gateway.
 
-`ftp` - interactive file transfer program operating on top of File Transfer Protocol. Supported by most if not all browsers. It transfers files over the network to computer. Communication is not encrypted. FTP client/server implementation example is FileZille. Flow happens like this: user connects to FTP server (any machine hosting ftp server), users connect to it with `ftp fileserver`, authenticate, go to some directory, and upload/download files to/from the server.
+`ftp` - interactive file transfer program operating on top of File Transfer Protocol. Supported by most if not all browsers. It transfers files over the network to computer. Communication is not encrypted. FTP client/server implementation example is FileZilla. Flow happens like this: user connects to FTP server (any machine hosting ftp server), users connect to it with `ftp fileserver`, authenticate, go to some directory, and upload/download files to/from the server.
 
 There is also `lftp`, improved version of `ftp`. It works just like `ftp`, but with additional caps like multiple protocol support (HTTP), background processes, retries, path completions, directory mirrorings (syncing entire dirs).
 
-There is also `wget`, non-interactive program to download files from web and FTP sites. We can grab a copy of first page of some page with `wget example.com`. It has many options like resuming download, mirroring a webpage, etc.
+There is also `wget`, non-interactive program to download files from web and FTP sites. We can grab a copy of first page of some page with `wget example.com`. It has many options like resuming download, mirroring a webpage (copying all files), etc.
+
+_Secure communication with remote hosts_
+
+From early days Unix-like systems could be administrated remotely via network. There were many programs to connect to remote hosts, like `rlogin` or `telnet`, but as with `ftp`, it has major problem, communication was not encrypted, including usernames and passwords.
+
+To fix that SSH (secure shell) protocol was developed. Advantages are it verifies remote host is the one who remote host claims it is, and secure communication with encryption.
+
+SSH comes with client and server. Server listens on port 22 and accepts new connections, while client connects to this port. By default some distributions (Ubuntu) come with client only, while some (RedHat) come with both client and server.
+
+To connect to remote host with SSH `ssh hostname` is used, for example `ssh localhost`. To specify username (different from current session's username), `ssh bob@localhost` can be used.
+
+Single command can also be executed with `ssh bob@localhost 'ls -la'` and print in local terminal, or forward to file with `ssh bob@localhost 'ls -la' > entries.txt`
+
+When connecting to remote host, if the host is new and client hasn't seen it yet, client makes a warning like `Authenticity of host cannot be established, continue?`, which can be continued.
+
+SSH client might refuse to connect with message that remote identification has changed and MITM attack might be conducting. This happens because of 3 reasons: MITM attack (unlikely, because ssh errors), host has changed OS, or it reinstalled SSH server. Error also points to offending key in `/home/username/.ssh/known_hosts` with a line number. By deleting it and trying to connect to remote host again, the error is fixed.
