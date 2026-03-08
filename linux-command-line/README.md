@@ -27,6 +27,8 @@ GNU has big impact on Linux, as Linux is the name of kernel, and it cannot be th
   - [Environment](#environment)
 - [Part 3, common tasks and essential tools](#part-3-common-tasks-and-essential-tools)
   - [Package management](#package-management)
+  - [Networking](#networking)
+  - [Searching for files](#searching-for-files)
 
 ## Part 1, learning the shell
 
