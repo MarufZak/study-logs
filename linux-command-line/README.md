@@ -606,3 +606,9 @@ All of these come with OpenSSH package (for example `ssh` client, `sshd` server,
 
 1. `scp` - secure copy, between local and remote hosts. It works just as `cp` command, but like `scp [username@]host:directory copy_to`.
 2. `sftp` - secure alternative for `ftp` program. Important note is that server doesn't need to run `ftp` server for this. Only running `ssh` server is enough for `sftp` to work just as `ftp` server.
+
+### Searching for files
+
+There are a lot of files in the Linux, and there are tools to easily search for them.
+
+`locate` - find files in easiest way, by name. The name with some optional path is entered, and if path matches the input, file locations are shown, like `locate bin/zip`. Database of files are searched, and it's not always in sync with current state of filesystem. To update the db, `updatedb` command is used. It's usually run as cron job, once a day.
