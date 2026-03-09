@@ -629,3 +629,16 @@ Other tests include:
 2. Size of file, `-size size`, which can accept more than or less then some unit. Units are `k` (kb), `M` (mb), `G` (gb), `c` (bytes), and others. For example `-size +1M` for files with size for than 1MB, or `-size -1M` for files less than 1MB.
 3. Empty files, `-empty`.
 4. And many more.
+
+**Operators**.
+
+Even though tests are powerful, we might need to make logical relations between the tests. For example what if we want to match files or directories with bad permissions? Operators help us create relations:
+
+1. `-and` - match the entry if both checks are true
+2. `-or` - match the entry if only any check is true
+3. `-not` - match the entry if check if false
+4. `()` - group the tests and operators together
+
+When no operator is specified, `-and` is assumed. Here is solution for problem above: `find ~ \( -type f -not -perm 0600 \) -or \( -type d -not -perm 0700 \)`. We use backslash to escape special meaning of parantheses in shell. Between `-type f` and `-not -perm 600` there is implicit `-and`.
+
+Also expressions might not be performed according to the operator, just like in scripting languages, where `expression1 && expression2` expression2 is only performed if expression1 is true. This is done for performance.
