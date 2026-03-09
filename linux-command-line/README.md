@@ -614,3 +614,18 @@ All of these come with OpenSSH package (for example `ssh` client, `sshd` server,
 There are a lot of files in the Linux, and there are tools to easily search for them.
 
 `locate` - find files in easiest way, by name. The name with some optional path is entered, and if path matches the input, file locations are shown, like `locate bin/zip`. Database of files are searched, and it's not always in sync with current state of filesystem. To update the db, `updatedb` command is used. It's usually run as cron job, once a day.
+
+_find_ is more advanced command that lets us search for file or directory with tests, actions, and options.
+
+It accepts a directory to search for, and it recursively searches for its subdirectories too. For example `find ~`.
+
+**Tests**.
+
+We can specify what to search for, file or directory, with `-type` test. For example: `find ~ -type f` searches for files. Possible inputs for it are `l` (symbolic link), `d` (directory), `f` (regular file), and others (block special device file and char special device file).
+
+Other tests include:
+
+1. Pattern to match name of file - `-name pattern`, for example `-name "*.jpg"` (note that to prevent expansion the quotes are used).
+2. Size of file, `-size size`, which can accept more than or less then some unit. Units are `k` (kb), `M` (mb), `G` (gb), `c` (bytes), and others. For example `-size +1M` for files with size for than 1MB, or `-size -1M` for files less than 1MB.
+3. Empty files, `-empty`.
+4. And many more.
