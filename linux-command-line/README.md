@@ -653,3 +653,12 @@ We can specify what to do with the results found with actions:
 4. `-quit` - quit once match is made.
 
 For example `find ~ -type f -ls`. Note that between `-type f` and `-ls` there is `-and` operator.
+
+These are builtin actions, but it's possible to define custom actions too with `-exec command {} ;` syntax. `{}` is symbolic representation of current pathname, and `;` is required to indicate the end of the command. Because these are special symbols for shell, they need to be escaped by quote or backslash. For example `find ~ -type f -exec ls -la '{}' ';'`
+
+It's also possible to make the program prompt before executing custom action if match is found by using `-ok` instead of `-exec`.
+
+The performance of this approach might not be good, because instance of custom command provided is run each time a match is found. It would be better to make an argument list of the results, and then give it to command for single execution. There are 2 ways to do this:
+
+1. With `find` itself, providing `+` instead of `;` and the end. This way the results are treated as a list for single command execution. For example `find ~ -type f -exec ls -la '{}' +`
+2. With `xargs` command. This command constructs argument list and executes a command provided. For example `find ~ -type f | xargs ls -la`. Number of arguments that can be placed into command line is not infinite. If it exceeds the limits (can be seen with `xargs --show-limits`), `xargs` splits arguments list into full buckets and execute each one by one.
