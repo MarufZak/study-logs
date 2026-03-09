@@ -642,3 +642,14 @@ Even though tests are powerful, we might need to make logical relations between 
 When no operator is specified, `-and` is assumed. Here is solution for problem above: `find ~ \( -type f -not -perm 0600 \) -or \( -type d -not -perm 0700 \)`. We use backslash to escape special meaning of parantheses in shell. Between `-type f` and `-not -perm 600` there is implicit `-and`.
 
 Also expressions might not be performed according to the operator, just like in scripting languages, where `expression1 && expression2` expression2 is only performed if expression1 is true. This is done for performance.
+
+**Actions**
+
+We can specify what to do with the results found with actions:
+
+1. `-delete` - delete currently matching file
+2. `-ls` - perform `ls -dils` on matchin file and print to stdout.
+3. `-print` - print full pathname of file to stdout. Default action.
+4. `-quit` - quit once match is made.
+
+For example `find ~ -type f -ls`. Note that between `-type f` and `-ls` there is `-and` operator.
