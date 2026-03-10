@@ -664,3 +664,8 @@ The performance of this approach might not be good, because instance of custom c
 2. With `xargs` command. This command constructs argument list and executes a command provided. For example `find ~ -type f | xargs ls -la`. Number of arguments that can be placed into command line is not infinite. If it exceeds the limits (can be seen with `xargs --show-limits`), `xargs` splits arguments list into full buckets and execute each one by one.
 
 Sometimes files have spaces or even newlines in the names. Space is counted as delimeter for `xargs` command, that's why if name of file is separated by space, 2 inputs will be passed to `xargs`. To prevent it we can mark null character as a delimeter. Null character is character marked with number 0, as opposed to space, which is marked as 32. `find` command accepts `-print0` option to make separation by null character, and `xargs` accepts `--null` option to use null character as delimeter.
+
+Here are other commands discussed:
+
+1. `touch` - used to update modification time of the file. If file doesn't exist, it's created.
+2. `stat` - shows all information the system knows about the file.
