@@ -669,3 +669,13 @@ Here are other commands discussed:
 
 1. `touch` - used to update modification time of the file. If file doesn't exist, it's created.
 2. `stat` - shows all information the system knows about the file.
+
+**Options**
+
+There are also options that can be passed to `find`. They are used to control the scope of the search:
+
+1. `--depth` - find and process directory files before directory itself. Automatically applied when `-delete` action is specified.
+2. `--maxdepth levels` - specifies max levels to descend into directory tree when performing tests and actions.
+3. `--mindepth levels` - specifies min levels to descend into directory tree when performing tests and actions.
+
+and others.
