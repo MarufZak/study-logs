@@ -686,7 +686,9 @@ It's always been important to make system data secure by timely performing backu
 
 Compression algorithms can be lossy and lossless. Following programs use lossless alogs, because no data loss is tolerated for files.
 
-_gzip_
+_Compression_
+
+**gzip**
 
 Is used to compress specified files. Accepts input from stdin. It replaces original specified file with one ending with `.gz`, with reduced size:
 
@@ -702,6 +704,16 @@ Many options exist, such as:
 6. `-v`, `--verbose`, display verbose messages while copmpressing.
 7. `-number`, set amount of compression. Less - fastest and less compressed. More - slower and more compressed. Default is 6. Can also be specified as `--fast` (1), and `--best` (9).
 
-_gunzip_
+**gunzip**
 
 Decompress files. Replaces the compressed file with its original form. Also has option `-c`, which is as `zcat`, outputs the contents replacing or creating the files. There is also `zless`.
+
+**bzip2 and bunzip2**
+
+Another program to compress files. Uses other compression algorithm. Comes with more efficient compression at cost of speed. Produces output with `bz2` at the end.
+
+All the options are same as with `gzip`, except there is no `-r`, and `-number` option behaves differently: `bzip2` uses blocks to compress a chunk of data at once. These blocks can be from 100kb (`-1`, `--fast`) to 900kb (`-9`, `--best`). Larger block means better compression, but more RAM usage, because larger blocks need to stay in memory.
+
+There is also `bunzip2` to decompress, and `bzcat`, `bzless`, and `bzip2recover` (recover damaged bzip2 files).
+
+It's often tried to compress already compressed files, like `gzip image.jpg`. This makes it worseby possibly making file bigger, because these compression algorithms have some overhead. So if there is no room for compression, it makes the file bigger.
