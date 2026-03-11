@@ -679,3 +679,25 @@ There are also options that can be passed to `find`. They are used to control th
 3. `--mindepth levels` - specifies min levels to descend into directory tree when performing tests and actions.
 
 and others.
+
+### Archiving and backup
+
+It's always been important to make system data secure by timely performing backups, and moving them from place to place, device to device.
+
+Compression algorithms can be lossy and lossless. Following programs use lossless alogs, because no data loss is tolerated for files.
+
+_gzip_
+
+Is used to compress specified files. It replaces original specified file with one ending with `.gz`, with reduced size:
+
+`gzip filename`
+
+Many options exist, such as:
+
+1. `-c`, `--stdout`, `--to-stdout`, write output to stdout and keep original files.
+2. `-d`, `--decompress`, --`uncompress`, acts just like `ungzip`.
+3. `-f`, `--force`, force compression even if compressed version of original file exists.
+4. `-t`, `--test`, test integrity.
+5. `-r`, `--recursive`, if one or more arguments are directories, recursively compress its files.
+6. `-v`, `--verbose`, display verbose messages while copmpressing.
+7. `-number`, set amount of compression. Less - fastest and less compressed. More - slower and more compressed. Default is 6. Can also be specified as `--fast` (1), and `--best` (9).
