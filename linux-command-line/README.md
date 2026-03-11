@@ -688,7 +688,7 @@ Compression algorithms can be lossy and lossless. Following programs use lossles
 
 _gzip_
 
-Is used to compress specified files. It replaces original specified file with one ending with `.gz`, with reduced size:
+Is used to compress specified files. Accepts input from stdin. It replaces original specified file with one ending with `.gz`, with reduced size:
 
 `gzip filename`
 
@@ -701,3 +701,7 @@ Many options exist, such as:
 5. `-r`, `--recursive`, if one or more arguments are directories, recursively compress its files.
 6. `-v`, `--verbose`, display verbose messages while copmpressing.
 7. `-number`, set amount of compression. Less - fastest and less compressed. More - slower and more compressed. Default is 6. Can also be specified as `--fast` (1), and `--best` (9).
+
+_gunzip_
+
+Decompress files. Replaces the compressed file with its original form. Also has option `-c`, which is as `zcat`, outputs the contents replacing or creating the files. There is also `zless`.
