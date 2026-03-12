@@ -717,3 +717,25 @@ All the options are same as with `gzip`, except there is no `-r`, and `-number` 
 There is also `bunzip2` to decompress, and `bzcat`, `bzless`, and `bzip2recover` (recover damaged bzip2 files).
 
 It's often tried to compress already compressed files, like `gzip image.jpg`. This makes it worseby possibly making file bigger, because these compression algorithms have some overhead. So if there is no room for compression, it makes the file bigger.
+
+_Archiving_
+
+Another method used alongside compression is archiving. It's about bundling the files and directories into 1 archive file.
+
+**tar**
+
+Originally designed for tape backups, now used everywhere for packaging and distribution. Syntax is `tar mode[options] pathname...`. Options include:
+
+1. `c` - create archive from list of files and/or directories.
+2. `x` - extract an archive.
+3. `r` - append specified pathnames to the end of an archive.
+4. `t` - list contents of archive.
+5. `f` - specify archive filename. If not present, defaults to stdin/stdout.
+6. `v` - verbose mode.
+7. And others
+
+For example `tar cf playground.tar playground` creates an archive from playground directory as `playground.tar`. To extract it we use `tar xf playground.tar`.
+
+When extracting, the files and directories takes ownership of user performing extraction.
+
+Also when creating an archive, if there is absolute path specified (for example `~/playground` expands to `/home/me/playground`), leading slash is removed (and path becomes `home/me/playground`). This is safety feature in order to prevent overriding system files or other user's files when extracting.So when extracting playground archived with `tar cf playground.tar ~/playground` inside `/home/me/entries` with `tar xf ../playground.tar`, we get `/home/me/entries/home/playground/...`. So the pathnames are preserved.
