@@ -739,3 +739,9 @@ For example `tar cf playground.tar playground` creates an archive from playgroun
 When extracting, the files and directories takes ownership of user performing extraction.
 
 Also when creating an archive, if there is absolute path specified (for example `~/playground` expands to `/home/me/playground`), leading slash is removed (and path becomes `home/me/playground`). This is safety feature in order to prevent overriding system files or other user's files when extracting.So when extracting playground archived with `tar cf playground.tar ~/playground` inside `/home/me/entries` with `tar xf ../playground.tar`, we get `/home/me/entries/home/playground/...`. So the pathnames are preserved.
+
+It's also possible to extract individual files or directories from an archive with `tar xf playground.tar pathname`, where pathnames can be multiple. Pathname should be exact relative path stored inside an archive.
+
+It's also possible to use wildcards for paths in GNU based `tar` program. For example `tar xf playground.tar --wildcards 'home/me/playgorund/dir-*/file-A'`.
+
+`find` program is also used often with `tar`, for example `find -name 'file-A' -exec tar rf playground.tar '{}' '+'`. `r` option is used to append the files to the archive.
