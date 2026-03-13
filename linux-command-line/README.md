@@ -745,3 +745,9 @@ It's also possible to extract individual files or directories from an archive wi
 It's also possible to use wildcards for paths in GNU based `tar` program. For example `tar xf playground.tar --wildcards 'home/me/playgorund/dir-*/file-A'`.
 
 `find` program is also used often with `tar`, for example `find -name 'file-A' -exec tar rf playground.tar '{}' '+'`. `r` option is used to append the files to the archive.
+
+`tar` program also accepts input/output from stdin/stdout. For example `tar cf - playground > playground.tar`. Here `-` indicates write to stdout. Or `find -name file-A | tar cf - --files-from=- | gzip > playground.tgz`, where `--files-from` indicates to read from stdin.
+
+`tar` program supports builtin compressions with `gzip` and `bzip2` algos, for example `tar czf playground.tgz playground` for gzip and `tar cjf playground.tbz playground` for bzip2.
+
+It's also possible to archive and copy some directory from remote shell to local system with `ssh maruf@remote-host 'tar cf - Documents' | tar xf -`. Recall that outputs of commands executed with `ssh` are sent to stdin of local system. Here we write output to stdout in remote system, and pipe it to local `tar` program and extract it from input.
