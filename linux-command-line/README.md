@@ -697,11 +697,11 @@ Is used to compress specified files. Accepts input from stdin. It replaces origi
 Many options exist, such as:
 
 1. `-c`, `--stdout`, `--to-stdout`, write output to stdout and keep original files.
-2. `-d`, `--decompress`, --`uncompress`, acts just like `ungzip`.
+2. `-d`, `--decompress`, `--uncompress`, acts just like `ungzip`.
 3. `-f`, `--force`, force compression even if compressed version of original file exists.
 4. `-t`, `--test`, test integrity.
 5. `-r`, `--recursive`, if one or more arguments are directories, recursively compress its files.
-6. `-v`, `--verbose`, display verbose messages while copmpressing.
+6. `-v`, `--verbose`, display verbose messages while compressing.
 7. `-number`, set amount of compression. Less - fastest and less compressed. More - slower and more compressed. Default is 6. Can also be specified as `--fast` (1), and `--best` (9).
 
 **gunzip**
@@ -751,3 +751,7 @@ It's also possible to use wildcards for paths in GNU based `tar` program. For ex
 `tar` program supports builtin compressions with `gzip` and `bzip2` algos, for example `tar czf playground.tgz playground` for gzip and `tar cjf playground.tbz playground` for bzip2.
 
 It's also possible to archive and copy some directory from remote shell to local system with `ssh maruf@remote-host 'tar cf - Documents' | tar xf -`. Recall that outputs of commands executed with `ssh` are sent to stdin of local system. Here we write output to stdout in remote system, and pipe it to local `tar` program and extract it from input.
+
+**zip**
+
+There is also `zip` command, which archives and compresses the files and directories. In Linux `gzip` is predominant compression program, and `tar` is predominant archiving program. `zip` is usually used to share the archives between Windows and Linux.
