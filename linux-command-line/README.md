@@ -755,3 +755,13 @@ It's also possible to archive and copy some directory from remote shell to local
 **zip**
 
 There is also `zip` command, which archives and compresses the files and directories. In Linux `gzip` is predominant compression program, and `tar` is predominant archiving program. `zip` is usually used to share the archives between Windows and Linux.
+
+Basic usage is `zip options zipfile file...`. For example `zip -r playground.zip playground`, where `-r` stands for recursion. If this option is not specified for directory, empty directory is archived.
+
+Zip adds files to archives with 2 methods: just adds without compression, or deflates (compression).
+
+Extraction can be done with `unzip playground.zip`.
+
+When target zip already exists, `zip` command doesn't replace it. It updates it by adding new files and replacing matching files.
+
+When unarchiving with `unzip`, if some files already exists, user is prompted before file is replaced.
