@@ -790,3 +790,8 @@ Besides matching any character at specified point, we can match character from s
 2. Ranges can be specified with dash (`-`). Instead of doing `[ABCDEFG until Z]`, we can do `[A-Z]`. Multiple ranges can be specified, for example `^[A-Za-z0-9]` means start with any letter or number. To disable special meaning of dash, we can use it at the start, like `[-AZ]`.
 
 Long story short, `[ABCD and all over Z]` and `[A-Z]` are not same, because how the dictionaries are formed. To avoid this limitation, POSIX character classes are made. For example `[:alnum:]`, `[:alpha:]`, etc.
+
+Posix separates regular expressions into 2 classes: basic regular expressions and extended regular expressions. The difference is in its metacharacters set.
+
+1. In BRE, `^ $ . [ ] *` are recognized as metacharacters, all others are considered literals. `( ) { }` are treated as metacharacters only if they are escaped by backslash. `grep` program uses BRE unless `-E` option is specified.
+2. In ERE, `( ) { } ? + |` are added. Escaping with backslash make them lose their special meaning.
