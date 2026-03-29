@@ -777,3 +777,7 @@ Regular expression is a symbolic notation used to identify a pattern. In simple 
 For example `grep bin file-*.txt` searches files matching `file-*.txt` for `bin` pattern. `bin` is regular expression here.
 
 Regular expressions have metacharactes, which are used to identify more complex matches: `^ $ . [ ] { } - ? * + ( ) | \`. All other characters are literals. Backslash is also used to escape metacharacters (make them literals), and to create metasequences.
+
+`.` (dot) is used to match any character. For example `.zip` will match `gzip unzip forexamplezip exzip2`.
+
+There are anchors. They cause match to occur if regular expression is at the start of the line (`^`), or at the end (`$`). They can also be used like `^apple$`, which causes only `apple` to match.
