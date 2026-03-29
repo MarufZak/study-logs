@@ -785,3 +785,4 @@ There are anchors. They cause match to occur if regular expression is at the sta
 Besides matching any character at specified point, we can match character from specified set of characters with brackets `[]`. For example `[bg]zip` matches `bzip` and `gzip`. Also metacharacters specified inside `[]` become literals, except 2 cases:
 
 1. If caret (`^`) is at the start (`[^]`), then characters inside brackets are meant NOT to match. For example `[^bg]zip` means if `zip` doesn't have `b` and `g` preceeding, then text matches. It matches `exzip forzip2 etczip`. If caret is not at the start, it loses its special meaning.
+2. Ranges can be specified with dash (`-`). Instead of doing `[ABCDEFG until Z]`, we can do `[A-Z]`. Multiple ranges can be specified, for example `^[A-Za-z0-9]` means start with any letter or number. To disable special meaning of dash, we can use it at the start, like `[-AZ]`.
