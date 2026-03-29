@@ -781,3 +781,7 @@ Regular expressions have metacharactes, which are used to identify more complex 
 `.` (dot) is used to match any character. For example `.zip` will match `gzip unzip forexamplezip exzip2`.
 
 There are anchors. They cause match to occur if regular expression is at the start of the line (`^`), or at the end (`$`). They can also be used like `^apple$`, which causes only `apple` to match.
+
+Besides matching any character at specified point, we can match character from specified set of characters with brackets `[]`. For example `[bg]zip` matches `bzip` and `gzip`. Also metacharacters specified inside `[]` become literals, except 2 cases:
+
+1. If caret (`^`) is at the start (`[^]`), then characters inside brackets are meant NOT to match. For example `[^bg]zip` means if `zip` doesn't have `b` and `g` preceeding, then text matches. It matches `exzip forzip2 etczip`. If caret is not at the start, it loses its special meaning.
