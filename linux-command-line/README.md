@@ -768,7 +768,9 @@ When unarchiving with `unzip`, if some files already exists, user is prompted be
 
 ### Regular expressions
 
-Regular expression is a symbolic notation used to identify a pattern. In simple words it's same as wildcards, but much richer. Regular expression is used by famous program `grep`. This program identifies patterns in given files and outputs matching lines. Some interesting `grep` options:
+Regular expression is a symbolic notation used to identify a pattern. In simple words it's same as wildcards, but much richer. Regular expressions might not be same everywhere. Sometimes regular expressions found in some languages are extended regular expressions.
+
+Regular expression is used by famous program `grep`. This program identifies patterns in given files and outputs matching lines. Some interesting `grep` options:
 
 1. `-i` - ignore case
 2. `-v` - invert match
@@ -776,7 +778,7 @@ Regular expression is a symbolic notation used to identify a pattern. In simple 
 
 For example `grep bin file-*.txt` searches files matching `file-*.txt` for `bin` pattern. `bin` is regular expression here.
 
-Regular expressions have metacharactes, which are used to identify more complex matches: `^ $ . [ ] { } - ? * + ( ) | \`. All other characters are literals. Backslash is also used to escape metacharacters (make them literals), and to create metasequences.
+Regular expressions have metacharactes, which are used to identify more complex matches: `^ $ . [ ] { } - ? * + ( ) | \`. All other characters are literals. Backslash is also used to escape metacharacters (make them literals), and to create metasequences. Some metacharacters have meaning in shell too, so quotes should be used to prevent expansion.
 
 `.` (dot) is used to match any character. For example `.zip` will match `gzip unzip forexamplezip exzip2`.
 
@@ -786,3 +788,5 @@ Besides matching any character at specified point, we can match character from s
 
 1. If caret (`^`) is at the start (`[^]`), then characters inside brackets are meant NOT to match. For example `[^bg]zip` means if `zip` doesn't have `b` and `g` preceeding, then text matches. It matches `exzip forzip2 etczip`. If caret is not at the start, it loses its special meaning.
 2. Ranges can be specified with dash (`-`). Instead of doing `[ABCDEFG until Z]`, we can do `[A-Z]`. Multiple ranges can be specified, for example `^[A-Za-z0-9]` means start with any letter or number. To disable special meaning of dash, we can use it at the start, like `[-AZ]`.
+
+Long story short, `[ABCD and all over Z]` and `[A-Z]` are not same, because how the dictionaries are formed. To avoid this limitation, POSIX character classes are made. For example `[:alnum:]`, `[:alpha:]`, etc.
