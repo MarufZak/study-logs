@@ -765,3 +765,15 @@ Extraction can be done with `unzip playground.zip`.
 When target zip already exists, `zip` command doesn't replace it. It updates it by adding new files and replacing matching files.
 
 When unarchiving with `unzip`, if some files already exists, user is prompted before file is replaced.
+
+### Regular expressions
+
+Regular expression is a symbolic notation used to identify a pattern. In simple words it's same as wildcards, but much richer. Regular expression is used by famous program `grep`. This program identifies patterns in given files and outputs matching lines. Some interesting `grep` options:
+
+1. `-i` - ignore case
+2. `-v` - invert match
+3. `-l` - print name of file with match instead match itself.
+
+For example `grep bin file-*.txt` searches files matching `file-*.txt` for `bin` pattern. `bin` is regular expression here.
+
+Regular expressions have metacharactes, which are used to identify more complex matches: `^ $ . [ ] { } - ? * + ( ) | \`. All other characters are literals. Backslash is also used to escape metacharacters (make them literals), and to create metasequences.
