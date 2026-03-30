@@ -795,3 +795,7 @@ Posix separates regular expressions into 2 classes: basic regular expressions an
 
 1. In BRE, `^ $ . [ ] *` are recognized as metacharacters, all others are considered literals. `( ) { }` are treated as metacharacters only if they are escaped by backslash. `grep` program uses BRE unless `-E` option is specified.
 2. In ERE, `( ) { } ? + |` are added. Escaping with backslash make them lose their special meaning.
+
+Here are extended regular expression metacharacters:
+
+1. Alternation. Just as brackets allow single character to match from specified set of characters, alternation allows expressions to match from specified set of expressions. For example `echo AAA | grep -E 'AAA|BBB|CCC'` matches `AAA`. We can enclose them in paretheses like `^(AAA|BBB|CCC)` matches strings starting with either AAA, BBB, or CCC.
