@@ -804,3 +804,9 @@ _Quantifiers_. Extended regular expressions allow us to specify number of times 
 
 1. `?` - zero or one time. For example `echo '(999)' | grep -E '^\(?[0-9][0-9][0-9]\)?$'` and `echo '999' | grep -E '^\(?[0-9][0-9][0-9]\)?$'` would match, but `echo '((999))' | grep -E '^\(?[0-9][0-9][0-9]\)?$'` would not.
 2. `*` - zero or more times. Unlike `?`, occurence might be any number of times >= 0. For example `echo "Hello world." | grep -E '[[:upper:]][[:upper:][:lower:] ]*\.'` would match. This RE will match sentences starting with uppercase, and trailing with any number of uppercase and lowercase letters followed by dot.
+3. `+` - Same as `*`, but matches if there is one or more occurences.
+4. `{}` - match element specified number of times. We can simplify earlier example with numbers to `echo '(999)' | grep -E '^\(?[0-9]{3}\)?$'` Can be used as following:
+   - `{n}` - match preceding element if it occurs `n` times.
+   - `{n,m}` - match preceding element if it occurs minimum `n` and maximum `m` times.
+   - `{n,}` - match preceding element if it matches `n` or more times.
+   - `{,m}` - match preceding element if it matches no more than `m` times.
