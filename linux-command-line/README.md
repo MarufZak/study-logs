@@ -798,4 +798,9 @@ Posix separates regular expressions into 2 classes: basic regular expressions an
 
 Here are extended regular expression metacharacters:
 
-1. Alternation. Just as brackets allow single character to match from specified set of characters, alternation allows expressions to match from specified set of expressions. For example `echo AAA | grep -E 'AAA|BBB|CCC'` matches `AAA`. We can enclose them in paretheses like `^(AAA|BBB|CCC)` matches strings starting with either AAA, BBB, or CCC.
+_Alternation_. Just as brackets allow single character to match from specified set of characters, alternation allows expressions to match from specified set of expressions. For example `echo AAA | grep -E 'AAA|BBB|CCC'` matches `AAA`. We can enclose them in paretheses like `^(AAA|BBB|CCC)` matches strings starting with either AAA, BBB, or CCC.
+
+_Quantifiers_. Extended regular expressions allow us to specify number of times match should occur:
+
+1. `?` - zero or one time. For example `echo '(999)' | grep -E '^\(?[0-9][0-9][0-9]\)?$'` and `echo '999' | grep -E '^\(?[0-9][0-9][0-9]\)?$'` would match, but `echo '((999))' | grep -E '^\(?[0-9][0-9][0-9]\)?$'` would not.
+2. `*` - zero or more times. Unlike `?`, occurence might be any number of times >= 0. For example `echo "Hello world." | grep -E '[[:upper:]][[:upper:][:lower:] ]*\.'` would match. This RE will match sentences starting with uppercase, and trailing with any number of uppercase and lowercase letters followed by dot.
