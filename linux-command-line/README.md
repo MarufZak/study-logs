@@ -810,3 +810,13 @@ _Quantifiers_. Extended regular expressions allow us to specify number of times 
    - `{n,m}` - match preceding element if it occurs minimum `n` and maximum `m` times.
    - `{n,}` - match preceding element if it matches `n` or more times.
    - `{,m}` - match preceding element if it matches no more than `m` times.
+
+### Text processing
+
+Text is used in many places in different systems like Unix-like systems, for example in documents, web pages, printer output, program source code. So there are many programs to manipulate text and view it.
+
+Non-printing characters change how text is displated rather than representing some text itself. For example `\n` (newline), `\t` (tab), `\r` (carriage return).
+
+For example `cat` program has `-I` option used to display non-printing characters in text. Output `^IHello world! $` means there is tab at the start, and space at the end.
+
+Unix and DOS don't specify end of the line the same way. In Unix, line is ended by linefeed, while in DOS by carriage return followed by linefeed. It's possible with `cat -I` to sport carriage returns.
