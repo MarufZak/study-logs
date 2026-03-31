@@ -817,6 +817,10 @@ Text is used in many places in different systems like Unix-like systems, for exa
 
 Non-printing characters change how text is displated rather than representing some text itself. For example `\n` (newline), `\t` (tab), `\r` (carriage return).
 
-For example `cat` program has `-I` option used to display non-printing characters in text. Output `^IHello world! $` means there is tab at the start, and space at the end.
+**cat**
 
-Unix and DOS don't specify end of the line the same way. In Unix, line is ended by linefeed, while in DOS by carriage return followed by linefeed. It's possible with `cat -I` to sport carriage returns.
+For example `cat` program has `-A` option used to display non-printing characters in text. Output `^IHello world! $` means there is tab at the start, and space at the end.
+
+Unix and DOS don't specify end of the line the same way. In Unix, line is ended by linefeed, while in DOS by carriage return followed by linefeed. It's possible with `cat -A` to sport carriage returns.
+
+`cat` has also `-n` option to number the lines in the text.
