@@ -824,3 +824,18 @@ For example `cat` program has `-A` option used to display non-printing character
 Unix and DOS don't specify end of the line the same way. In Unix, line is ended by linefeed, while in DOS by carriage return followed by linefeed. It's possible with `cat -A` to sport carriage returns.
 
 `cat` has also `-n` option to number the lines in the text.
+
+### Compiling programs
+
+Although Linux distributions have hude repositories with many precompiled programs, knowing how to compile is needed for 2 reasons:
+
+1. Availability. Some distributions might not include precompiled versions of some programs.
+2. Timelines. Latest version of program might need to be compiled, because it's yet not included in disto repository.
+
+Compiling is translating high-level language into machine level language.
+
+Machine executes instructions written in binary format. Early programs required developers to write programs in binary format. After that assembly was invented with instructions like `CPY`, `MOV`, which made making programs easier. Assembly language is translated into machine language by `assembler`. Assembly language is still used for device drivers and embedded systems.
+
+After that high level languages came. High level languages allow developers not to worry about low level routines. High level languages are translated into machine language by compiler. Some compilers translate it into assembly language and then let assembler carry out the rest.
+
+There is also process of linking. Programs don't implement some common set of tasks such as reading file, writing file, because they are provided with libraries which implement these routines. Programs share these libraries. Program called `linker` connects this shared set of libraries with compiled form of programs.
