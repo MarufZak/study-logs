@@ -218,3 +218,14 @@ Assume SHA-1 is used as a hash function. Its hash space is from `0` to `2^160 - 
 Using hash function SHA-1, we map the servers based on their IP or name in the hash ring.
 
 ![14](./assets/14.png)
+
+Now let's hash the keys and put them into ring. To determine the server, we go clockwise and take first server met.
+
+![15](./assets/15.png)
+
+Adding/removing keys would require only fraction of keys to be rehashed. For example let's say server is added before server 0. Only k0 would be rehashed.
+
+There are 2 problems with this approach:
+
+1. It's impossible to map the servers in the ring with same partition. Partition is distance on the ring between two servers. This means one server might have much more data than others.
+2. It's possible to have non-uniform distribution of keys on the ring, which again causes one server to have more data than others.
