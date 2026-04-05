@@ -208,3 +208,13 @@ This approach works when number of servers is fixed, and data is distributed eve
 | key5 | 8392147 | 1        |
 | key6 | 2039586 | 0        |
 | key7 | 6104723 | 2        |
+
+Consisten hashing fixes this problem. Consistent hashing is hashing algorithm which causes on average `k / n` keys to be rehashed, where `k` is number of keys, and `n` is number of slots.
+
+Assume SHA-1 is used as a hash function. Its hash space is from `0` to `2^160 - 1`. Assume they are `x0` and `xn` respectively.
+
+![13](./assets/13.png)
+
+Using hash function SHA-1, we map the servers based on their IP or name in the hash ring.
+
+![14](./assets/14.png)
