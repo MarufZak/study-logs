@@ -229,3 +229,11 @@ There are 2 problems with this approach:
 
 1. It's impossible to map the servers in the ring with same partition. Partition is distance on the ring between two servers. This means one server might have much more data than others.
 2. It's possible to have non-uniform distribution of keys on the ring, which again causes one server to have more data than others.
+
+To fix these problems, techinque called virtual nodes or replicas is used.
+
+Instead of being represented as single server, server is represented as multiple virtual servers (virtual nodes). For example `s0` is represented as `s0_0`, `s0_1`, `s0_2`. With virtual nodes, each server is responsible for multiple partitions. As the number of virtual nodes is bigger, distribution of the keys become more balanced. In real world scenario, the number of virtual nodes is bigger.
+
+![16](./assets/16.png)
+
+How do we find the keys to be redistributed when some server is added? We take the server that is added, move anticlockwise, and capture some server `n`. So keys between added server and server `n` are redistributed. Same with removing. We take removed server, move anticlockwise, and capture some server `n`. Keys between removed server and server `n` are redistributed.
