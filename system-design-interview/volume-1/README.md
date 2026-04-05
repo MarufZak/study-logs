@@ -178,3 +178,20 @@ To properly reply to client that it has been throttled, some HTTP headers are al
 When too many requests are made, 429 alongside X-Ratelimit-Retry-After is sent.
 
 ![12](./assets/12.png)
+
+## Chapter 5. Design consistent hashing
+
+To properly scale horizontally, the load must be evenly distributed between the servers.
+
+Let's assume we are using multiple cache servers. Cached data is distributed by the key to cache servers. There are 4 cache servers. In traditional case we would use formula like `serverIndex = hash(key) % number_of_servers`. This would distribute the load like following:
+
+| key  | hash    | hash % 4 |
+| ---- | ------- | -------- |
+| key0 | 1835617 | 1        |
+| key1 | 2614354 | 0        |
+| key2 | 1124379 | 2        |
+| key3 | 3482210 | 0        |
+| key4 | 5765441 | 1        |
+| key5 | 8392147 | 3        |
+| key6 | 2039586 | 2        |
+| key7 | 6104723 | 3        |
