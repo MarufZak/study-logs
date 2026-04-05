@@ -195,3 +195,16 @@ Let's assume we are using multiple cache servers. Cached data is distributed by 
 | key5 | 8392147 | 3        |
 | key6 | 2039586 | 2        |
 | key7 | 6104723 | 3        |
+
+This approach works when number of servers is fixed, and data is distributed evenly. But what if we added or removed one server (let's say one goes offline)? If we removed one, let's say server 0, number_of_servers would become 3, and table would become following, causing all keys to be rehashed, causing many cache misses.
+
+| key  | hash    | hash % 3 |
+| ---- | ------- | -------- |
+| key0 | 1835617 | 2        |
+| key1 | 2614354 | 1        |
+| key2 | 1124379 | 0        |
+| key3 | 3482210 | 1        |
+| key4 | 5765441 | 2        |
+| key5 | 8392147 | 1        |
+| key6 | 2039586 | 0        |
+| key7 | 6104723 | 2        |
