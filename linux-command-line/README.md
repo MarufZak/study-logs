@@ -850,3 +850,13 @@ Most programs can be compiled with 2 commands:
 2. `Makefile`. This file is used by `make`. It's used to define dependencies and relations between modules in the actual program. Without this `make` refuses to run. First section defines variables that are later substituted. Most of `Makefile` includes defining a target, and the files on which it's dependent. `Makefile` also defines how to compile any `.c` and `.o` files. Why not just make pipeline to build everything from ground up? Because when program is compiled, and if source code is changed a bit, `make` can determine which files to build and which to not.
 
 Well packages source code also includes special `make` target called `install`. This target is used to install final production in sysem directory for use. Usually `/usr/local/bin`, traditional directory for locally built software. Needs to be executed as superuser (because `/usr/local/bin` is not writable by ordinary user) as `sudo make install`.
+
+## Part 4, writing shell scripts
+
+So far we learnt how to use commands, can we do more with shell? Shell is not only command line interface, but also scripting language interpreter. It can execute scripts written in files just like we input it manually. Most commands done with scripts can be done in command line can be done in scripts, and vice versa.
+
+To execute a script:
+
+1. Write a script
+2. Make it executable
+3. Locate it
