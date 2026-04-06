@@ -876,6 +876,8 @@ echo Hello world
 After making it executable (must be readable to be able to execute), we can run the script as `./hello_world`. We specify `./` so shell can find it. By default shell searches directories specified in $PATH env variable. If we locate the script in specified directory, we can omit specifying the path.
 Good path for scripts for user is `~/bin`. If script should be available for all users -> `/usr/local/bin`. Scripts intended for use by system administrator -> `/usr/local/sbin`. Directories `/bin` and `/usr/bin` are intended for use by Linux distributor.
 
+In shell scripts we can use `\` line continuation character. It tells shell to escape newline and treat next line as part of same command.
+
 Following script is discussed:
 
 ```bash
@@ -897,5 +899,6 @@ echo "<HTML>
 "
 ```
 
-1. We create variables just by typing the name and assigning value. Commands like `echo $unexisting_variable` implies that `unexisting_variable` is created and assigned empty string value, so the output is empty string. In shell scripts, multiple variables can be assigned in single line, like `a=5 b="a string"`. Shell doesn't differentiate constants and variables, but we can ensure variable is not overwritten with `declare -r` syntax, or ensure specific variable type with `declare -i` syntax (not widely used). Variables can contain anything that resolves to string - expansions, like math expansion.
-2. We can surround variables with optional curly braces. For example let's suppose variable `filename` exists. We want to move file to `$filename` adding `a` directory. `mv $filename $filename1` fails (no such variable name `$filename1`), but `${filename}1` succeeds.
+1. Quoted string can contain newlines. Shell will continue reading it untill it encounters closing quote.
+2. We create variables just by typing the name and assigning value. Commands like `echo $unexisting_variable` implies that `unexisting_variable` is created and assigned empty string value, so the output is empty string. In shell scripts, multiple variables can be assigned in single line, like `a=5 b="a string"`. Shell doesn't differentiate constants and variables, but we can ensure variable is not overwritten with `declare -r` syntax, or ensure specific variable type with `declare -i` syntax (not widely used). Variables can contain anything that resolves to string - expansions, like math expansion.
+3. We can surround variables with optional curly braces. For example let's suppose variable `filename` exists. We want to move file to `$filename` adding `a` directory. `mv $filename $filename1` fails (no such variable name `$filename1`), but `${filename}1` succeeds.
