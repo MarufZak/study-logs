@@ -928,3 +928,13 @@ _EOF_
 ```
 
 Inside `here document` single quotes and double quotes lose their meaning, meaning `'$filename'` expands the variable despite there is single quotes.
+
+If we use `<<-` instead of `<<`, shell will ignore leading tab characters (not spaces) in here document. This improves readability, for example:
+
+```bash
+cat <<- EOF
+    echo hello
+    echo world
+    echo hi
+EOF
+```
