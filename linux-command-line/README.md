@@ -860,3 +860,18 @@ To execute a script:
 1. Write a script
 2. Make it executable
 3. Locate it
+
+For example
+
+```bash
+#!/bin/bash
+
+# our first script
+
+echo Hello world
+```
+
+`#!` syntax is shebang. It's used to specify name of interpreter used to execute scripts following.
+
+After making it executable (must be readable to be able to execute), we can run the script as `./hello_world`. We specify `./` so shell can find it. By default shell searches directories specified in $PATH env variable. If we locate the script in specified directory, we can omit specifying the path.
+Good path for scripts for user is `~/bin`. If script should be available for all users -> `/usr/local/bin`. Scripts intended for use by system administrator -> `/usr/local/sbin`. Directories `/bin` and `/usr/bin` are intended for use by Linux distributor.
