@@ -1137,3 +1137,8 @@ if [[ $INT -ge 1 && $INT -le 100 ]]; then
     echo "INT is between 1 and 100"
 fi
 ```
+
+Bash also provides a way for branching with control operators, that is:
+
+1. `&&`. In `expression1 && expression2`, expression2 is executed only if expression1 succeeds.
+1. `||`. In `expression1 || expression2`, expression2 is executed only if expression1 fails.
