@@ -995,3 +995,17 @@ fi
 ```
 
 Any programs exit with some status indicating weather program executed successfully or if there was an error. Programs exit with either 0-255 status codes, 0 being success, and all other being error. We can see status of last executed command with `echo $?`.
+
+There are programs that just exit with success and fail codes, `true` and `false`.
+
+If block simply sees what whether the program executed successfully. If there are multiple commands, it looks at the last command. Conditions example:
+
+```bash
+x=5
+
+if [ $x = 5 ]; then
+    echo "x equals 5"
+else
+    echo "x does not equal 5"
+fi
+```
