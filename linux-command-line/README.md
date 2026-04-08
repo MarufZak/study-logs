@@ -939,6 +939,8 @@ cat <<- EOF
 EOF
 ```
 
+### Functions
+
 Shell also has functions feature. It should contain at least 1 command. Syntax is:
 
 ```bash
@@ -977,3 +979,19 @@ function print () {
 
 print
 ```
+
+### Branching
+
+Shell scripts also support if else conditions. Syntax is:
+
+```bash
+if commands; then
+    commands
+[elif commands; then
+    commands]
+[else
+    commands]
+fi
+```
+
+Any programs exit with some status indicating weather program executed successfully or if there was an error. Programs exit with either 0-255 status codes, 0 being success, and all other being error. We can see status of last executed command with `echo $?`.
