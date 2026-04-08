@@ -1009,3 +1009,17 @@ else
     echo "x does not equal 5"
 fi
 ```
+
+Here we used `test` command. It has 2 syntaxes:
+
+```bash
+test expression
+```
+
+and
+
+```bash
+[ expression ]
+```
+
+It's a command that exits with `0` if expression is true, and `1` if not.
