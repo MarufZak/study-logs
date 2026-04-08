@@ -1092,3 +1092,24 @@ It supports all expressions supported in `[]` or `test`, but also has more:
 ```
 
 which returns true if there is a match in string.
+
+In addition to this, modern bash has `(( ))` designed to work only with integers. It supports full set of arithmethic evaluations. It is used to perform arithmetic truth test. It's a test where the result is true if result of arithmetic evaluation is non-zero.
+
+```bash
+if (( 1 )); then
+    echo "It's true"
+else
+    echo "It's fale"
+fi
+```
+
+```bash
+INT=5
+
+if (( INT == 0 )); then
+    echo "It is zero"
+else
+    echo "It is not zero"
+```
+
+Because it operates on integers natively, we don't need param expansion.
