@@ -1023,3 +1023,19 @@ and
 ```
 
 It's a command that exits with `0` if expression is true, and `1` if not.
+
+It has various flags for different operations. For example for files:
+
+1. `file1 -ef file2` - file1 and file2 have same inode numbers
+2. `file1 -nt file2` - file1 is newer than file2
+3. `-e file` - file exists
+4. and many others
+
+For string expressions:
+
+1. `string` - string is not null
+2. `-n string` - length of string is greather than 0
+3. `-z string` - length of string is zero
+4. `string1 = string2` or `string1 == string2` - strings are equal
+5. `string1 != string2` - strings are not equal.
+6. And others
