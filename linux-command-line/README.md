@@ -1078,3 +1078,17 @@ fi
 Note thatn `$INT` is inside quotes. This is because if $INT is empty, program crashes if it's not inside quotes. Because it's inside quotes it resolves to empty string.
 
 Also error is forwarded to stderr as it should.
+
+Modern versions of `bash` has modern replacement for `test`, that is:
+
+```bash
+[[ expresision ]]
+```
+
+It supports all expressions supported in `[]` or `test`, but also has more:
+
+```bash
+[[ string =~ regex ]]
+```
+
+which returns true if there is a match in string.
