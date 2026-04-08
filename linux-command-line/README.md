@@ -1039,3 +1039,42 @@ For string expressions:
 4. `string1 = string2` or `string1 == string2` - strings are equal
 5. `string1 != string2` - strings are not equal.
 6. And others
+
+For number expressions:
+
+1. `integer1 -eq integer2` - integer1 is equal to integer2
+2. `integer1 -ne integer2` - integer 1 is not equal integer2
+3. `integer1 -le integer2` - integer1 is less or equal to integer2
+
+For example:
+
+```bash
+#!/bin/bash
+
+INT=-5
+
+if [ -z "$INT" ]; then
+    echo "INT is empty" >&2
+    exit 1
+fi
+
+if [ $INT -eq 0 ]; then
+    echo "INT is zero"
+else
+    if [ $INT -lt 0 ]; then
+        echo "INT is negative"
+    else
+        echo "INT is positive"
+    fi
+
+    if [ $((INT % 2)) -eq 0 ]; then
+        echo "INT is even"
+    else
+        echo "INT is odd"
+    fi
+fi
+```
+
+Note thatn `$INT` is inside quotes. This is because if $INT is empty, program crashes if it's not inside quotes. Because it's inside quotes it resolves to empty string.
+
+Also error is forwarded to stderr as it should.
