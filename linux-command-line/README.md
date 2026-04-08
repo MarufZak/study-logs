@@ -1112,4 +1112,28 @@ else
     echo "It is not zero"
 ```
 
-Because it operates on integers natively, we don't need param expansion.
+Because it operates on integers natively and is shell builtin syntax, we don't need param expansion.
+
+We can combine expressions with logical operators. There are 3: AND, OR, NOT. `test` and `[[ ]]` have different syntax:
+
+| Operator | `test` / `[ ]` | `[[ ]]` |
+| -------- | -------------- | ------- |
+| AND      | `-a`           | `&&`    |
+| OR       | `-o`           | `\|\|`  |
+| NOT      | `!`            | `!`     |
+
+For example with `test`:
+
+```bash
+if [ $INT -ge 1 -a $INT -le 100 ]; then
+    echo "INT is between 1 and 100"
+fi
+```
+
+And with `[[ ]]`:
+
+```bash
+if [[ $INT -ge 1 && $INT -le 100 ]]; then
+    echo "INT is between 1 and 100"
+fi
+```
