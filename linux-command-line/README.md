@@ -965,3 +965,15 @@ function print () {
 
 print
 ```
+
+there are also local variables that can be defined inside shell functions, defined with `local` keyword. For example:
+
+```bash
+function print () {
+    local text="Hello World"
+    echo $text
+    return
+}
+
+print
+```
