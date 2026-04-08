@@ -938,3 +938,30 @@ cat <<- EOF
     echo hi
 EOF
 ```
+
+Shell also has functions feature. It should contain at least 1 command. Syntax is:
+
+```bash
+function name () {
+    commands
+    return
+}
+
+# or
+
+name () {
+    commands
+    return
+}
+```
+
+`return` is optional, and there should be at least 1 command. For example:
+
+```bash
+function print () {
+    echo "Hello World"
+    return
+}
+
+print
+```
