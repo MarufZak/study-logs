@@ -1142,3 +1142,19 @@ Bash also provides a way for branching with control operators, that is:
 
 1. `&&`. In `expression1 && expression2`, expression2 is executed only if expression1 succeeds.
 1. `||`. In `expression1 || expression2`, expression2 is executed only if expression1 fails.
+
+### Reading keyboard input
+
+It's possible to read from stdin with `read` command. Syntax is `read -options variable...`. Options example is `-s` silent mode, which doesn't shown characters typed. Variable can be one or more. `read` program makes word separation (indicated by `IFS` variable) and assign values to variables. If variables are not specified, `REPLY` env variable will contain the input.
+
+For example:
+
+```bash
+#!/bin/bash
+echo -n "Type something ->"
+
+read var1 var2
+
+echo "var1: $var1"
+echo "var2: $var2"
+```
