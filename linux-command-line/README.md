@@ -1091,7 +1091,15 @@ It supports all expressions supported in `[]` or `test`, but also has more:
 [[ string =~ regex ]]
 ```
 
-which returns true if there is a match in string.
+which returns true if there is a match in string. Plus `==` in `[[ ]]` supports pattern matching, for example:
+
+```bash
+if [[ $FILE == foo.* ]]; then
+    echo "Correct"
+else
+    echo "Incorrect"
+fi
+```
 
 In addition to this, modern bash has `(( ))` designed to work only with integers. It supports full set of arithmethic evaluations. It is used to perform arithmetic truth test. It's a test where the result is true if result of arithmetic evaluation is non-zero.
 
