@@ -1170,3 +1170,19 @@ echo "var2: $var2"
 It's possible to execute commands by specifying some ENV variables before it. For example `IFS=; read user pw <<< $file_info`. Here we use new redirection operator `<<<`, which is here string, one-line version of here document. In this case, `IFS` is set to `;` to only next command, which is `read`.
 
 Why not use just `echo "foo" | read` ? It's because we can't pipe `read`. In `bash` (and `sh`), pipeline creates subshells, copies of the shell and its environment that are used to execute the command. This means subshell cannot edit environment of parent process. When we execute command `echo "foo" | read`, `REPLY` variable is set inside subshell, but once its finished, its destroyed.
+
+### Looping
+
+There is looping with `while` too. Syntax is `while commands; do commands; done`. It supports both `continue` and `break`. There is also `until`. If `while` executes the body while exit status of command is 0, `until` does the opposite.
+
+Example program:
+
+```bash
+#!/bin/bash
+
+while read distro version release; do
+    echo "$distro $version $release"
+done < distros.txt
+```
+
+where we redirect file to the loop after `done`.
