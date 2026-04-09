@@ -1145,7 +1145,7 @@ Bash also provides a way for branching with control operators, that is:
 
 ### Reading keyboard input
 
-It's possible to read from stdin with `read` command. Syntax is `read -options variable...`. Options example is `-s` silent mode, which doesn't shown characters typed. Variable can be one or more. `read` program makes word separation (indicated by `IFS` variable) and assign values to variables. If variables are not specified, `REPLY` env variable will contain the input.
+It's possible to read from stdin with `read` command. Syntax is `read -options variable...`. Options example is `-s` silent mode, which doesn't shown characters typed. Variable can be one or more. `read` program makes word separation (indicated by `IFS` variable, default `IFS` value is space, tab, and newline) and assign values to variables. If variables are not specified, `REPLY` env variable will contain the input.
 
 For example:
 
@@ -1158,3 +1158,7 @@ read var1 var2
 echo "var1: $var1"
 echo "var2: $var2"
 ```
+
+It's possible to execute commands by specifying some ENV variables before it. For example `IFS=; read user pw <<< $file_info`. Here we use new redirection operator `<<<`, which is here string, one-line version of here document. In this case, `IFS` is set to `;` to only next command, which is `read`.
+
+Why not use just `echo "foo" | read` ? It's because we can't pipe `read`. In `bash` (and `sh`), pipeline creates subshells, copies of the shell and its environment that are used to execute the command. This means subshell cannot edit environment of parent process. When we execute command `echo "foo" | read`, `REPLY` variable is set inside subshell, but once its finished, its destroyed.
