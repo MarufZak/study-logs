@@ -1208,3 +1208,25 @@ set -x # enable tracing
 # ...scripts
 set +x #disable tracing
 ```
+
+### Branching with case
+
+As with many programming languages, bash shell provides branching with `case`. For example:
+
+```bash
+#!/bin/bash
+
+case $REPLY in
+    0) echo "Reply is 0"
+       exit
+       ;;
+    1) echo "Reply is 1"
+       exit
+       ;;
+    *) echo "Reply is something else"
+       exit
+       ;;
+esac
+```
+
+Patterns are same as in pathname expansion, for example these patterns are valid: `???`, `[:alnum:]`, `*.txt`, `*`, `abc`. Once match is found, other cases are not considered.
