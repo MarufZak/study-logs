@@ -1186,3 +1186,25 @@ done < distros.txt
 ```
 
 where we redirect file to the loop after `done`.
+
+### Debugging
+
+Debugging can be done by echoing some text in the code.
+
+Bash provides a flag to enable tracing:
+
+```bash
+#!/bin/bash -x
+
+# ...scripts
+```
+
+It's possible to enable and disable tracing at some points:
+
+```bash
+#!/bin/bash
+
+set -x # enable tracing
+# ...scripts
+set +x #disable tracing
+```
