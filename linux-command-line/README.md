@@ -1295,3 +1295,25 @@ There are expansions available for positional params:
 
 1. `$*` expands into list of positional params, starting with 1 (`"word", "words with spaces"` turns into `"word", "words", "with", ""spaces`). When surrounded by double quotes, expands into a double quoted string containing all positional params separated by first char of IFS (space by default) (`"word", "words with spaces"` become `"word words with spaces"`).
 2. `$@` expands into list of positional params, starting with 1 (`"word", "words with spaces"` turns into `"word", "words", "with", "spaces"`). When surrounded by double quotes, expands each positional param into separated word surrounded by double quotes. (`"word", "words with spaces"` turns into `"word"`, `"words with spaces"`, stays the same, so yes, it preserves integrity).
+
+### Looping with for
+
+There are 2 forms.
+
+First form has syntax:
+
+```bash
+for variable [in words]; do
+    commands
+done
+```
+
+It's like for in loop in javascript. For example:
+
+```bash
+for letter in A B C D; do
+    echo $letter
+done
+```
+
+expansion is supported for words, for example `{A..D}`, or `*.txt`
