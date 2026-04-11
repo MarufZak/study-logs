@@ -1248,3 +1248,13 @@ case $REPLY in
          ;;
 esac
 ```
+
+### Positional parameters
+
+Shell gives us ability to access words in command line, these are called positional parameters. First param is always full pathname of the program being executed. They can be accessed `$0`, `$1`, and so on. After `$9` we can access with `${10}` and so on.
+
+With these we can give arguments to programs executed.
+
+We can determine number of arguments with `$#` (ignoring `$0`, which is pathname).
+
+We can process the arguments with `shift`, which puts `$3` instead of `$2`, `$2` instead of `$1` and so on, and value fo `$#` is also reduced by 1.
