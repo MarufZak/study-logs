@@ -1230,3 +1230,21 @@ esac
 ```
 
 Patterns are same as in pathname expansion, for example these patterns are valid: `???`, `[:alnum:]`, `*.txt`, `*`, `abc`. Once match is found, other cases are not considered.
+
+case also supports `or` operator, for example:
+
+```bash
+#!/bin/bash
+
+case $REPLY in
+    0|1) echo "Reply is 0 or 1"
+         exit
+         ;;
+    2|3) echo "Reply is 2 or 3"
+         exit
+         ;;
+      *) echo "Reply is something else"
+         exit
+         ;;
+esac
+```
