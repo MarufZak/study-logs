@@ -1316,4 +1316,26 @@ for letter in A B C D; do
 done
 ```
 
-expansion is supported for words, for example `{A..D}`, or `*.txt`
+expansion is supported for words, for example `{A..D}`, or `*.txt`. Words is optional, if it's not provided, positional params are processed instead. For example:
+
+```bash
+for i; do
+    echo $i
+done
+```
+
+Second form is modern form, it's like for loop in javascript. Syntax is:
+
+```bash
+for (( expression1; expression2; expression3 )); do
+    commands
+done
+```
+
+For example:
+
+```bash
+for (( i=0;i<5;i=i+1 )); do
+    echo $i
+done
+```
