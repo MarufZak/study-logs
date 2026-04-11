@@ -1257,4 +1257,36 @@ With these we can give arguments to programs executed.
 
 We can determine number of arguments with `$#` (ignoring `$0`, which is pathname).
 
-We can process the arguments with `shift`, which puts `$3` instead of `$2`, `$2` instead of `$1` and so on, and value fo `$#` is also reduced by 1.
+We can process the arguments with `shift`, which puts `$3` instead of `$2`, `$2` instead of `$1` and so on, and value fo `$#` is also reduced by 1. For example:
+
+```bash
+#!/bin/bash
+
+count=1
+
+while [[ $# -gt 0 ]]; do
+    echo "Argument $count = $1"
+    count=$((count + 1))
+    shift
+done
+```
+
+Positional params can also be used with shell functions. They are used same way:
+
+```bash
+#!/bin/bash
+
+file_info () {
+if [[ -e $1 ]]; then
+    echo -e "\nFile Type:"
+    file $1
+    echo -e "\nFile Status:"
+    stat $1
+else
+    echo "$FUNCNAME: usage $FUNCNAME file" >&2
+    return 1
+fi
+}
+```
+
+Note that `FUNCNAME` is special variable shell updates itself to display current function name.
