@@ -1383,3 +1383,25 @@ or with declare command:
 ```bash
 declare -a arr
 ```
+
+Values can be assigned by specifying index, or list values:
+
+```bash
+arr=(value1 value2 value3)
+```
+
+or specify by index:
+
+```bash
+days=([0]=Mon [1]=Tue [2]=Wed)
+```
+
+All contentns of array can be accessed via `array[*]`, or `array[@]` (best one is with `@`, because it reflects array elements most accurately), for example
+
+```bash
+arr=(one two three)
+
+for i in ${arr[@]}; do
+    echo $i
+done
+```
