@@ -1354,3 +1354,13 @@ Expansions to manage empty variables:
 4. `${parameter:+word}` - if `parameter` is unset or empty, nothing happens. But if it has value, `word` is used instead.
 
 Also string operations with `${#parameter}` (string length), `${parameter:offset}` `${parameter:offset:length}` (extract portion of string), `${parameter#pattern}` `${parameter##pattern}` (remove leading portion of string), `${parameter%pattern}` `${parameter%%pattern}` (remove trailing portion of string) are discussed.
+
+Compount component `(( ))` supports basic operations like `+ - / * %`, the result is always integers (it doesn't support floats), it also supports other number formats other than decimals (base 10).
+
+Inside this compound component there might be also assignment, for example:
+
+```bash
+if (( foo = 5 )); then echo "It is true"; fi
+```
+
+It's important to understand that body executes if assignment is successful. In `test` ( `[]` ) `=` is used to equal strings, but in compound componentns `(( ))` and `[[ ]]` it's used as assignment. To make comparison, `==` is used instead.
