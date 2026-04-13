@@ -29,6 +29,21 @@ GNU has big impact on Linux, as Linux is the name of kernel, and it cannot be th
   - [Package management](#package-management)
   - [Networking](#networking)
   - [Searching for files](#searching-for-files)
+  - [Archiving and backup](#archiving-and-backup)
+  - [Regular expressions](#regular-expressions)
+  - [Text processing](#text-processing)
+  - [Compiling programs](#compiling-programs)
+- [Part 4, writing shell scripts](#part-4-writing-shell-scripts)
+  - [Functions](#functions)
+  - [Branching](#branching)
+  - [Reading keyboard input](#reading-keyboard-input)
+  - [Looping](#looping)
+  - [Debugging](#debugging)
+  - [Branching with case](#branching-with-case)
+  - [Positional parameters](#positional-parameters)
+  - [Looping with for](#looping-with-for)
+  - [Strings and numbers](#strings-and-numbers)
+  - [Arrays](#arrays)
 
 ## Part 1, learning the shell
 
