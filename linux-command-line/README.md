@@ -1364,3 +1364,7 @@ if (( foo = 5 )); then echo "It is true"; fi
 ```
 
 It's important to understand that body executes if assignment is successful. In `test` ( `[]` ) `=` is used to equal strings, but in compound componentns `(( ))` and `[[ ]]` it's used as assignment. To make comparison, `==` is used instead.
+
+In addition to this, there are other assignments supported too: `+=, -=, *=, /=, %=, ++, --` etc.
+
+Compound `(( ))` also supports bit operators. It also supports comparison operators such as `<= >= < > == !=`, logical operators `&& ||`, and ternary operator `expr1?expr2:expr3`. `expr1` is true if it's non-zero, strings won't work.
