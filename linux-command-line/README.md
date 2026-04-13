@@ -1368,3 +1368,18 @@ It's important to understand that body executes if assignment is successful. In 
 In addition to this, there are other assignments supported too: `+=, -=, *=, /=, %=, ++, --` etc.
 
 Compound `(( ))` also supports bit operators. It also supports comparison operators such as `<= >= < > == !=`, logical operators `&& ||`, and ternary operator `expr1?expr2:expr3`. `expr1` is true if it's non-zero, strings won't work.
+
+### Arrays
+
+In bash arrays are single dimensional only, just as in javascript. Array can be created by just assigning value to it:
+
+```bash
+arr[0]=foo
+echo ${arr[0]}
+```
+
+or with declare command:
+
+```bash
+declare -a arr
+```
