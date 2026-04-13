@@ -1352,3 +1352,5 @@ Expansions to manage empty variables:
 2. `${parameter:=word}` - `word` is used instead of `parameter` if value of `parameter` is unset or empty. Also `word` is assigned to `parameter`.
 3. `${parameter:?word}` - program exits with error code if `parameter` is unset or empty, and `word` is forwarded to stderr.
 4. `${parameter:+word}` - if `parameter` is unset or empty, nothing happens. But if it has value, `word` is used instead.
+
+Also string operations with `${#parameter}` (string length), `${parameter:offset}` `${parameter:offset:length}` (extract portion of string), `${parameter#pattern}` `${parameter##pattern}` (remove leading portion of string), `${parameter%pattern}` `${parameter%%pattern}` (remove trailing portion of string) are discussed.
