@@ -1405,3 +1405,11 @@ for i in ${arr[@]}; do
     echo $i
 done
 ```
+
+Number of array elements can be determined with `${#arr[@]}`.
+
+Indexes used by array can be found in following syntax: `${!array[@]}` or `${!array[*]}`, for example `for i in "${foo[@]}"; do echo $i; done`.
+
+Elements can be added to array with `+=` syntax, for example `array+=(1 2 3)`.
+
+Array can be deleted with `unset` command. Its elements can be deleted with same command, like `unset 'foo[2]'`. There are quotes to prevent pathname expansion.
