@@ -1339,3 +1339,16 @@ for (( i=0;i<5;i=i+1 )); do
     echo $i
 done
 ```
+
+### Strings and numbers
+
+We touched basic parameter expansion, but there are more.
+
+Parameters can be surrounded by curly braces if they are adjacent to some text. For example `$a_text` tries to expand `a_text`, but `${a}_text` expands `a` instead.
+
+Expansions to manage empty variables:
+
+1. `${parameter:-word}` - `word` is used instead of `parameter` if value of `parameter` is unset or empty.
+2. `${parameter:=word}` - `word` is used instead of `parameter` if value of `parameter` is unset or empty. Also `word` is assigned to `parameter`.
+3. `${parameter:?word}` - program exits with error code if `parameter` is unset or empty, and `word` is forwarded to stderr.
+4. `${parameter:+word}` - if `parameter` is unset or empty, nothing happens. But if it has value, `word` is used instead.
