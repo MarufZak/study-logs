@@ -104,6 +104,12 @@ Sometimes it's asked to estimate system capacity or performance requirements usi
 | 40    | 1 trillion        | 1 terabyte | 1 TB       |
 | 50    | 1 quadrillion     | 1 petabyte | 1 PB       |
 
+Based on latency numbers, memory is fast, disk is slow, avoid disk seeks if possible, simple compression algos are fast, compress data before sending over internet if possible, datacenters are usually in different regions, it takes time to deliver from one to another.
+
+Availability is about how much of the time your system can be continuously operational. 100% means no downtime. SLA is agreement between service provider and customer on how much uptime service provider will deliver. Most define `99.9%` uptime or above, which is 1.44 minutes downtime a day.
+
+Some tips: use rounding and approximation, write down your assumptions, label your units.
+
 ## Chapter 4. Design rate limiter
 
 Rate limiter in the context of networking is limiting the traffic by some origin. In context of HTTP requests, it's about limiting the number of requests sent by client.

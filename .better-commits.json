@@ -2,7 +2,7 @@
   "check_status": true,
   "commit_type": {
     "enable": true,
-    "initial_value": "linux-command-line",
+    "initial_value": "system-design-interview",
     "infer_type_from_branch": true,
     "options": [
       {
