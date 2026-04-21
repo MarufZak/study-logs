@@ -237,3 +237,16 @@ Instead of being represented as single server, server is represented as multiple
 ![16](./assets/16.png)
 
 How do we find the keys to be redistributed when some server is added? We take the server that is added, move anticlockwise, and capture some server `n`. So keys between added server and server `n` are redistributed. Same with removing. We take removed server, move anticlockwise, and capture some server `n`. Keys between removed server and server `n` are redistributed.
+
+### Chapter 8. Design url shortener.
+
+System design questions are often left open-ended, so it's important to ask clarification questions. For example how system works, load, or others. So url shortener load is 100M URLs generated per day, as short url as possible, characters 0-9,a-z,A-Z are allowed, no deletion or update.
+
+Let's assume the service runs for 10 years, so if per URL is 100 bytes, total space needed is `100_000_000 * 365 * 10 = 36.5TB` space is needed.
+
+High level design consists of 2 REST API endpoints, something like `POST /api/v1/data/shorten` and `GET /api/v1/shortUrl`.
+
+Redirection happens once shortUrl is received to long url. Redirection is HTTP redirect with Location header. There are 2 types of redirects:
+
+1. 301 redirect - permanent redirect. Browser caches the Location. Once queries same page, it doesn't send request to api endpoint but redirects automatically. Useful to make load lower to servers.
+2. 302 redirect - temporary redirect. Browser sends request to API endpoint next time. Useful if there is going to be analytics, it's easier to track with 301.
