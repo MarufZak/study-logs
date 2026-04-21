@@ -250,3 +250,11 @@ Redirection happens once shortUrl is received to long url. Redirection is HTTP r
 
 1. 301 redirect - permanent redirect. Browser caches the Location. Once queries same page, it doesn't send request to api endpoint but redirects automatically. Useful to make load lower to servers.
 2. 302 redirect - temporary redirect. Browser sends request to API endpoint next time. Useful if there is going to be analytics, it's easier to track with 301.
+
+Now regarding data model. Because memory is limited, some db, like relational db is used. Model is simple: id, shortUrl, longUrl.
+
+Now regarding URL shortening. We need some function that generates some hash based on longUrl. We can make use of common encryption algos like SHA1, but its length is too big. We can truncate it, but it can cause collisions in the future. We can add some string to it and check if such entry exists in DB. If not, add it, if yes, add once more. So querying db is required to check for existing one, which is not good.
+
+Another method is base62 conversion. It's about converting number into different representational systems. base is 62 because there are 62 characters we can use. Some unique ID is generated, and this ID is converted into base62. For example id `11157` is `2TX` in base62.
+
+Some other considerations: cache, rate limiting, web server scaling (stateless, easy scaling), database scaling (sharding, replication).
