@@ -92,6 +92,18 @@ However, sharding has some complexities:
 2. Celebrity problem, where one shard might be overloaded with read operations (for example) if many celebrities are in one shard.
 3. Join operations cannot happen on different shards, workaround would be duplicating data from different shard.
 
+## Chapter 2. Back of envelope estimation
+
+Sometimes it's asked to estimate system capacity or performance requirements using back of envelope estimation. It's estimation you create using a combination of thought experiments and common performance numbers to get good feel of which designs will meet your requirements. Basic components are power of 2, latency numbers, and availability numbers.
+
+| power | approximate value | full name  | short name |
+| ----- | ----------------- | ---------- | ---------- |
+| 10    | 1 thousand        | 1 kilobyte | 1 KB       |
+| 20    | 1 million         | 1 megabyte | 1 MB       |
+| 30    | 1 billion         | 1 gigabyte | 1 GB       |
+| 40    | 1 trillion        | 1 terabyte | 1 TB       |
+| 50    | 1 quadrillion     | 1 petabyte | 1 PB       |
+
 ## Chapter 4. Design rate limiter
 
 Rate limiter in the context of networking is limiting the traffic by some origin. In context of HTTP requests, it's about limiting the number of requests sent by client.
