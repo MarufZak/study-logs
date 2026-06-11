@@ -282,7 +282,7 @@ I also observed that if javascript file response includes CORS policy, when load
 
 One way of protection is using fetch call inside javascript file, to receive sensitive data in json. When script is run on the loading side, the origin is the loading side, evil website in this case. JSON is protected by cross-origin policy, so javascript is not able to read the response. Or include it in HTML response, as a value of meta tag, and retrieve with javascript.
 
-Also it’s possible to protect against such attack with `Cross-Origin-Resource-Policy` HTTP header, telling browsers not to leak the body of the response, so the body is stripped, and so response is not executed. The difference between it and `Access-Control-Allow-Origin` is that last one restricts the response to JS, and the first one cuts the response at all if policy is not met.
+Also it’s possible to protect against such attack with `Cross-Origin-Resource-Policy` HTTP header, telling browsers not to leak the body of the response, so the body is stripped, and so response is not executed. The difference between it and `Access-Control-Allow-Origin` is that last one restricts the response to JS, and the first restricts who can load/embed resource at all (like with script or img tags, which don't trigger CORS).
 
 ## Network vulnerabilities
 
@@ -446,7 +446,6 @@ There are different ways to implement sessions:
 - JWT
 
   JSON Web Tokens are just a way to transmit information over the network, but with capability of ensuring payload sent inside the token is same as it was sent → it’s not tampered with, as long as it passes validation. JWT includes:
-
   1. Header - information about the token itself, like the algorithm used to sign it, and media type of jwt, or any other metadata. Can be obtained by using formula, which is basically base64URL (url safe).
 
      ```tsx
@@ -474,7 +473,7 @@ There are different ways to implement sessions:
      const createSignature = (header, payload, secret) => {
        const hashed = hmacSHA256(
          `${encode(header)}.${encode(payload)}`,
-         secret
+         secret,
        );
        const stringified = Base64.stringify(hashed);
        return makeUrlSafe(stringified);
