@@ -101,11 +101,11 @@ For security concerns, browsers implement _sandboxing,_ where each web page is g
 Before executing javascript, browser asks 3 questions: What javascript am i allowed to execute? What tasks should javascript be allowed to perform? How can i be sure that i am executing correct javascript code?
 
 - What javascript am i allowed to execute?
-  We can answer this question with Content Security Policies (CSP). These are directives that restrict browser to execute javascript loaded from URLs not specified. It can be set in HTTP response of the HTML document, or hardcoded in meta tag of HTML document.
+  We can answer this question with _Content Security Policies (CSP)_. These are directives that restrict browser to execute javascript loaded from URLs not specified. It can be set in HTTP response of the HTML document, or hardcoded in meta tag of HTML document.
   ![Browser csp](./assets/browser-csp.png)
 
 - What tasks should javascript be allowed to perform?
-  CSPs enables locking down resources by domain. Browser also uses domain for other security protections. This is about same-origin policy. Origin is a combination of protocol, domain, and port. If origin is the same across windows, browsers let them communicate via JavaScript.
+  CSPs enables locking down resources by domain. Browser also uses domain for other security protections. This is about _same-origin policy_. _Origin_ is a combination of protocol, domain, and port. If origin is the same across windows, browsers let them communicate via JavaScript.
   ![Browser window channel](./assets/browser-window-channel.png)
   Origin also dictates how communication with the server is done. Web page communicates with the origin server where it came from to load images, or scripts.
   In browser, cross-origin writes (clicking to a link that leads to another website) is allowed, cross-origin embeds (for example loading images from external origins, as long as CSP allows) is allowed, but cross-origin reads is not allowed.
@@ -234,9 +234,9 @@ There are several attack vectors in browsers, and the most popular are XSS, CSRF
 
 There are several attack vectors in browsers, and the most popular is XSS (cross-site scripting). It has several types:
 
-1. Stored XSS - the value entered by user is stored in database, and retrieved later. If it’s being written in HTML, it’s a vector of attack. Hacker can write malicious script. For example a comments section in blog post. Everyone who opens the web page executes the malicious javascript as a comment.
-2. Reflected XSS - instead of the malicious script being stored in database, it’s retrieved from the URI. Let’s say the blog page inserts the blog post id, retrieved from URI, in the web page. Attacker can use a script instead of the value, and trick the user into visiting the website. Also, instead of script, attacker can provide src for loading the script.
-3. DOM-based XSS - instead of the using path in URI for attack, hacker could also use URI fragments. In fact URI fragments are browser only, and are not sent to the server in the request. If the fragment is being written in HTML, it’s another vector of attack.
+1. _Stored XSS_ - the value entered by user is stored in database, and retrieved later. If it’s being written in HTML, it’s a vector of attack. Hacker can write malicious script. For example a comments section in blog post. Everyone who opens the web page executes the malicious javascript as a comment.
+2. _Reflected XSS_ - instead of the malicious script being stored in database, it’s retrieved from the URI. Let’s say the blog page inserts the blog post id, retrieved from URI, in the web page. Attacker can use a script instead of the value, and trick the user into visiting the website. Also, instead of script, attacker can provide src for loading the script.
+3. _DOM-based XSS_ - instead of the using path in URI for attack, hacker could also use URI fragments. In fact URI fragments are browser only, and are not sent to the server in the request. If the fragment is being written in HTML, it’s another vector of attack.
 
 Protection against such attacks includes escaping (replacing HTML sensitive strings with safe alternatives), CSP (limiting javascript execution). Modern frameworks, such as React, escapes these by default, and you need to use special attributes to disable it.
 
@@ -258,17 +258,17 @@ Attackers, though, can still make CSRF attack, for example by crafting malicious
 
 ![CSRF with post](./assets/csrf-post.png)
 
-The solution is to use CSRF tokens. Each form has a hidden field with CSRF token. The CSRF token is also stored in cookies, when the request for the page is done, with Set-Cookie HTTP header. When request for creating comment is done, the value inside the header and body of the request are checked, if not equal, request is rejected. The attacker cannot know the token, and cannot submit it in body of the request.
+The solution is to use _CSRF tokens_. Each form has a hidden field with CSRF token. The CSRF token is also stored in cookies, when the request for the page is done, with Set-Cookie HTTP header. When request for creating comment is done, the value inside the header and body of the request are checked, if not equal, request is rejected. The attacker cannot know the token, and cannot submit it in body of the request.
 
 Same can be applied for other requests with fetch. Any request missing CSRF token in body is rejected.
 
-Also ensure that the cookies have proper SameSite attribute. When Lax, cookies for cross-site GET requests are not stripped out. Theoretically, choosing proper SameSite eliminates the need for CSRF tokens, but it would serve as an additional level of protection.
+Also ensure that the cookies have proper _SameSite_ attribute. When _Lax_, cookies for cross-site GET requests are not stripped out. Theoretically, choosing proper SameSite eliminates the need for CSRF tokens, but it would serve as an additional level of protection.
 
 ### Clickjacking
 
-Browsers have feature called “features gated by user activation”. These are some APIs that can be executed only when user triggers it by some action, for example a click. You can’t simply execute them, for example you can’t simply open pages with `window.open()`.
+Browsers have feature called _“features gated by user activation”_. These are some APIs that can be executed only when user triggers it by some action, for example a click. You can’t simply execute them, for example you can’t simply open pages with `window.open()`.
 
-Clickjacking means stealing some actions by the user, and perform other actions user doesn’t exist. For example a website has some button. User clicks it, but it turns out he liked some post in Facebook. Behind the button there is iframe with hidden with opacity and managed z-index div. User thinks he clicks a button to receive something, but in fact he does another action.
+_Clickjacking_ means stealing some actions by the user, and perform other actions user doesn’t exist. For example a website has some button. User clicks it, but it turns out he liked some post in Facebook. Behind the button there is iframe with hidden with opacity and managed z-index div. User thinks he clicks a button to receive something, but in fact he does another action.
 
 ![Clickjacking](./assets/clickjacking.png)
 
@@ -290,7 +290,7 @@ There is a client, and there is a server. Between those 2 there is network, thro
 
 ### Man in the middle
 
-When devices communicate in local network, they do so by using ARP (Address Resolution Protocol). It’s simple protocol that translates the IP addresses into MAC addresses, because MAC addresses are needed to deliver the messages across LAN. Each device has MAC address. If A wants to communicate to B, it broadcasts ARP request, asking who this IP address belongs to. Device B responds, and sender caches the relationship of IP and MAC in its ARP table.
+When devices communicate in local network, they do so by using _ARP (Address Resolution Protocol)_. It’s simple protocol that translates the IP addresses into MAC addresses, because MAC addresses are needed to deliver the messages across LAN. Each device has MAC address. If A wants to communicate to B, it broadcasts ARP request, asking who this IP address belongs to. Device B responds, and sender caches the relationship of IP and MAC in its ARP table.
 
 Devices tend to believe whatever they receive, so what if someone responded to all requests “Yes, it’s me”? They could act as gateway, and route the traffic where needed, but also read all unencrypted data. This is called _ARP spoofing attack_. The solution is to use encrypted connections, with HTTPS. This way, hackers cannot read the traffic unless they have private key.
 
@@ -298,7 +298,7 @@ Hackers found a way to prevent secured connections in the first place. Back in d
 
 ![MITM with SSL stripping](./assets/mitm-ssl-stripping.png)
 
-To prevent such attacks, we should upgrade to HTTPS to all connections, and use HTTP Strict Transport Security (HSTS) header to allow browsers to connect only with secure connections.
+To prevent such attacks, we should upgrade to HTTPS to all connections, and use _HTTP Strict Transport Security (HSTS)_ header to allow browsers to connect only with secure connections.
 
 Also MITM attacks happens not only on local networks, but also in global.
 
@@ -310,17 +310,17 @@ This can be prevented by using minimum TLS algorithm in web server, in NGINX thi
 
 ## Misdirection vulnerabilities
 
-It’s also possible for hackers to make fake websites that look like yours. For example, they might use similar domain, like [ammazon.com](http://ammazon.com) (this domain is called _doppelganger domain_), or using non-ascii characters in domain name, as opposed against international domain name standard (_homograph attack_). For example using latin characters with their cyrillic counterparts. Actually browsers like chrome protect against such attacks, but using Punycode, unicode rendered with ASCII characters where it is similar with ASCII (like ‘a’ character), and converted to special ASCII sequence for the rest.
+It’s also possible for hackers to make fake websites that look like yours. For example, they might use similar domain, like [ammazon.com](http://ammazon.com) (this domain is called _doppelganger domain_), or using non-ascii characters in domain name, as opposed against international domain name standard (_homograph attack_). For example using latin characters with their cyrillic counterparts. Actually browsers like chrome protect against such attacks, but using _Punycode_, unicode rendered with ASCII characters where it is similar with ASCII (like ‘a’ character), and converted to special ASCII sequence for the rest.
 
 ### DNS poisoning
 
 DNS resolution happens as follows: the client requests the IP of [example.com](http://example.com) domain from public DNS resolvers, such as 8.8.8.8. Public resolver asks for root DNS resolvers (13 in the world) for .com DNS resolvers. From .com DNS resolvers it finds the IP for example.com resolver. Each layer has a cache, for example browser, or OS has its own cache. ISP can also have its own DNS resolver, so it doesn’t take it from root resolvers.
 
-DNS resolvers are naive, they believe in whatever response they get from DNS servers, though the response is checked with some ID, which is only 2 bytes ⇒ 64K strings are enough to find the correct ID, this can be done in barely 10 seconds. What if attacker poisons the response, and makes so DNS server responds with IP of malicious website? This is called DNS poisoning.
+DNS resolvers are naive, they believe in whatever response they get from DNS servers, though the response is checked with some ID, which is only 2 bytes ⇒ 64K strings are enough to find the correct ID, this can be done in barely 10 seconds. What if attacker poisons the response, and makes so DNS server responds with IP of malicious website? This is called _DNS poisoning_.
 
 DNS poisoning is not dangerous on its own, with HTTPS. If this happens, the destination website should provide valid certificate for connection. If it provides original website certificate, it cannot decrypt the messages, assuming they haven’t stolen encryption keys. Or if it provides invalid certificate, browser warns its invalid.
 
-DNS is being upgraded these days. DNSSEC is new standard for DNS that enables signed responses from resolvers, which can be verified. All DNSSEC validation happens on DNS resolvers, and clients like browser gets raw IP address. But browser might bypass the OS resolver, and use DoH (DNS over HTTP) when configured, and it can choose which resolvers to use, and if DNSSEC is configured in browser, it chooses resolvers that support DNSSEC.
+DNS is being upgraded these days. _DNSSEC_ is new standard for DNS that enables signed responses from resolvers, which can be verified. All DNSSEC validation happens on DNS resolvers, and clients like browser gets raw IP address. But browser might bypass the OS resolver, and use _DoH (DNS over HTTP)_ when configured, and it can choose which resolvers to use, and if DNSSEC is configured in browser, it chooses resolvers that support DNSSEC.
 
 In simple words DoH is when DNS servers expose HTTPS (443) port so clients can make simple HTTPS requests to lookup DNS record. At its core DNS servers still make recursive lookups from different DNS servers. If DNSSEC is configured additional validation happens, if target DNS server supports it.
 
@@ -342,8 +342,8 @@ Hackers can hack a node in chain of trust, and issue fake certificates, as happe
 
 If the certificate private keys are stolen, or certificate authority is compromised, certificate revocation is needed. There are 2 ways browsers check for certificate revocation, and usually they do both:
 
-1. Certificate revocation list (CRL) - list of certificates, provided by CA, that browsers periodically fetch and save locally. When certificate is encountered, it checks against this list.
-2. Online certificate status protocol (OCSP) response - basically CA’s online service, that responds whether certificate is revoked.
+1. _Certificate revocation list (CRL)_ - list of certificates, provided by CA, that browsers periodically fetch and save locally. When certificate is encountered, it checks against this list.
+2. _Online certificate status protocol (OCSP)_ response - basically CA’s online service, that responds whether certificate is revoked.
 
 It’s possible to revoke the certificate using CLI tools like `*certbot*`, or using CA’s admin panels. If certificate is revoked, user gets warning.
 
@@ -361,13 +361,13 @@ The way with passwords is not good, but there is solution. The best way to solve
 
 ### OAuth
 
-Back in days, if user wanted to import contacts from gmail to app, he had to give username and passwords, so app can grab them and import. This is ridiculous. Instead, there is new approach, open authorization (authorization - what permissions user has). It lets the application to get specified permissions on behalf of user. User logs in to their account in gmail, grand permissions for application. Google issues some access token, which can be used to access to gmail API for that user. Application uses it and imports contacts. User can revoke the access token at any time.
+Back in days, if user wanted to import contacts from gmail to app, he had to give username and passwords, so app can grab them and import. This is ridiculous. Instead, there is new approach, _open authorization_ (authorization - what permissions user has). It lets the application to get specified permissions on behalf of user. User logs in to their account in gmail, grand permissions for application. Google issues some access token, which can be used to access to gmail API for that user. Application uses it and imports contacts. User can revoke the access token at any time.
 
 ![OAuth 1](./assets/oauth1.png)
 
 ![Oauth 2](./assets/oauth2.png)
 
-The authentication (who the user is) can be done with OAuth, but there is another standard called Open ID Connect (OIDC). The way to do with OAuth is obtaining access token with permissions, and get user info from some endpoint with that access token.
+The authentication (who the user is) can be done with OAuth, but there is another standard called _Open ID Connect (OIDC)_. The way to do with OAuth is obtaining access token with permissions, and get user info from some endpoint with that access token.
 
 ### OIDC
 
@@ -375,31 +375,31 @@ OIDC is built on top of OAuth, and except access token, it provides JWT token th
 
 ### SAML
 
-SAML is comparable to OAuth, it uses XML format to to exchange message with identity provider. Typically companies who owns their own identity provider services use SAML. In SAML there is identity provider, and service provider. Service provider publishes XML document, containing URL to which identity provider redirects the user to after successful login, and certificate, which is used by identity provider to sign requests. SAML is also used as SSO.
+_SAML_ is comparable to OAuth, it uses XML format to to exchange message with identity provider. Typically companies who owns their own identity provider services use SAML. In SAML there is identity provider, and service provider. Service provider publishes XML document, containing URL to which identity provider redirects the user to after successful login, and certificate, which is used by identity provider to sign requests. SAML is also used as SSO.
 
 ### Strengthening authentication
 
 There are multiple ways to make the authentication stronger.
 
-1. Password complexity rules - enforcing user to set password with specified rules, for example minimum 8 characters, 2 symbols, and others. Password can be rated with tool like `zxcvbn`. Also password rotation is common, which means enforcing user to change the password in specified period of time.
-2. CAPTCHAs - Completely Automated Public Turing tests to tell Computers and Humans Apart, typically widgets requiring user to select some specified item in pieces of images. Some CAPTCHAs can detect robot with mouse movement, keyboard input and others. However, there are services these days that sell human’s work on solving 1 thousand CAPTCHAs for $1.
-3. Rate limiting - limiting user for each incorrect password enter. In brute-force attack, if password is entered thousand times, it just doesn’t receive response. In practice each incorrect password enter results in doubled delay time. At first it is so small users don’t notice it, this is called exponential backoff. However hacker can enter wrong password for another user, and legitimate user can be banned for long time. Because of this, it’s more common to rate limit the requests by IP. This also has downside, because user might share the IP address, when navigating in corporate network, for example. And hackers don’t use just simple IP. They use different bots with different IPs, and can rotate IP addresses.
+1. _Password complexity rules_ - enforcing user to set password with specified rules, for example minimum 8 characters, 2 symbols, and others. Password can be rated with tool like `zxcvbn`. Also _password rotation_ is common, which means enforcing user to change the password in specified period of time.
+2. _CAPTCHAs_ - Completely Automated Public Turing tests to tell Computers and Humans Apart, typically widgets requiring user to select some specified item in pieces of images. Some CAPTCHAs can detect robot with mouse movement, keyboard input and others. However, there are services these days that sell human’s work on solving 1 thousand CAPTCHAs for $1.
+3. _Rate limiting_ - limiting user for each incorrect password enter. In brute-force attack, if password is entered thousand times, it just doesn’t receive response. In practice each incorrect password enter results in doubled delay time. At first it is so small users don’t notice it, this is called _exponential backoff_. However hacker can enter wrong password for another user, and legitimate user can be banned for long time. Because of this, it’s more common to rate limit the requests by IP. This also has downside, because user might share the IP address, when navigating in corporate network, for example. And hackers don’t use just simple IP. They use different bots with different IPs, and can rotate IP addresses.
 
 ### MFA
 
-Multi-factor authentication means users have to provide several forms of identification. For example first is email and password, while second is entering the code sent to user’s phone.
+_Multi-factor authentication_ means users have to provide several forms of identification. For example first is email and password, while second is entering the code sent to user’s phone.
 
-Multi-factor authentication can also be done with authenticator apps, like Yandex Key. These apps use Time-based-One-Time-Passwords (TOTP), typically 6 figures that expire in 30 seconds. These passwords are generated by timestamp and shared secret. To share the secret with authenticator app, QR is given for the user.
+Multi-factor authentication can also be done with authenticator apps, like Yandex Key. These apps use _Time-based-One-Time-Passwords (TOTP)_, typically 6 figures that expire in 30 seconds. These passwords are generated by timestamp and shared secret. To share the secret with authenticator app, QR is given for the user.
 
 The flow with authentication apps is following: server generates a secret key, shares it with authenticator app with `otpauth` protocol, via QR code. Server and app shares the secret now, and usually user has to enter some code to authenticator app, to ensure the secret is in sync between parties. Whenever user wants to log in, he goes to authenticator app and grabs 6-figure code, which is computed by encrypting secret and time slice, and cropped. User inputs it, and server makes same computation and checks the code. Note that secret is unique per user.
 
-Because the authenticator app is only third-party holding the private key, if user loses the phone, the private key is lost also. For these cases, server should generate set of recovery codes, which can be used once each (OTP).
+Because the authenticator app is only third-party holding the private key, if user loses the phone, the private key is lost also. For these cases, server should generate set of _recovery codes_, which can be used once each (OTP).
 
-Another form of MFA is biometrics, verified with WebAuthn, browser API that allows to use biometric information to validate the users.
+Another form of MFA is _biometrics_, verified with _WebAuthn_, browser API that allows to use biometric information to validate the users.
 
 ### Storing credentials
 
-Credentials like password should be stored in hashed manner. Hashing algorithms like MD5 or SH1 or considered insecure, because multiple inputs might produce same output. Instead, hashing functions like SHA-2 or SHA-3, or bcrypt should be used. Only hashed passwords are not enough, because there are _rainbow tables,_ tables of precomputed hashes of most popular passwords. Also bcrypt lets us specify how many rounds algorithm has to complete, because computing power increases year by year.
+Credentials like password should be stored in hashed manner. Hashing algorithms like _MD5_ or _SH1_ or considered insecure, because multiple inputs might produce same output. Instead, hashing functions like _SHA-2_ or _SHA-3_, or _bcrypt_ should be used. Only hashed passwords are not enough, because there are _rainbow tables,_ tables of precomputed hashes of most popular passwords. Also bcrypt lets us specify how many rounds algorithm has to complete, because computing power increases year by year.
 
 We should also use salting and peppering the password, like following. Note that salt is different for every user, and stored alongside password in table. Pepper is taken from configuration file, and same for all users. This makes so hacker has to crack different parts of the system to obtain passwords. Just brute forcing them taking ‘infinite’ time.
 
@@ -417,7 +417,7 @@ As a last resort, it’s also not bad to store encryption keys in application co
 
 ### User enumeration
 
-If login or sign up page shows message like “Incorrect username” or “Incorrect password”, this is user enumeration vulnerability. Attacker can exploit it to enumerate the users that registered to the website. Guessing passwords only is easier than guessing combination of user and password. The correct way is to display some general message like “Invalid credentials”.
+If login or sign up page shows message like “Incorrect username” or “Incorrect password”, this is _user enumeration_ vulnerability. Attacker can exploit it to enumerate the users that registered to the website. Guessing passwords only is easier than guessing combination of user and password. The correct way is to display some general message like “Invalid credentials”.
 
 This vulnerability also exists in password reset pages. In these cases, it’s better to show messages like “Email is sent to this mail” or “Check your inbox”, even if account doesn’t exist.
 
@@ -427,7 +427,7 @@ There is another vector for user enumeration attack. If you check username, and 
 
 ## Session vulnerabilities
 
-Identifying the user with username and password for each HTTP request made from their account leads to a lot of unnecessary work in server, because rechecking password each time is a lot of work. To prevent this, there are sessions, identifiers that let server identify the user without requiring them to submit credentials.
+Identifying the user with username and password for each HTTP request made from their account leads to a lot of unnecessary work in server, because rechecking password each time is a lot of work. To prevent this, there are _sessions_, identifiers that let server identify the user without requiring them to submit credentials.
 
 There are different ways to implement sessions:
 
@@ -447,7 +447,7 @@ There are different ways to implement sessions:
 
 - JWT
 
-  JSON Web Tokens are just a way to transmit information over the network, but with capability of ensuring payload sent inside the token is same as it was sent → it’s not tampered with, as long as it passes validation. JWT includes:
+  _JSON Web Tokens_ are just a way to transmit information over the network, but with capability of ensuring payload sent inside the token is same as it was sent → it’s not tampered with, as long as it passes validation. JWT includes:
   1. Header - information about the token itself, like the algorithm used to sign it, and media type of jwt, or any other metadata. Can be obtained by using formula, which is basically base64URL (url safe).
 
      ```tsx
@@ -497,8 +497,8 @@ Sessions can be hijacked or forged in different ways:
 
 1. On network - sessions are hijacked in the network level, when using insecure connection. For example with MITM attack, entire requests are visible, so it’s easy to steal the session.
 2. Via XSS - if you store your sessions in local storage, or in cookie without HttpOnly flag, our sessions are vulnerable to XSS.
-3. Weak identifiers - it’s also possible to forge the sessions by just guessing them, when using weak session identifiers. Tomcat server once used to use `Random` util function from java standard library, but the outcome of this function could be guessed, so does session identifiers. This was patched to use `SecureRandom` later. Make sure you don’t generate identifiers that are guessable.
-4. Session fixation - in older days session ids used to be passed via URL. This creates fixation attack, where hacker could share some url with random session id. Victim logs in, and server creates session under the same session id. Hacker now can log in with same URL with victim’s account. Server shouldn’t trust the session ids suggested by the client.
+3. _Weak identifiers_ - it’s also possible to forge the sessions by just guessing them, when using weak session identifiers. Tomcat server once used to use `Random` util function from java standard library, but the outcome of this function could be guessed, so does session identifiers. This was patched to use `SecureRandom` later. Make sure you don’t generate identifiers that are guessable.
+4. _Session fixation_ - in older days session ids used to be passed via URL. This creates fixation attack, where hacker could share some url with random session id. Victim logs in, and server creates session under the same session id. Hacker now can log in with same URL with victim’s account. Server shouldn’t trust the session ids suggested by the client.
 
 ## Authorization vulnerabilities
 
@@ -510,17 +510,17 @@ For example applications like Reddit have 3 types of users: regular users, moder
 
 Authorization logic should be documented, because it evolves as the business logic of the application. This will serve as a living document. Describe clearly what authorization roles are and what they can do at an abstract level.
 
-Access Control is an umbrella for Authentication and Authorization, because we need to know who the user is before granting permissions. Access control can be split into 2 categories:
+_Access Control_ is an umbrella for _Authentication_ and _Authorization_, because we need to know who the user is before granting permissions. Access control can be split into 2 categories:
 
 - RBAC
 
-  Role Based Access Control (RBAC) is splitting users into different categories, and allow them perform some privileges based on their role. For example, in CMS system, roles would be writer and publisher. Privileges would be writing article, and publishing it.
+  _Role Based Access Control (RBAC)_ is splitting users into different categories, and allow them perform some privileges based on their role. For example, in CMS system, roles would be writer and publisher. Privileges would be writing article, and publishing it.
 
   ![RBAC](./assets/rbac.png)
 
 - ABAC
 
-  Attribute Based Access Control (ABAC), is about users having control over some resources based on their attributes. Users are subjects, and resources are objects. Subjects usually own the objects, and can perform actions based on attributes defined by subject or object.
+  _Attribute Based Access Control (ABAC)_, is about users having control over some resources based on their attributes. Users are subjects, and resources are objects. Subjects usually own the objects, and can perform actions based on attributes defined by subject or object.
 
   ![ABAC](./assets/abac.png)
 
@@ -540,7 +540,7 @@ Most vulnerabilities come from untrusted input, and usually these target the web
 
 Many serialization libraries allow defining some functions, that are executed before the deserialization happens. Attacker can make use of it and define some function that deletes all files in web server (deserialization happens on the server in this case). To avoid it, better format should be considered, for example yaml or json, which are less vulnerable to these attacks, because these can be deserialized safely.
 
-Another risk is that attacker can easily tamper with data sent to the browser in serialized way. This data is going to travel back to server, and can cause problems (for example data stored in localhost might make round trip). To prevent attacker from tampering with these, HMAC (hash based message authentication code) signature should be used and sent alongside the serialized data itself. When the serialized data is received back alongside the signature, we should check the signature against the serialized data to make sure the data is not tampered with.
+Another risk is that attacker can easily tamper with data sent to the browser in serialized way. This data is going to travel back to server, and can cause problems (for example data stored in localhost might make round trip). To prevent attacker from tampering with these, _HMAC (hash based message authentication code)_ signature should be used and sent alongside the serialized data itself. When the serialized data is received back alongside the signature, we should check the signature against the serialized data to make sure the data is not tampered with.
 
 ### JSON vulnerabilities
 
@@ -548,7 +548,7 @@ JSON is valid subset of JavaScript. This means that JSON is valid JS. Anything w
 
 ### Prototype pollution
 
-JavaScript uses prototype-based inheritance, rather than class-based inheritance. In languages that use prototype-based inheritance, if some field or value is not found in current object, it's searched in its prototype, until root prototype is reached. Some method up the prototype chain can be easily modified, and all calls to this method results in custom defined behavior. Prototype pollution refers to this.
+JavaScript uses prototype-based inheritance, rather than class-based inheritance. In languages that use prototype-based inheritance, if some field or value is not found in current object, it's searched in its prototype, until root prototype is reached. Some method up the prototype chain can be easily modified, and all calls to this method results in custom defined behavior. _Prototype pollution_ refers to this.
 
 Consider a case when some merging algorithm exists, which takes two objects, one is from user input. If merge algorithm is incorrect, it lets the user input object to change the methods or properties in prototype chain. What if attacker replaces some function, which deletes all files in server?
 
@@ -569,7 +569,7 @@ To mitigate such attacks, allow lists of fields should be used (for merging in t
 
 In the past days, XML was used pretty much for everything, including config files, remote procedure calls, data labelling, build scripts. But now it has been replaced by many other formats, like YAML for config files. Anyway web servers can parse the XML.
 
-There was a technique to validate XML, called Document Type Definition (DTD), where field names, values, and ordering of tags in XML could be specified.
+There was a technique to validate XML, called _Document Type Definition (DTD)_, where field names, values, and ordering of tags in XML could be specified.
 
 ```xml
 <?xml version="1.0"?>
@@ -594,7 +594,7 @@ DTD:
 <!ELEMENT age (#PCDATA) >
 ```
 
-DTD is deprecated and replaced by XML schemas, but still supported. Security concerns arise because DTD can be specified in inline way inside XML.
+DTD is deprecated and replaced by _XML schemas_, but still supported. Security concerns arise because DTD can be specified in inline way inside XML.
 
 DTD has feature where 'variables' can be specified, and these 'variables' are replaced in DTD before parsing. In following example, &company is going to be replaced to Rock and Gravel Company in XML document. Note that DTD is inlined inside XML.
 
@@ -633,7 +633,7 @@ Inline DTDs are under control of the ones who submit XML document, which gives a
 <lolz>&lol9;</lolz>
 ```
 
-&lo19 is going to be replaced by five instances of &lo18, and so on, and this results in several GB of space in the server after parsing. This attack is called billion of laughs, type of XML bombs attack that explodes the server memory with single HTTP request, to perform DoS.
+&lo19 is going to be replaced by five instances of &lo18, and so on, and this results in several GB of space in the server after parsing. This attack is called _billion of laughs_, type of _XML bombs_ attack that explodes the server memory with single HTTP request, to perform DoS.
 
 ![XML bomb](./assets/xml-bomb.png)
 
@@ -645,7 +645,7 @@ DTD is old technology, and modern XML parsers disable DTD by default, but this s
 
 Uploading files functionality is favorite for attackers, because it's direct opportunity to insert some files in the file system, or overwrite something there. The payload can also be some malicious code or files.
 
-First of all, it's important to validate the file. The name, maximum file size (large files can lead to DoS), file extensions compared with headers, file extensions compared to magic number (it's possible to craft files that are valid in multiple formats, though), be aware of ZIP bombs, where the ZIP files get bigger and bigger as they get unzipped. The name can also contain path characters like ../../, which can overwrite some files etc. It's much safer to generate some name for the file and store it like this. If file names matter, it's possible to store the files with arbitrary names, and store the original name in the database for further lookups.
+First of all, it's important to validate the file. The name, maximum file size (large files can lead to DoS), file extensions compared with headers, file extensions compared to magic number (it's possible to craft files that are valid in multiple formats, though), be aware of _ZIP bombs_, where the ZIP files get bigger and bigger as they get unzipped. The name can also contain path characters like ../../, which can overwrite some files etc. It's much safer to generate some name for the file and store it like this. If file names matter, it's possible to store the files with arbitrary names, and store the original name in the database for further lookups.
 
 ![File upload](./assets/file-upload.png)
 
@@ -655,7 +655,7 @@ It's also possible to use cloud services like S3, and they handle the risks of t
 
 ### Path traversal
 
-Suppose the static files are being served through our application. Application takes the name of the file from query params (`?file=myfile.png`). In this case attacker could use (`?file=../../sensitive-file.yaml`) to obtain sensitive file. This is called file traversal. No path should be allowed in the filename, and when requesting the filename, filename should always be tested against path characters.
+Suppose the static files are being served through our application. Application takes the name of the file from query params (`?file=myfile.png`). In this case attacker could use (`?file=../../sensitive-file.yaml`) to obtain sensitive file. This is called _path traversal_. No path should be allowed in the filename, and when requesting the filename, filename should always be tested against path characters.
 
 ### Mass assignment
 
@@ -666,7 +666,7 @@ const body = req.json();
 db.user.save(body);
 ```
 
-This code is vulnerable to mass assignment. If user has field `isAdmin` for example, attacker might include it in the body to obtain admin privileges. The fields should be explicitly written.
+This code is vulnerable to _mass assignment_. If user has field `isAdmin` for example, attacker might include it in the body to obtain admin privileges. The fields should be explicitly written.
 
 ```js
 const body = req.json();
@@ -688,9 +688,9 @@ server.use("/execute", async (req) => {
 });
 ```
 
-DSL (domain-specific language) is a language that solves specific problem, unlike general purpose languages. If you build DLS into web application, you probably end up running it dynamically, and in fact it's easiest way. But, unless you did proper sandboxing, it opens doors for RCE. One solution is to use some scripting languages specifically designed to be embedded to other languages, like Lua. You can control which objects are passed to the context. Another solution is to safely parse and evaluate each expression by breaking it into expressions, and evaluating each of them (this is hard, because we are building our own parser). This way each operation is already defined, and there is no way to run arbitrary operations.
+_DSL (domain-specific language)_ is a language that solves specific problem, unlike general purpose languages. If you build DLS into web application, you probably end up running it dynamically, and in fact it's easiest way. But, unless you did proper sandboxing, it opens doors for RCE. One solution is to use some scripting languages specifically designed to be embedded to other languages, like Lua. You can control which objects are passed to the context. Another solution is to safely parse and evaluate each expression by breaking it into expressions, and evaluating each of them (this is hard, because we are building our own parser). This way each operation is already defined, and there is no way to run arbitrary operations.
 
-Another possibility for RCE is server-side includes. For example in PHP, while evaluating HTML, you can include other files:
+Another possibility for RCE is _server-side includes_. For example in PHP, while evaluating HTML, you can include other files:
 
 ```php
 <head>
@@ -715,9 +715,9 @@ const username = body.username;
 SELECT * from users where username = '" + username + "' and password_hash = '" + hash + '"'
 ```
 
-This code is vulnerable to SQL injections. Hacker could provide something like `sam'--'`, which would bypass password by just making password checking a comment, or maybe drop the tables.
+This code is vulnerable to _SQL injections_. Hacker could provide something like `sam'--'`, which would bypass password by just making password checking a comment, or maybe drop the tables.
 
-To protect against such attacks, application should use parameterized statements. Placeholders (like %s) are given in sql query, and the arguments are provided separately. This way driver can ensure that the arguments don't contain something malicious, and fail if they do.
+To protect against such attacks, application should use _parameterized statements_. Placeholders (like %s) are given in sql query, and the arguments are provided separately. This way driver can ensure that the arguments don't contain something malicious, and fail if they do.
 
 Sometimes, though, using parameterized queries is complex because of, for example, complex order_by, where the order is taken from query params. In this case, an allow list of params is good protection against sql injections.
 
@@ -725,18 +725,18 @@ Many apps use ORMs, and most of them are safe, they use parametrized queries. Th
 
 SQL is considered to consist of four sublanguages:
 
-1. Data Query Language (DQL) - for querying data via SELECT commands.
-2. Data Manipulation Language (DML) - for manipulating data with UPDATE, DELETE, INSERT.
-3. Data Definition Language (DDL) - for defining and changing structure of columns, structured, indexes, with CREATE, MODIFY and DROP commands.
-4. Data Control Language (DCL) - for modifying permissions with GRAND and REVOKE commands.
+1. _Data Query Language (DQL)_ - for querying data via SELECT commands.
+2. _Data Manipulation Language (DML)_ - for manipulating data with UPDATE, DELETE, INSERT.
+3. _Data Definition Language (DDL)_ - for defining and changing structure of columns, structured, indexes, with CREATE, MODIFY and DROP commands.
+4. _Data Control Language (DCL)_ - for modifying permissions with GRAND and REVOKE commands.
 
 Usually the application code requires only reading and writing to the database, so making proper permissions for the account is another protection layer.
 
-There are also NoSQL databases, family of approaches to loosen the constraints of traditional SQL databases (traditional SQL databases tend to be very strict about the data types, which might lead to bottleneck in large applications, and writing to database is queued up and validated before being written). NoSQL databases tackle scaling problems by loosening strictness. However, they are still vulnerable to SQL injections when used improperly. For example MongoDB allows constructing command strings, and interpolating (joining strings) from untrusted input might lead to SQL injections.
+There are also _NoSQL_ databases, family of approaches to loosen the constraints of traditional SQL databases (traditional SQL databases tend to be very strict about the data types, which might lead to bottleneck in large applications, and writing to database is queued up and validated before being written). NoSQL databases tackle scaling problems by loosening strictness. However, they are still vulnerable to SQL injections when used improperly. For example MongoDB allows constructing command strings, and interpolating (joining strings) from untrusted input might lead to SQL injections.
 
 ### LDAP injections
 
-LDAP (Lightweight directory access protocol) is method of storing and accessing directory information about users, systems, and devices. Web applications might use ldap with ldap://localhost:389 protocol to check user's credentials. Usually these credentials are taken from users' input. So query might look like:
+_LDAP (Lightweight directory access protocol)_ is method of storing and accessing directory information about users, systems, and devices. Web applications might use ldap with ldap://localhost:389 protocol to check user's credentials. Usually these credentials are taken from users' input. So query might look like:
 
 ```py
 ldap_query = f"(&(uid={username})(userPassword={password}))"
@@ -753,7 +753,7 @@ There are some applications that take user's input, and make some system call on
 $lookup = system("nslookup {$domain}");
 ```
 
-Attacker might use chaining to perform additional system calls, for example he can provide input: `google.com && cat /etc/passwords` to read sensitive file, or another actions.
+Attacker might use _chaining_ to perform additional system calls, for example he can provide input: `google.com && cat /etc/passwords` to read sensitive file, or another actions.
 
 Making system calls from application code are common in one programming languages than in others. For example in PHP it's common to make command line calls that use system calls, in Node.js it's also possible, but also other native APIs are provided, like fs module. In Node.js we can use `child_process` module, which provides `spawn` function to make command line calls, which accepts arguments as array. This can server as protection against command injection attacks.
 
@@ -761,9 +761,9 @@ Making system calls from application code are common in one programming language
 
 ### CRLF injections
 
-In UNIX-based systems, new lines are marked with Line Feed character - \n. In Windows systems, new lines are marked with two characters, Carriage Return (CR) - \r, and Line Feed.
+In UNIX-based systems, new lines are marked with _Line Feed_ character - \n. In Windows systems, new lines are marked with two characters, _Carriage Return (CR)_ - \r, and Line Feed.
 
-Attacker might inject LF or CRLF combination to make log injection. Suppose you are logging operations in your server, for example user is logging in with some username. Attacker might use LF or CRLF to mark newline in your logs.
+Attacker might inject LF or CRLF combination to make _log injection_. Suppose you are logging operations in your server, for example user is logging in with some username. Attacker might use LF or CRLF to mark newline in your logs.
 
 ```txt
 username =  username\nhere are logs from attackers!
@@ -773,7 +773,7 @@ This can be used to disguise the footprints and make hard to debug.
 
 The most effective way to mitigate this attack is strip newline characters from the input, and use standard logging package, that adds some metadata like request id, or timestamp, to make it obvious the log is from attacker.
 
-The second use-case for this attack is HTTP response splitting. In HTTP spec, the headers are split with \r\n characters. If you take some untrusted input from the user to include in HTTP response, make sure you escape these characters. Otherwise attacker can provide input like `value\r\n\r\n<script>Oops!!!</script>` to provide custom body to the response.
+The second use-case for this attack is _HTTP response splitting_. In HTTP spec, the headers are split with \r\n characters. If you take some untrusted input from the user to include in HTTP response, make sure you escape these characters. Otherwise attacker can provide input like `value\r\n\r\n<script>Oops!!!</script>` to provide custom body to the response.
 
 ![HTTP response splitting](./assets/http-response-splitting.png)
 
@@ -783,7 +783,7 @@ Regexes are usually defined statically at the code level, but there are some cas
 
 ![regex injection](./assets/regex-injection.png)
 
-If he provides some complicated regex that takes too much computation power, and make a query where this regex is used, this causes server to go offline. This attack is called regular expression DoS attack (ReDoS).
+If he provides some complicated regex that takes too much computation power, and make a query where this regex is used, this causes server to go offline. This attack is called _regular expression DoS attack (ReDoS)_.
 
 The thing to do is to use some tools that analyze the codebase and detect such vulnerabilities, like SonarSource tool, or use packages like escape-string-regexp.
 
@@ -803,7 +803,7 @@ However, it's possible to use server fingerprinting tools like NMap, that send s
 
 The security of deployed application also depends on the security of configurations.
 
-First thing to check is to ensure that the public serving directory and private content directory are different. Sometimes they are in one directory, and private files can be served as public. Apache also had `open directory listing` vulnerability, which should be disabled in order not to let the attackers see the contents of directory.
+First thing to check is to ensure that the public serving directory and private content directory are different. Sometimes they are in one directory, and private files can be served as public. Apache also had _`open directory listing`_ vulnerability, which should be disabled in order not to let the attackers see the contents of directory.
 
 Secondly, client-side error reporting should be disabled on production, in order not to leak the server information to the client.
 
@@ -815,7 +815,7 @@ Our web applications are not islands, they are connected to the internet. Someti
 
 ### Server-side request forgery
 
-Internet is client-server protocol. Client such as browser makes request to server, and server responds with response. Sometimes servers can also be clients, when they send requests to other servers, acting as a client. But if user can make the server to send request to any arbitrary URL, the server is vulnerable to SSRF attacks. User can make too many requests, and make DoS attack for endpoint server (server which our web server sending requests to).
+Internet is client-server protocol. Client such as browser makes request to server, and server responds with response. Sometimes servers can also be clients, when they send requests to other servers, acting as a client. But if user can make the server to send request to any arbitrary URL, the server is vulnerable to _SSRF (server-side request forgery)_ attacks. User can make too many requests, and make DoS attack for endpoint server (server which our web server sending requests to).
 
 ![ssrf](./assets/ssrf.png)
 
@@ -840,19 +840,19 @@ Another use case where URL to make request to comes from incoming request is lin
 
 ### Email spoofing
 
-Attacks can be done with emails also, with SMTP protocol, for phishing attacks. It has `From` header which is easily manipulated and is not authenticated.
+Attacks can be done with emails also, with _SMTP_ protocol, for _phishing_ attacks. It has `From` header which is easily manipulated and is not authenticated.
 
-The first way to protect against these attacks is to use Sender Policy Framework (SPF), with the help of what we can list the IPs of servers, which can be used to send some emails from some domain. It's done by adding DNS record of type TXT.
+The first way to protect against these attacks is to use _Sender Policy Framework (SPF)_, with the help of what we can list the IPs of servers, which can be used to send some emails from some domain. It's done by adding DNS record of type TXT.
 
 ![spf](./assets/spf.png)
 
 SMTP travels over TCP, and it's much harder to spoof IP address, rather than spoof `From` header in SMTP protocol. This way email clients can verify the sender who they say they are.
 
-To prevent the emails to be tampered with, we can use DomainKeys identified mail (DKIM). In this case, we add public key as DNS record, and signing each email with private key. Private key signs, public key verifies. Email clients can recalculate the signature when mail arrives, and reject if not same. This technique is more complex than SPF, but good news is email service will do most of the job.
+To prevent the emails to be tampered with, we can use _DomainKeys identified mail (DKIM)_. In this case, we add public key as DNS record, and signing each email with private key. Private key signs, public key verifies. Email clients can recalculate the signature when mail arrives, and reject if not same. This technique is more complex than SPF, but good news is email service will do most of the job.
 
 ![dkim](./assets/dkim.png)
 
-What happens to rejected emails is dictated by Domain-based message authentication, reporting, and conformance (DMARC) policy. It's itself a DNS record, TXT type, that should be on `subdomain_dmarc.example.com`.
+What happens to rejected emails is dictated by _Domain-based message authentication, reporting, and conformance (DMARC)_ policy. It's itself a DNS record, TXT type, that should be on `subdomain_dmarc.example.com`.
 
 ![spf](./assets/dmarc.png)
 
@@ -860,19 +860,19 @@ What happens to rejected emails is dictated by Domain-based message authenticati
 
 Mail service providers usually parse the URLs in links, and check against banned list of domains, and if there is a match, the mail is moved to the junk folder.
 
-If your website has ability to redirect the user into arbitrary URLs, it's vulnerable to `open redirect` vulnerability. Spam emailers use your website to make the redirect to malicious website, and because of trust your users have on you, they might do what is instructed.
+If your website has ability to redirect the user into arbitrary URLs, it's vulnerable to _open redirect_ vulnerability. Spam emailers use your website to make the redirect to malicious website, and because of trust your users have on you, they might do what is instructed.
 
 It's often done for UX in websites, for example redirect the user after login to URL put in query params. To protect against attacks, it's important to check that URL is relative path, that is, start with backslash.
 
-Another protection is to check `Referer` header, which should be our domain. If it's not, the redirect is not performed. Attacker can change `Referer` header if the request is in full control of attacker. But often attacker has no such control, and just sends links.
+Another protection is to check _`Referer`_ header, which should be our domain. If it's not, the redirect is not performed. Attacker can change `Referer` header if the request is in full control of attacker. But often attacker has no such control, and just sends links.
 
 ## What to do when you get hacked
 
 Being hacked is inevitable. First of all, we should know when we are being hacked. Logs are essential, logs should be everywhere. It's important to inspect these logs and detect malicious traffic. This can be automated with cloud services that has alerting capabilities.
 
-Large organizations have SOC (security operations center) team that can detect attacks in progress. Sometimes it makes sense to shut the server down if attack is in progress, if the service is not critical. Or other techniques, like deploying the fix, rolling back, rotating password keys might be enough, depending on the vulnerability. Also status pages are implemented to make customers aware.
+Large organizations have _SOC (security operations center)_ team that can detect attacks in progress. Sometimes it makes sense to shut the server down if attack is in progress, if the service is not critical. Or other techniques, like deploying the fix, rolling back, rotating password keys might be enough, depending on the vulnerability. Also status pages are implemented to make customers aware.
 
-After the attack is done, and after it was mitigated, so called `digital forensics` is made. It's timeline of everything, created out of logs, starting when vulnerability was deployed, what hackers did, ending with when it was mitigated.
+After the attack is done, and after it was mitigated, so called _digital forensics_ is made. It's timeline of everything, created out of logs, starting when vulnerability was deployed, what hackers did, ending with when it was mitigated.
 
 ![digital forensics](./assets/digital-forensics.png)
 
