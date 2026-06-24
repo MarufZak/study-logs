@@ -322,6 +322,8 @@ DNS poisoning is not dangerous on its own, with HTTPS. If this happens, the dest
 
 DNS is being upgraded these days. DNSSEC is new standard for DNS that enables signed responses from resolvers, which can be verified. All DNSSEC validation happens on DNS resolvers, and clients like browser gets raw IP address. But browser might bypass the OS resolver, and use DoH (DNS over HTTP) when configured, and it can choose which resolvers to use, and if DNSSEC is configured in browser, it chooses resolvers that support DNSSEC.
 
+In simple words DoH is when DNS servers expose HTTPS (443) port so clients can make simple HTTPS requests to lookup DNS record. At its core DNS servers still make recursive lookups from different DNS servers. If DNSSEC is configured additional validation happens, if target DNS server supports it.
+
 ### Subdomain squatting
 
 Consider a case when you have a website hosted on particular domain. This domain has a subdomain, for example [`assets.example.com`](http://assets.example.com), which has CNAME pointing to `my-company.amazon-s3.com`. If one day you delete your account or delete the s3 bucket, your domain of `assets.example.com` becomes dangling, pointing to nothing. Attacker can make use of that, and register its bucket under same name, `my-company.amazon-s3.com` and host any arbitrary files. Your domain, which is trusted by your users, now points to malicious storage. This also enables cookie re-usage, because cookies from your websites are also sent to malicious website, unless you don’t specify the domain when setting the cookies, which locks down the cookie to the exact same domain.
