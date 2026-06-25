@@ -17,6 +17,7 @@ The repository is organized into different folders, each representing a specific
 - **`data-structures-algorithms`** — My notes and takeaways about data structures and algorithms, including some implementations in typescript.
 - **`grokking-web-application-security`** — My notes and takeaways from the Grokking Web Application Security book by Malcolm McDonald.
 - **`system-design-interview`** — My notes and takeaways from the System Design Interview book series by Alex Xu & Sahn Lam.
+- **`the-pragmatic-programmer`** — My notes and takeaways from The Pragmatic Programmer book by David Thomas and Andrew Hunt.
 
 > **Note**: This list will grow as I continue my learning journey. Feel free to explore the folders to see detailed notes on each subject. If anything is unclear or you have questions, feel free to open an issue or reach out to me directly.
 

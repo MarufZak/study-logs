@@ -2,7 +2,7 @@
   "check_status": true,
   "commit_type": {
     "enable": true,
-    "initial_value": "system-design-interview",
+    "initial_value": "the-pragmatic-programmer",
     "infer_type_from_branch": true,
     "options": [
       {
@@ -36,6 +36,10 @@
       {
         "value": "linux-command-line",
         "label": "linux-command-line"
+      },
+      {
+        "value": "the-pragmatic-programmer",
+        "label": "the-pragmatic-programmer"
       },
       {
         "label": "none",
