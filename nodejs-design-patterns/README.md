@@ -7,7 +7,6 @@
     <a href="https://www.nodejsdesignpatterns.com/">
       <img src="https://img.shields.io/badge/Book-Official_Website-blue?style=flat-square" alt="Book Website"/>
     </a>
-    <img src="https://img.shields.io/badge/Status-In_Progress-green?style=flat-square" alt="Status"/>
   </p>
 </div>
 
