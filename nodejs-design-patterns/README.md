@@ -1,6 +1,6 @@
 # NodeJS Design Patterns
 
-<div align="center">
+<div>
   <img src="./assets/book-cover.jpg" alt="NodeJS Design Patterns Book Cover" width="300"/>
 
   <p>
