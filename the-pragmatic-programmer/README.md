@@ -14,7 +14,13 @@ Things go wrong. Nothing is perfect. We make mistakes. Pragmatic programmers tak
 
 Trust is essential in the team.
 
+### Take responsibility
+
 Take responsibility for the work you do. Not only this, but also analyze the situation for risks that are beyond your control. When taking responsibility for something, be ready to be accountable for it. If mistake is made, admint it and try to offer options. Don't blame others. **Provide options, don't make kame excuses.**. Before telling someone bad news, run through conversation in your head, how does it sound? Is there anything you can try? Don't say it can't be done, explain what can be done to salvage situation. Maybe more resources are needed, or book or course could help? Don't be afraid to admit you need help.
 
 Imagine a situation when bank teller or mechanic comes to you with kame excuses. What do you think of them and their company?
 When you find yourself telling "i don't know", make sure to follow up with "but i will find out" to take responsibility like a pro.
+
+### Software entropy
+
+Entropy means disorder. When disorder increases in software, we call it technical dept. Technical dept starts with small disorder - broken window, then graffiti appears in the building, then building becomes damaged. **Don't live with broken windows** (bad designs, wrong decisions, poor code). Fix one as soon as it's discovered. If there is no time, board it up by commenting offending code for example. Take some action to prevent further damage. Neglect accelerates disorders fastest. You might think no one has time to fix the broken glasses of a project, if so you'd better plan moving to another house.
