@@ -24,3 +24,7 @@ When you find yourself telling "i don't know", make sure to follow up with "but 
 ### Software entropy
 
 Entropy means disorder. When disorder increases in software, we call it technical dept. Technical dept starts with small disorder - broken window, then graffiti appears in the building, then building becomes damaged. **Don't live with broken windows** (bad designs, wrong decisions, poor code). Fix one as soon as it's discovered. If there is no time, board it up by commenting offending code for example. Take some action to prevent further damage. Neglect accelerates disorders fastest. You might think no one has time to fix the broken glasses of a project, if so you'd better plan moving to another house.
+
+If you find yourself working in a project with many broken windows, it's easy to get into trap of mindset that whole code is crap and you will just follow the suit, breaking other windows. Don't do that. **Don't cause collateral damage just because there is crisis of some sort**. Think of great codebase, you wouldn't like to be first who messes it up, even if there is some crisis (deadline, for example).
+
+Choose some broken windows, discuss with the team what the problems are and how they can be fixed.
