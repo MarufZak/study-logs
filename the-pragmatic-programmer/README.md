@@ -28,3 +28,11 @@ Entropy means disorder. When disorder increases in software, we call it technica
 If you find yourself working in a project with many broken windows, it's easy to get into trap of mindset that whole code is crap and you will just follow the suit, breaking other windows. Don't do that. **Don't cause collateral damage just because there is crisis of some sort**. Think of great codebase, you wouldn't like to be first who messes it up, even if there is some crisis (deadline, for example).
 
 Choose some broken windows, discuss with the team what the problems are and how they can be fixed.
+
+### Stone Soup and Boiled Frogs
+
+Three soldiers came back home from war. They were sure villagers meet them and give them food, but there were no one in the village streets, doors were locked. Because of war villagers saved what they could. Then soldiers started boiling some water and put three stones inside it. Surprised villagers came out of houses and asked if it's enough. Soliders said: "Yes, it's enough. Although some say it's better with some carrots". One villager came out with carrots and asked if that's it. Same reply, but potatoes this time. Different villagers took out different ingredients from their homes. After some time soldiers boiled a soup, and entire village sat down to enjoy their first square meal any of them had eaten in months.
+
+Sometimes there are situations where you know exactly what to do, entire system appears before your eyes, and once you ask for permissions, you'll be met with delays and blank stares, things get complicated. Everyone will guard their own resources ("startup fatigure"). It's time to take out the stones. Work out what you can reasonably ask for, develop it, show it to people, then say "of course, it would be better if we added...", pretend it's not important, sit back and wait for them to add more functionality you originally wanted. People find it easier to join an ongoing success. **Show them glimpse of future and you'll get them rally around**.
+
+`Be a catalyst for a change`
