@@ -40,3 +40,7 @@ Sometimes there are situations where you know exactly what to do, entire system 
 Villagers story is also about focusing tightly. They focus so much on the soup so they forget about the rest of the world. We have all seen this. Projects slowly get out of hand. Systems drift from their specifications feature by feature, until there is nothing original left. It's often accumulation of small things. **Remember the big picture**. There is saying that if you put frog on boiled water it will jump back, but if you put it in water and gradually boil it, frogs doesn't notice and it gets cooked. Don't be like a frog, always keep an eye on big picture, not only what you are personally doing.
 
 - Challenge. Quick, without looking, how many lights are there in ceiling above you? How many exits in the room? How many people? Is there anything out of context that looks like it doesn't belong? This is exercise for **situational awareness**. Get in habit of really looking and noticing your surroundings, then do same for your project.
+
+### Good-enough software
+
+Software is never perfect, never bug-free.
